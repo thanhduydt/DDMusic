@@ -23,7 +23,11 @@ namespace DDMusic.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Genre()
+        {
+            return View();
+        }
+        public IActionResult TopSong()
         {
             return View();
         }
