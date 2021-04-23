@@ -148,11 +148,7 @@
     }
 
     // :: 8.0 Sticky Active Code
-    if ($.fn.sticky) {
-        $(".oneMusic-main-menu").sticky({
-            topSpacing: 0
-        });
-    }
+   
 
     // :: 9.0 Progress Bar Active Code
     if ($.fn.circleProgress) {

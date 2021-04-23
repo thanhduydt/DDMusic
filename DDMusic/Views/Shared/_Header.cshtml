@@ -18,7 +18,7 @@
                 <nav class="classy-navbar justify-content-between" id="oneMusicNav">
 
                     <!-- Nav brand -->
-                    <a href="index.html" class="nav-brand"><img src="~/img/core-img/logo.png" alt=""></a>
+                    <a asp-action="Index" asp-controller="Home" class="nav-brand"><div class="section-heading style-2" style="margin-top:auto;margin-bottom:auto"><h2 style="color:#FFFFFF">DDMusic</h2></div></a>
 
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">
@@ -40,7 +40,7 @@
                                 <li>
                                     <a href="#">Thể Loại</a>
                                     <ul class="dropdown">
-                                        <li><a href="index.html">EDM</a></li>
+                                        <li><a asp-action="Genre" asp-controller="Home">EDM</a></li>
                                         <li><a href="albums-store.html">Accoustic</a></li>
                                         <li><a href="event.html">Indie</a></li>
                                     </ul>
@@ -53,7 +53,7 @@
                                         <li><a href="event.html">Hàn Quốc</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="event.html">Bảng Xếp Hạng</a></li>
+                                <li><a asp-action="TopSong" asp-controller="Home">Bảng Xếp Hạng</a></li>
                                 <li><a href="blog.html">Playlist</a></li>
                                 <li><a href="contact.html">Về Chúng tôi</a></li>
                             </ul>
