@@ -1,0 +1,106 @@
+﻿<style>
+    .image-upload > input {
+        display: none;
+    }
+</style>
+<section class="contact-area section-padding-100 bg-img bg-overlay bg-fixed has-bg-img" style="background-image: url(../img/bg-img/bg-2.jpg);">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading white wow fadeInUp" data-wow-delay="100ms">
+                    <h2>Thông tin cá nhân</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!-- Contact Form Area -->
+                <div class="contact-form-area">
+                    <form action="#" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-12">
+                                <center>
+                                    <div class="image-upload">
+                                        <label for="ful"><img style=" width:200px;   height:200px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;" src="~/img/bg-img/ttd.jpg" alt="" /></label>
+                                        <input type="file" class="custom-file-input" id="ful" name="ful">
+                                    </div>
+                                </center>
+
+                            </div>
+
+                         
+                   
+
+                            @*<div class="image-upload">
+                                    <label for="file-input">
+                                        <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
+                                    </label>
+
+                                    <input id="file-input" name="ful" type="file" />
+                                </div>*@
+
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                    <label style="color:gray">Tên</label>
+                                    <input type="text" class="form-control" id="name" value="Trần Thanh Duy">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                    <label style="color:gray">Email</label>
+                                    <input type="email" class="form-control" id="email" value="ttduydt66@gmail.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                    <label style="color:gray">Số điện thoại</label>
+                                    <input type="text" class="form-control" id="phone" value="0706877807">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                    <label style="color:gray">Địa chỉ</label>
+                                    <input type="text" class="form-control" id="address" value="Phú Đức,Tam Nông,Đồng Tháp">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                    <label style="color:gray">Sinh nhật</label>
+                                    <input type="text" class="form-control" id="" value="16/03/2000">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                    <label style="color:gray">Giới tính</label>
+                                    <input type="text" class="form-control" id="" value="Nam">
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
+                                <button class="btn oneMusic-btn mt-30" type="submit">Cập nhật</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function readURL(input, img) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#ful").change(function () {
+            readURL(this, '#img');
+        })
+    </script>
+}
