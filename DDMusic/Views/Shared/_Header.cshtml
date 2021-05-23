@@ -2,6 +2,12 @@
     .header-area {
         top: 0px !important;
     }
+    .input-search{
+        border:50%;
+    }
+    .btn-search{
+        border:50%;
+    }
 </style>
 
 <!-- Preloader -->
@@ -61,11 +67,13 @@
                                 </li>
                                 <li><a asp-action="TopSong" asp-controller="Home">Bảng Xếp Hạng</a></li>
                                 <li><a asp-action="Playlist" asp-controller="Home">Playlist</a></li>
-                                <li><a href="contact.html">Về Chúng tôi</a></li>
+                                <li><a asp-action="Contact" asp-controller="Home">Về Chúng tôi</a></li>
                             </ul>
 
                             <!-- Login/Register & Cart Button -->
                             <div class="login-register-cart-button d-flex align-items-center">
+                                @*<button class="btn-search">Tìm</button>
+                                <input class="input-search" placeholder="Tìm Kiếm"/>*@
                                 <!-- Login/Register -->
                                 <div class="login-register-btn mr-50">
                                     <a href="/Home/Login" id="loginBtn">Đăng nhập</a>
