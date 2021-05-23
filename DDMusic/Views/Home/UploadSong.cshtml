@@ -1,0 +1,108 @@
+﻿
+<style>
+    .image-upload > input {
+        display: none;
+    }
+    .custom-file-upload {
+        background: #f7f7f7;
+        padding: 8px;
+        border: 1px solid #e3e3e3;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+</style>
+<div class="container" style="padding-top:100px;">
+    <div class="row">
+        <div class="col-lg-4 col-sm-12" @*style=" background-color: aqua"*@>
+            <center>
+                <div class="image-upload" style="padding-top:50px;">
+                    <label for="ful"><img style=" width:250px;   height:250px;border-radius: 10%;-moz-border-radius: 10%;   -webkit-border-radius: 10%;" src="~/img/bg-img/noimage.jpg" alt="" /></label>
+                    <input type="file" class="custom-file-input" accept=".jpeg,.gif,.png,.tiff,.bmp,.jpg" id="ful" name="ful">
+                </div>
+            </center>
+        </div>
+        <div class="col-lg-8 col-sm-12"  @*style=" background-color:red"*@>
+            <div class="contact-form-area">
+                <form action="#" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                <label for="choose-file" class="custom-file-upload" id="choose-file-label">
+                                    Chọn File
+                                </label>
+                                <input name="uploadDocument" type="file" id="choose-file"
+                                       accept=".mp3,.wma,.mp2,.asf,.wav,.wmv,.mp4,.flv,.mpg,.mpe,.avi,.3gp,.dat,.flac" style="display: none;" />
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                <label style="color:gray">Tên bài hát</label>
+                                <input type="text" class="form-control" id="name" value="">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                <label style="color:gray">Ca sĩ</label>
+                                <select class="form-control" name="cars" id="cars">
+                                    <option value="Đen Vâu">Đen Vâu</option>
+                                    <option value="Đạt G">Đạt G</option>
+                                    <option value="Sơn Tùng MTP">Sơn Tùng MTP</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                <label style="color:gray">Thể loại</label>
+                                <select class="form-control" name="cars" id="cars">
+                                    <option value="">Nhạc trẻ</option>
+                                    <option value="">Trữ tình</option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
+                            <button class="btn oneMusic-btn mt-30" type="submit">Lưu</button>
+                            <button class="btn oneMusic-btn mt-30" type="submit">Hủy</button>
+                        </div>
+
+                    </div>
+                </form>
+                <br /><br /><br /><br />
+            </div>
+        </div>
+       
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function readURL(input, img) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#ful").change(function () {
+            readURL(this, '#img');
+        })
+
+        $(document).ready(function () {
+            $('#choose-file').change(function () {
+                var i = $(this).prev('label').clone();
+                var file = $('#choose-file')[0].files[0].name;
+                $(this).prev('label').text(file);
+            });
+        });
+    </script>
+}

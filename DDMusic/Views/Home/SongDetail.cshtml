@@ -1,4 +1,10 @@
-﻿
+﻿<style>
+    .divLyric {
+        height: auto;
+        max-height: 255px;
+        overflow: hidden;
+    }
+</style>
 <br />
 <section class="miscellaneous-area section-padding-100-0">
     <div class="container">
@@ -18,31 +24,36 @@
                 </audio>
                 <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
                 <h3>Lời bài hát:Chỉ Là Không Cùng Nhau</h3>
-                <div>
-                    Chiều hôm ấy có mưa rơi nhẹ vương mi ai
-                    Con đường ngỡ bước chung đôi bây giờ chia hai
-                    Ai nói ra lời gian dối làm tan nát con tim ai.
-                    Một người nỡ, một người vỡ bao mộng mơ
+                <div class="divLyric" id="divLyric">
+                    Chiều hôm ấy có mưa rơi nhẹ vương mi ai<br />
+                    Con đường ngỡ bước chung đôi bây giờ chia hai<br />
+                    Ai nói ra lời gian dối làm tan nát con tim ai.<br />
+                    Một người nỡ, một người vỡ bao mộng mơ<br /><br />
 
-                    Rời xa nhau dẫu tim vẫn còn mang tên nhau
-                    Chỉ là giấu, giấu che đi ta còn yêu nhau
-                    Phía cuối cuộc đời ta hứa sẽ chờ dẫu qua bao lâu.
-                    Tình vẫn đậm sâu!
+                    Rời xa nhau dẫu tim vẫn còn mang tên nhau<br />
+                    Chỉ là giấu, giấu che đi ta còn yêu nhau<br />
+                    Phía cuối cuộc đời ta hứa sẽ chờ dẫu qua bao lâu.<br />
+                    Tình vẫn đậm sâu!<br /><br />
 
-                    Từng yêu nhau, từng là của nhau thật lâu
-                    Đến sau cùng chẳng thể có nhau bạc đầu
-                    Chẳng cần tương lai, chẳng biết có thương đau ngày mai
-                    Chỉ cần nhau.
+                    Từng yêu nhau, từng là của nhau thật lâu<br />
+                    Đến sau cùng chẳng thể có nhau bạc đầu<br />
+                    Chẳng cần tương lai, chẳng biết có thương đau ngày mai<br />
+                    Chỉ cần nhau.<br /><br />
 
-                    Giờ buông tay để được thấy nhau về sau
-                    Trả người về những ngày tháng chưa bắt đầu
-                    Ai rồi cũng sẽ tìm được ấm êm sau khổ đau
-                    Chỉ là không cùng nhau.
+                    Giờ buông tay để được thấy nhau về sau<br />
+                    Trả người về những ngày tháng chưa bắt đầu<br />
+                    Ai rồi cũng sẽ tìm được ấm êm sau khổ đau<br />
+                    Chỉ là không cùng nhau.<br /><br />
 
-                    Hẹn nhau nhé, kiếp sau ta lại nhận ra nhau.
-                    Không lùi bước nắm tay nhau qua đời thương đau.
-                    Nước mắt để dành ta khóc những ngày có nhau bên nhau.
-                    Hẹn nhau nhé, hẹn nhau kiếp sau tìm nhau.
+                    Hẹn nhau nhé, kiếp sau ta lại nhận ra nhau.<br />
+                    Không lùi bước nắm tay nhau qua đời thương đau.<br />
+                    Nước mắt để dành ta khóc những ngày có nhau bên nhau.<br />
+                    Hẹn nhau nhé, hẹn nhau kiếp sau tìm nhau.<br />
+                </div>
+                <div class="more_add" id="divMoreAddLyric">
+                    <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
+                    <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
+                
                 </div>
             </div>
 
@@ -219,3 +230,19 @@
         </div>
     </div>
 </section>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function seeMoreLyric() {
+
+            document.getElementById("divLyric").className ="";
+            document.getElementById("seeMoreLyric").style.display = 'none';
+            document.getElementById("hideMoreLyric").style.display = 'block';
+        }
+        function hideMoreLyric() {
+            document.getElementById("divLyric").className = "divLyric";
+            document.getElementById("seeMoreLyric").style.display = 'block';
+            document.getElementById("hideMoreLyric").style.display = 'none';
+        }
+    </script>
+}

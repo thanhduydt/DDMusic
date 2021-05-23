@@ -51,6 +51,10 @@ namespace DDMusic.Controllers
         {
             return View();
         }
+        public IActionResult UploadSong()
+        {
+            return View();
+        }
         public IActionResult Album()
         {
             return View();
