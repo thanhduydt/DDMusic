@@ -2,11 +2,28 @@
     .header-area {
         top: 0px !important;
     }
-    .input-search{
-        border:50%;
+
+    .input-search {
+        border: none;
+        background-color: white;
+        width: 170px;
+        height: 25px;
     }
-    .btn-search{
-        border:50%;
+
+    .btn-search {
+        border: none;
+        background-color: black;
+        width: 25px;
+        height: 25px;
+        margin-right: -7px;
+    }
+
+    .fa-search {
+        color: white;
+    }
+
+    .form-group {
+        margin-top: 16px;
     }
 </style>
 
@@ -48,36 +65,41 @@
                         <!-- Nav Start -->
                         <div class="classynav">
                             <ul>
-                                <li><a asp-action="Album" asp-controller="Home">Albums</a></li>
+                                @*<li><a asp-action="Album" asp-controller="Home">Albums</a></li>*@
                                 <li>
                                     <a href="#">Thể Loại</a>
                                     <ul class="dropdown">
                                         <li><a asp-action="Genre" asp-controller="Home">EDM</a></li>
-                                        <li><a href="albums-store.html">Accoustic</a></li>
-                                        <li><a href="event.html">Indie</a></li>
+                                        <li><a>Acoustic</a></li>
+                                        <li><a>Indie</a></li>
                                     </ul>
                                 </li>
                                 <li>
                                     <a href="#">Ca sĩ</a>
                                     <ul class="dropdown">
                                         <li><a asp-action="Singer" asp-controller="Home">Việt Nam</a></li>
-                                        <li><a href="albums-store.html">Âu Mỹ</a></li>
-                                        <li><a href="event.html">Hàn Quốc</a></li>
+                                        <li><a>Âu Mỹ</a></li>
+                                        <li><a>Hàn Quốc</a></li>
                                     </ul>
                                 </li>
                                 <li><a asp-action="TopSong" asp-controller="Home">Bảng Xếp Hạng</a></li>
-                                <li><a asp-action="Playlist" asp-controller="Home">Playlist</a></li>
-                                <li><a asp-action="Contact" asp-controller="Home">Về Chúng tôi</a></li>
+                                @*<li><a asp-action="Playlist" asp-controller="Home">Playlist</a></li>*@
+                                <li><a asp-action="Login" asp-controller="Home" id="loginBtn">Đăng Nhập</a></li>
+                                <li><a asp-action="Register" asp-controller="Home" id="loginBtn">Đăng Ký</a></li>
                             </ul>
+
+
 
                             <!-- Login/Register & Cart Button -->
                             <div class="login-register-cart-button d-flex align-items-center">
-                                @*<button class="btn-search">Tìm</button>
-                                <input class="input-search" placeholder="Tìm Kiếm"/>*@
                                 <!-- Login/Register -->
                                 <div class="login-register-btn mr-50">
-                                    <a href="/Home/Login" id="loginBtn">Đăng nhập</a>
-                                </div>   
+
+                                    <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                        <button class="btn-search"><i class="fa fa-search"></i></button>
+                                        <input class="input-search" type="text" placeholder=" Tìm Kiếm">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- Nav End -->

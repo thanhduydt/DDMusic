@@ -22,31 +22,37 @@ namespace DDMusic.Controllers
         {
             return View();
         }
-
+        [Route("the-loai")]
         public IActionResult Genre()
         {
             return View();
         }
+        [Route("bang-xep-hang")]
         public IActionResult TopSong()
         {
             return View();
         }
+
         public IActionResult SongDetail()
         {
             return View();
         }
+        [Route("dang-nhap")]
         public IActionResult Login()
         {
             return View();
         }
+        [Route("dang-ky")]
         public IActionResult Register()
         {
             return View();
         }
+        [Route("ca-si")]
         public IActionResult Singer()
         {
             return View();
         }
+        [Route("thong-tin-tai-khoan")]
         public IActionResult PersonalPage()
         {
             return View();
@@ -55,14 +61,17 @@ namespace DDMusic.Controllers
         {
             return View();
         }
+        [Route("album")]
         public IActionResult Album()
         {
             return View();
         }
+        [Route("playlist")]
         public IActionResult Playlist()
         {
             return View();
         }
+        [Route("lien-he")]
         public IActionResult Contact()
         {
             return View();

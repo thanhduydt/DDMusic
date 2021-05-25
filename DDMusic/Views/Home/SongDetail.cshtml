@@ -4,6 +4,58 @@
         max-height: 255px;
         overflow: hidden;
     }
+
+    .img-song {
+        width: 100px;
+        height: 100px;
+        border-radius: 10%;
+    }
+
+    .title-song {
+        margin-top: 10px;
+        margin-left: -120px;
+    }
+
+    .img-comment {
+        width: 60px;
+        height: 60px;
+        border-radius: 12%;
+    }
+
+    .user-name {
+        width: 100px;
+        margin-left: 10px;
+        margin-right: 10px;
+        font-weight: 600 !important;
+    }
+
+    .user-comment {
+        margin-left: 10px;
+        font-weight: 400 !important;
+    }
+
+    .padding-comment {
+        padding-bottom: 10px;
+    }
+
+    .comment {
+        margin-left: -30px;
+    }
+
+    h4 {
+        font-size: 40px;
+    }
+
+    h6 {
+        font-weight: 500;
+        letter-spacing:1px;
+    }
+    .title-related-song{
+        font-weight:700;
+        letter-spacing:2px;
+        text-transform:uppercase;
+        font-size:20px !important;
+    }
 </style>
 <br />
 <section class="miscellaneous-area section-padding-100-0">
@@ -13,8 +65,15 @@
 
             <div class="col-12 col-lg-8">
                 <div>
-                    <img style=" width: 100px;   height: 100px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;
-" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" /> <h4>Chỉ là không cùng nhau</h4><p>Tăng Phúc,Trương Thảo Nhi</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-song" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
+                        </div>
+                        <div class="col-md-8 title-song">
+                            <h4>Chỉ là không cùng nhau</h4>
+                            <h6>Tăng Phúc,Trương Thảo Nhi</h6>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -23,48 +82,48 @@
                     <source src="~/audio/ChiLaKhongCungNhau.mp3">
                 </audio>
                 <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
-                <h3>Lời bài hát:Chỉ Là Không Cùng Nhau</h3>
+                <h3>Lời bài hát</h3>
                 <div class="divLyric" id="divLyric">
-                    Chiều hôm ấy có mưa rơi nhẹ vương mi ai<br />
-                    Con đường ngỡ bước chung đôi bây giờ chia hai<br />
-                    Ai nói ra lời gian dối làm tan nát con tim ai.<br />
-                    Một người nỡ, một người vỡ bao mộng mơ<br /><br />
+                    <h6>
+                        Chiều hôm ấy có mưa rơi nhẹ vương mi ai<br />
+                        Con đường ngỡ bước chung đôi bây giờ chia hai<br />
+                        Ai nói ra lời gian dối làm tan nát con tim ai.<br />
+                        Một người nỡ, một người vỡ bao mộng mơ<br /><br />
 
-                    Rời xa nhau dẫu tim vẫn còn mang tên nhau<br />
-                    Chỉ là giấu, giấu che đi ta còn yêu nhau<br />
-                    Phía cuối cuộc đời ta hứa sẽ chờ dẫu qua bao lâu.<br />
-                    Tình vẫn đậm sâu!<br /><br />
+                        Rời xa nhau dẫu tim vẫn còn mang tên nhau<br />
+                        Chỉ là giấu, giấu che đi ta còn yêu nhau<br />
+                        Phía cuối cuộc đời ta hứa sẽ chờ dẫu qua bao lâu.<br />
+                        Tình vẫn đậm sâu!<br /><br />
 
-                    Từng yêu nhau, từng là của nhau thật lâu<br />
-                    Đến sau cùng chẳng thể có nhau bạc đầu<br />
-                    Chẳng cần tương lai, chẳng biết có thương đau ngày mai<br />
-                    Chỉ cần nhau.<br /><br />
+                        Từng yêu nhau, từng là của nhau thật lâu<br />
+                        Đến sau cùng chẳng thể có nhau bạc đầu<br />
+                        Chẳng cần tương lai, chẳng biết có thương đau ngày mai<br />
+                        Chỉ cần nhau.<br /><br />
 
-                    Giờ buông tay để được thấy nhau về sau<br />
-                    Trả người về những ngày tháng chưa bắt đầu<br />
-                    Ai rồi cũng sẽ tìm được ấm êm sau khổ đau<br />
-                    Chỉ là không cùng nhau.<br /><br />
+                        Giờ buông tay để được thấy nhau về sau<br />
+                        Trả người về những ngày tháng chưa bắt đầu<br />
+                        Ai rồi cũng sẽ tìm được ấm êm sau khổ đau<br />
+                        Chỉ là không cùng nhau.<br /><br />
 
-                    Hẹn nhau nhé, kiếp sau ta lại nhận ra nhau.<br />
-                    Không lùi bước nắm tay nhau qua đời thương đau.<br />
-                    Nước mắt để dành ta khóc những ngày có nhau bên nhau.<br />
-                    Hẹn nhau nhé, hẹn nhau kiếp sau tìm nhau.<br />
+                        Hẹn nhau nhé, kiếp sau ta lại nhận ra nhau.<br />
+                        Không lùi bước nắm tay nhau qua đời thương đau.<br />
+                        Nước mắt để dành ta khóc những ngày có nhau bên nhau.<br />
+                        Hẹn nhau nhé, hẹn nhau kiếp sau tìm nhau.<br />
+                    </h6>
                 </div>
                 <div class="more_add" id="divMoreAddLyric">
                     <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
                     <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
-                
+
                 </div>
             </div>
 
             <!-- ***** New Hits Songs ***** -->
             <div class="col-12 col-lg-4">
                 <div class="new-hits-area mb-100">
-                    <div class="section-heading text-left mb-50 wow fadeInUp" data-wow-delay="50ms">
-                        @*<p>See what’s new</p>*@
-
+                    <div class="section-heading text-left mb-50 wow fadeInUp" style="text-align:center !important" data-wow-delay="50ms">
+                       <p class="title-related-song">Những bài hát liên quan</p>
                     </div>
-
                     <!-- Single Top Item -->
                     <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
                         <div class="first-part d-flex align-items-center">
@@ -169,7 +228,6 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                     <input type="text" class="form-control" id="name" placeholder="Bình luận">
-
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -195,35 +253,23 @@
                         </div>
                     </form>
                     <br />
-                    <div class="col-md-6 col-lg-4">
-                        <table>
-                            <tr>
-                                <td>
-                                    <img style="        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        -moz-border-radius: 50%;
-        -webkit-border-radius: 50%;
-" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
-                                </td>
-                                <td> <p> KD</p></td>
-                                <td>&ensp;vsdgsd</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img style="        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        -moz-border-radius: 50%;
-        -webkit-border-radius: 50%;
-" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
-                                </td>
-                                <td> <p> TD</p></td>
-                                <td>&ensp;vsdgsd</td>
-                            </tr>
-
-                        </table>
-                        <br />
+                    <div class="row padding-comment">
+                        <div class="col-md-1">
+                            <img class="img-comment" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
+                        </div>
+                        <div class="col-md-6 comment">
+                            <h6 class="user-name">Kỳ Đạt</h6>
+                            <h6 class="user-comment">Bài hát thật tuyệt vời!</h6>
+                        </div>
+                    </div>
+                    <div class="row padding-comment">
+                        <div class="col-md-1">
+                            <img class="img-comment" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
+                        </div>
+                        <div class="col-md-6 comment">
+                            <h6 class="user-name">Thanh Duy</h6>
+                            <h6 class="user-comment">Nghe thật thích tai!</h6>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -235,7 +281,7 @@
     <script>
         function seeMoreLyric() {
 
-            document.getElementById("divLyric").className ="";
+            document.getElementById("divLyric").className = "";
             document.getElementById("seeMoreLyric").style.display = 'none';
             document.getElementById("hideMoreLyric").style.display = 'block';
         }
