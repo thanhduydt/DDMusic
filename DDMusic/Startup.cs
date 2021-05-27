@@ -48,6 +48,10 @@ namespace DDMusic
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                            name: "default",
+                            areaName: "Admin",
+                            pattern: "Admin/{controller=Users}/{action=Users}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

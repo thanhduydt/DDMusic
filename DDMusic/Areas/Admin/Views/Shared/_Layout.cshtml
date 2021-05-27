@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@await Html.PartialAsync("_Head.cshtml")
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        @await Html.PartialAsync("_Header.cshtml")
+        <!-- Content Wrapper. Contains page content -->
+        @RenderBody()
+        <!-- /.content-wrapper -->
+        @await Html.PartialAsync("_Footer.cshtml")
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+    @RenderSection("Scripts", required: false)
+  
+</body>
+</html>
