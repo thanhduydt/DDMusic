@@ -27,7 +27,7 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="#" method="post" enctype="multipart/form-data">
+                        <form action="#" method="get" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
@@ -91,10 +91,10 @@
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Lời bài hát</label>
-
+                                            <textarea name="lyrics" id="editor"></textarea>
                                         </div>
                                     </div>
-
+                                 
                                     <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
                                         <button type="submit" style="width:100px" class="btn btn-primary">Lưu</button>
                                         <button type="submit" style="width:100px" class="btn btn-light">Hủy</button>
@@ -150,6 +150,11 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
         function readURL(input, img) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
