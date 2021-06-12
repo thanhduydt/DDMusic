@@ -1,14 +1,19 @@
-﻿<div class="content-wrapper">
+﻿<style>
+    img {
+        width: 10%
+    }
+</style>
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Song</h1>
+                    <h1>Ca sĩ</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Song</a></li>
+                        <li class="breadcrumb-item"><a href="#">Album</a></li>
                         <li class="breadcrumb-item active"></li>
                     </ol>
                 </div>
@@ -24,37 +29,24 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a asp-action="CreateSong" asp-controller="Song"><i class="nav-icon fas fa-plus"></i></a>
+                            <a asp-action="CreateAlbum" asp-controller="Album"><i class="nav-icon fas fa-plus"></i></a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Tên bài hát</th>
-                                        <th>Ca sĩ</th>
-                                        <th>Ngày phát hành</th>
+                                        <th>Tên Album</th>
+                                        <th>Thuộc ca sĩ</th>
                                         <th>Hình ảnh</th>
-                                        <th>Thể Loại</th>
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Cớ sao vậy</td>
-                                        <td>LX Band</td>
-                                        <td>15/11/2021</td>
-                                        <td><img src="~/img/song/CauHenCauThe.jpg" /></td>
-                                        <td>Ballad</td>
-                                        <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Nép vào anh và nghe anh hát</td>
-                                        <td>Hoàng Dũng</td>
-                                        <td>12/12/2018</td>
-                                        <td><img src="~/img/song/NangTho.jpg"/></td>
-                                        <td>Pop</td>
+                                        <td>Chúng ta</td>
+                                        <td>Sơn Tùng M-TP</td>
+                                        <td><img src="~/img/Singer/SonTungMTP.jpg" /></td>
                                         <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
                                     </tr>
                                 </tbody>
-
                             </table>
                         </div>
                         <!-- /.card-body -->
