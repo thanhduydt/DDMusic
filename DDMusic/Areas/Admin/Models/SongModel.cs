@@ -12,7 +12,7 @@ namespace DDMusic.Areas.Admin.Models
         public int Gerne { get; set; }
         public int Singer { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public int Users { get; set; }
+        public string Users { get; set; }
         public string Lyric { get; set; }
         public string URLImg { get; set; }
         public string URLMusic { get; set; }
