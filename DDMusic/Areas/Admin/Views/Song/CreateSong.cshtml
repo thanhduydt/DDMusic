@@ -39,17 +39,15 @@
                                         </center>
 
                                     </div>
+                                    <div class="col-12">
+                                        <center>
+                                            <div class="image-upload">
+                                                <label for="ful">Chọn file nhạc: </label>
+                                                <input type="file" accept=".mp3" id="fulMusic" name="fulMusic">
+                                            </div>
+                                        </center>
 
-
-
-
-                                    @*<div class="image-upload">
-                                            <label for="file-input">
-                                                <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
-                                            </label>
-
-                                            <input id="file-input" name="ful" type="file" />
-                                        </div>*@
+                                    </div>
                                     <div class="col-md-6 col-lg-6">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên bài hát</label>
@@ -72,11 +70,15 @@
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Ca sĩ</label>
                                             <br />
-                                            <select class="form-control" name="singer" id="singer">
-                                                <option value="Hoàng Dũng">Hoàng Dũng</option>
-                                                <option value="LXBand">LXBand</option>
-                                                <option value="Jack">Jack</option>
-                                                <option value="Sơn Tùng M-TP">Sơn Tùng M-TP</option>
+                                            <select id='selUser' hidden>
+                                                <option value='0'>Select User</option>
+                                                <option value='1'>Yogesh singh</option>
+                                                <option value='2'>Sonarika Bhadoria</option>
+                                                <option value='3'>Anil Singh</option>
+                                                <option value='4'>Vishal Sahu</option>
+                                                <option value='5'>Mayank Patidar</option>
+                                                <option value='6'>Vijay Mourya</option>
+                                                <option value='7'>Rakesh sahu</option>
                                             </select>
                                         </div>
                                     </div>
@@ -84,7 +86,7 @@
                                     <div class="col-md-6 col-lg-6">
                                         <label>Ngày phát hành</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                            <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                         </div>
 
                                     </div>
@@ -94,9 +96,9 @@
                                             <textarea name="lyrics" id="editor"></textarea>
                                         </div>
                                     </div>
-                                 
+
                                     <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
-                                        <button type="submit" style="width:100px" class="btn btn-primary">Lưu</button>
+                                        <button type="submit" style="width:100px" onlclick="SaveSong()" class="btn btn-primary">Lưu</button>
                                         <button type="submit" style="width:100px" class="btn btn-light">Hủy</button>
                                     </div>
                                 </div>
@@ -150,6 +152,17 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        function SaveSong() {
+
+        }
+        $("#selUser").select2();
+
+        $(document).ready(function () {
+            $('select').selectize({
+                sortField: 'text'
+            });
+        });
+
         ClassicEditor
             .create(document.querySelector('#editor'))
             .catch(error => {

@@ -14,6 +14,9 @@ namespace DDMusic.Areas.Admin.Models
         public DateTime ReleaseDate { get; set; }
         public int Users { get; set; }
         public string Lyric { get; set; }
+        public string URLImg { get; set; }
+        public string URLMusic { get; set; }
+        public int CountView { get; set; }
         public bool Accept { get; set; }
         public bool IsActive { get; set; }
     }
