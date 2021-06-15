@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
@@ -17,9 +18,9 @@ namespace DDMusic.Areas.Admin.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _context.Singer.ToListAsync());
         }
         public IActionResult CreateSinger()         
         {
@@ -42,6 +43,7 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 singerModel.Image = singerModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
                 _context.Update(singerModel);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(singerModel);

@@ -1,6 +1,7 @@
-﻿<style>
-    img{
-        width:10%
+﻿@model  IEnumerable<DDMusic.Areas.Admin.Models.SingerModel>;
+<style>
+    img {
+        width: 10%
     }
 </style>
 <div class="content-wrapper">
@@ -40,12 +41,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Sơn Tùng M-TP</td>
-                                        <td>05/07/1994</td>
-                                        <td><img src="~/img/Singer/SonTungMTP.jpg" /></td>
-                                        <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
-                                    </tr>
+                                    @foreach (var item in Model)
+                                    {<tr>
+                                            <td>@item.Name</td>
+                                            <td>@String.Format("{0:dd/MM/yyyy}",item.BirthDay)</td>
+                                            <td><img src="~/img/Singer/@item.Image" /></td>
+                                            <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>

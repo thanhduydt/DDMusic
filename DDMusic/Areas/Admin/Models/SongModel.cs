@@ -22,8 +22,8 @@ namespace DDMusic.Areas.Admin.Models
         public int CountView { get; set; }
         public bool Accept { get; set; }
         public bool IsActive { get; set; }
-        public virtual List<SingerModel> Singers { get; set; }
-        public virtual UserModel User { get; set; }
+        //public virtual List<SingerModel> Singers { get; set; }
+        //public virtual UserModel User { get; set; }
     }
     public class Gerne
     {

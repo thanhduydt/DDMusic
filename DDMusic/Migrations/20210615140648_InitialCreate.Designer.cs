@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDMusic.Migrations
 {
     [DbContext(typeof(DPContext))]
-    [Migration("20210615025804_InitialCreate")]
+    [Migration("20210615140648_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,12 +40,7 @@ namespace DDMusic.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SongModelId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("SongModelId");
 
                     b.ToTable("Singer");
                 });
@@ -90,12 +85,7 @@ namespace DDMusic.Migrations
                     b.Property<string>("URLMusic")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Song");
                 });
@@ -311,22 +301,6 @@ namespace DDMusic.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("DDMusic.Areas.Admin.Models.SingerModel", b =>
-                {
-                    b.HasOne("DDMusic.Areas.Admin.Models.SongModel", null)
-                        .WithMany("Singers")
-                        .HasForeignKey("SongModelId");
-                });
-
-            modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>
-                {
-                    b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -376,11 +350,6 @@ namespace DDMusic.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>
-                {
-                    b.Navigation("Singers");
                 });
 #pragma warning restore 612, 618
         }
