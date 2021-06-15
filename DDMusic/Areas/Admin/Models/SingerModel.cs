@@ -11,5 +11,6 @@ namespace DDMusic.Areas.Admin.Models
         public string Name { get; set; }
         public DateTime BirthDay { get; set; }
         public string Description { get; set; }
+        public string Image { get; set; }
     }
 }

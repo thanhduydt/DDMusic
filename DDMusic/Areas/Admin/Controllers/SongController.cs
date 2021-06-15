@@ -25,6 +25,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         public IActionResult CreateSong()
         {
+            ViewBag.ListGerne = Gerne.GetAllGerne();
             return View();
         }
         //[HttpPost]
