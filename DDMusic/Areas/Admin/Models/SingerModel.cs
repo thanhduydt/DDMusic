@@ -12,5 +12,16 @@ namespace DDMusic.Areas.Admin.Models
         public DateTime BirthDay { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }
+        public string Country { get; set; }
+
+        //Danh sách quốc gia
+        public static List<string> GetCountry()
+        {
+            List<string> Countries = new List<string>()
+            {
+                "Việt Nam","Hàn Quốc","Âu Mỹ"
+            };
+            return Countries;
+        }
     }
 }

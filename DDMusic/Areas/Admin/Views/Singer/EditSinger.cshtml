@@ -1,4 +1,5 @@
-﻿<div class="content-wrapper">
+﻿@model DDMusic.Areas.Admin.Models.SingerModel;
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -9,7 +10,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Singer">Singer</a></li>
-                        <li class="breadcrumb-item active">Create</li>
+                        <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
             </div>
@@ -27,38 +28,39 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form asp-area="Admin" asp-controller="Singer" asp-action="Create" enctype="multipart/form-data">
+                        <form asp-area="Admin" asp-controller="Singer" asp-action="Edit" asp- enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="Id" />
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
                                         <center>
                                             <div class="image-upload">
-                                                <label for="ful"><img id="Img" style=" width:200px; height:200px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;" src="~/img/bg-img/noimage.jpg" alt="" /></label>
+                                                <label for="ful"><img id="Img" style=" width:200px; height:200px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;" src="~/img/Singer/@Model.Image" alt="" /></label>
                                                 <input type="file" accept=".jpeg,.gif,.png,.tiff,.bmp,.jpg" class="custom-file-input" id="ful" name="ful">
-                                                @*<input type="text" id="ImageURL" name="Image"/>*@
+                                                <input type="text" id="ImageURL" asp-for="Image"hidden/>
                                             </div>
                                         </center>
 
                                     </div>
                                     @*<div class="image-upload">
-            <label for="file-input">
-                <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
-            </label>
+                    <label for="file-input">
+                        <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
+                    </label>
 
-            <input id="file-input" name="ful" type="file" />
-        </div>*@
+                    <input id="file-input" name="ful" type="file" />
+                </div>*@
                                     <div class="col-md-4 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên ca sĩ</label>
-                                            <input type="text" class="form-control" name="Name" id="namesinger" value="">
+                                            <input type="text" class="form-control" asp-for="Name" id="namesinger">
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 col-lg-4">
                                         <label>Ngày sinh</label>
                                         <div class="input-group">
-                                            <input type="date" name="BirthDay" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                            <input type="date" asp-for="BirthDay" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                         </div>
 
                                     </div>
@@ -66,14 +68,14 @@
                                     <div class="col-md-4 col-lg-4">
                                         <label>Quốc Gia</label>
                                         <div class="input-group">
-                                            <select name="Country" class="form-control" asp-items="ViewBag.ListCountry"></select>
+                                            <select asp-for="Country" class="form-control" asp-items="ViewBag.ListCountry"></select>
                                         </div>
 
                                     </div>
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Thông tin cá nhân</label>
-                                            <textarea name="Description" id="editor" ></textarea>
+                                            <textarea name="Description" id="editor">@Model.Description</textarea>
                                         </div>
                                     </div>
 
@@ -142,7 +144,7 @@
                 var reader = new FileReader();
                 reader.onload = function (e) {
                     document.getElementById("Img").src = e.target.result;
-                    
+
                 }
                 reader.readAsDataURL(input.files[0]);
             }
@@ -281,6 +283,6 @@
         document.querySelector("#actions .cancel").onclick = function () {
             myDropzone.removeAllFiles(true)
         }
-              // DropzoneJS Demo Code End
+                  // DropzoneJS Demo Code End
     </script>
 }

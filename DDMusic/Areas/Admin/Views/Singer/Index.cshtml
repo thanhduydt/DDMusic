@@ -3,6 +3,9 @@
     img {
         width: 10%
     }
+    a{
+        color:#000;
+    }
 </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -36,7 +39,8 @@
                                     <tr>
                                         <th>Tên Ca Sĩ</th>
                                         <th>Ngày Sinh</th>
-                                        <th>Hình ảnh</th>
+                                        <th>Hình Ảnh</th>
+                                        <th>Quốc Gia</th>
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
@@ -46,7 +50,8 @@
                                             <td>@item.Name</td>
                                             <td>@String.Format("{0:dd/MM/yyyy}",item.BirthDay)</td>
                                             <td><img src="~/img/Singer/@item.Image" /></td>
-                                            <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
+                                            <td>@item.Country</td>
+                                            <td><a asp-action="EditSinger" asp-controller="Singer" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a><a asp-controller="Singer" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');"><i class="fas fa-trash-alt"></i></a></td>
                                         </tr>
                                     }
                                 </tbody>
