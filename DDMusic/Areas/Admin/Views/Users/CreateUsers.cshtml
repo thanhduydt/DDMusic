@@ -28,7 +28,7 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form asp-area="Admin" asp-controller="Users" asp-action="Create"  enctype="multipart/form-data">
+                        <form asp-area="Admin" asp-controller="Users" asp-action="CreateUsers"  enctype="multipart/form-data">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="card-body">
                                 <div class="row">
@@ -46,48 +46,64 @@
 
 
                                     @*<div class="image-upload">
-                    <label for="file-input">
-                        <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
-                    </label>
-                    <input id="file-input" name="ful" type="file" />
-                </div>*@
+            <label for="file-input">
+                <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
+            </label>
+            <input id="file-input" name="ful" type="file" />
+        </div>*@
+
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên đăng nhập</label>
-                                            <input asp-for="UserName" type="text" class="form-control" id="username" value="">
+                                            <input asp-for="UserName" type="text" class="form-control" id="username">
+                                            @if (ViewBag.eUserName != null)
+                                            {
+                                                <div>
+                                                    <span class="badge badge-danger">@ViewBag.eUserName</span>
+                                                </div>
+                                                <br />
+                                            }
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Mật khẩu</label>
-                                            <input asp-for="PasswordHash"  class="form-control" id="password" value="">
+                                            <input asp-for="PasswordHash" type="text" class="form-control" id="password">
                                         </div>
                                     </div>
                                     @*<div class="col-md-6 col-lg-4">
-                    <div class="form-group wow fadeInUp" data-wow-delay="100ms">
-                        <label>Nhập lại mật khẩu</label>
-                        <input asp-for="" type="password" class="form-control" id="password1" value="">
-                    </div>
-                </div>*@
+            <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                <label>Nhập lại mật khẩu</label>
+                <input asp-for="" type="password" class="form-control" id="password1" value="">
+            </div>
+        </div>*@
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên</label>
-                                            <input asp-for="Name" type="text" class="form-control" id="name" value="">
+                                            <input asp-for="Name" type="text" class="form-control" id="name">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="200ms">
                                             <label>Email</label>
-                                            <input asp-for="Email" type="email" class="form-control" id="email" value="">
+                                            <input asp-for="Email" type="email" class="form-control" id="email">
+                                            @if (ViewBag.eEmail != null)
+                                            {
+                                                <div>
+                                                    <span class="badge badge-danger">@ViewBag.eEmail</span>
+                                                </div>
+                                                <br />
+                                            }
                                         </div>
+
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="200ms">
                                             <label>Số điện thoại</label>
                                             <div class="input-group">
                                                 @*<div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            </div>*@
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    </div>*@
                                                 <input asp-for="PhoneNumber" type="text" class="form-control" data-inputmask='"mask": "9999 999 999"' data-mask>
                                             </div>
                                             <!-- /.input group -->
@@ -96,23 +112,23 @@
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="200ms">
                                             <label>Địa chỉ</label>
-                                            <input asp-for="Address" type="text" class="form-control" id="address" value="">
+                                            <input asp-for="Address" type="text" class="form-control" id="address">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         @*<div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                        <label style="color:gray">Sinh nhật</label>
-                        <input type="text" class="form-control" id="" value="">
-                    </div>*@
+                <label style="color:gray">Sinh nhật</label>
+                <input type="text" class="form-control" id="" value="">
+            </div>*@
 
 
                                         <label>Sinh nhật</label>
 
                                         <div class="input-group">
                                             @*<div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                        </div>*@
-                                            <input asp-for="Birthday" type="text" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                </div>*@
+                                            <input asp-for="Birthday" type="text" value="01/01/2000" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
 
                                             <!-- /.input group -->
                                         </div>
@@ -120,14 +136,19 @@
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                            @*<label>Giới tính</label>
+                <input asp-for="Gender" type="text" class="form-control" id="">*@
                                             <label>Giới tính</label>
-                                            <input asp-for="Gender" type="text" class="form-control" id="" value="">
+                                            <select asp-for="Gender" class="form-control">
+                                                <option>Nam</option>
+                                                <option>Nữ</option>
+                                            </select>
                                         </div>
                                     </div>
 
                                     <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
-                                        <button type="submit" style="width:100px" class="btn btn-primary">Lưu</button>
-                                        <button type="submit" style="width:100px" class="btn btn-light">Hủy</button>
+                                        <button type="submit" style="width:150px" class="btn btn-primary">Lưu</button>
+                                        @*<button onclick="'location.href = @Url.Action("Users","Users")'" style="width:100px" class="btn btn-light">Hủy</button>*@
                                     </div>
                                 </div>
                             </div>
