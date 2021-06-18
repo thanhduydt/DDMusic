@@ -1,4 +1,5 @@
-﻿<div class="content-wrapper">
+﻿@model DDMusic.Areas.Admin.Models.SongModel;
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -27,7 +28,8 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="#" method="get" enctype="multipart/form-data">
+                        <form asp-area="Admin" asp-controller="Song" asp-action="Create" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
@@ -42,7 +44,7 @@
                                     <div class="col-12">
                                         <center>
                                             <div class="image-upload">
-                                                <label for="ful">Chọn file nhạc: </label>
+                                                <label for="ful1">Chọn file nhạc: </label>
                                                 <input type="file" accept=".mp3" id="fulMusic" name="fulMusic">
                                             </div>
                                         </center>
@@ -51,18 +53,14 @@
                                     <div class="col-md-6 col-lg-6">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên bài hát</label>
-                                            <input type="text" class="form-control" id="namesong" value="">
+                                            <input type="text" class="form-control" asp-for="Name" id="namesong" value="">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Thể loại</label>
                                             <br />
-                                            <select class="form-control" name="Genre" id="Genre">
-                                                <option value="Pop">Pop</option>
-                                                <option value="Ballad">Ballad</option>
-                                                <option value="Acoustic">Accoustic</option>
-                                                <option value="EDM">EDM</option>
+                                            <select class="form-control" asp-for="Genre" asp-items="ViewBag.ListGenre" id="Genre">
                                             </select>
                                         </div>
                                     </div>
@@ -70,15 +68,7 @@
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Ca sĩ</label>
                                             <br />
-                                            <select id='selUser' hidden>
-                                                <option value='0'>Select User</option>
-                                                <option value='1'>Yogesh singh</option>
-                                                <option value='2'>Sonarika Bhadoria</option>
-                                                <option value='3'>Anil Singh</option>
-                                                <option value='4'>Vishal Sahu</option>
-                                                <option value='5'>Mayank Patidar</option>
-                                                <option value='6'>Vijay Mourya</option>
-                                                <option value='7'>Rakesh sahu</option>
+                                            <select class="form-control" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
                                             </select>
                                         </div>
                                     </div>
@@ -86,19 +76,19 @@
                                     <div class="col-md-6 col-lg-6">
                                         <label>Ngày phát hành</label>
                                         <div class="input-group">
-                                            <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                            <input type="date" asp-for="ReleaseDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                         </div>
 
                                     </div>
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Lời bài hát</label>
-                                            <textarea name="lyrics" id="editor"></textarea>
+                                            <textarea asp-for="Lyric" id="editor"></textarea>
                                         </div>
                                     </div>
 
                                     <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
-                                        <button type="submit" style="width:100px" onlclick="SaveSong()" class="btn btn-primary">Lưu</button>
+                                        <button type="submit" style="width:100px" class="btn btn-primary">Lưu</button>
                                         <button type="submit" style="width:100px" class="btn btn-light">Hủy</button>
                                     </div>
                                 </div>
@@ -152,9 +142,6 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        function SaveSong() {
-
-        }
         $("#selUser").select2();
 
         $(document).ready(function () {
@@ -311,6 +298,6 @@
         document.querySelector("#actions .cancel").onclick = function () {
             myDropzone.removeAllFiles(true)
         }
-              // DropzoneJS Demo Code End
+                  // DropzoneJS Demo Code End
     </script>
 }
