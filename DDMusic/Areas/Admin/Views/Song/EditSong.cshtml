@@ -79,7 +79,18 @@
                                         <div class="input-group">
                                             <input type="date" asp-for="ReleaseDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                         </div>
-
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <label>Số lượng lượt nghe nhạc: <span>@Model.CountView</span></label>
+                                        <div class="input-group">
+                                            <input type="text" asp-for="CountView" class="form-control" hidden>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <label>Kích Hoạt: <input type="checkbox" asp-for="Accept" disabled /></label>
+                                        <div class="input-group">                        
+                                            <input type="checkbox" asp-for="Accept" class="form-control" disabled/>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">

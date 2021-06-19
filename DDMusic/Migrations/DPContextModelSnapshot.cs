@@ -59,17 +59,14 @@ namespace DDMusic.Migrations
                     b.Property<int>("CountView")
                         .HasColumnType("int");
 
-                    b.Property<int>("Gerne")
-                        .HasColumnType("int");
+                    b.Property<string>("Genre")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdSinger")
                         .HasColumnType("int");
 
                     b.Property<string>("IdUser")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Lyric")
                         .HasColumnType("nvarchar(max)");
@@ -87,6 +84,10 @@ namespace DDMusic.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdSinger");
+
+                    b.HasIndex("IdUser");
 
                     b.ToTable("Song");
                 });
@@ -300,6 +301,23 @@ namespace DDMusic.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.SingerModel", "Singers")
+                        .WithMany()
+                        .HasForeignKey("IdSinger")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser");
+
+                    b.Navigation("Singers");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

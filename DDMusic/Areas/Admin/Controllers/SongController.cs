@@ -38,6 +38,10 @@ namespace DDMusic.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Admin tạo bài hát thì luôn được cho phép hiển thị lên frontend
+                song.Accept = true;
+                //Khởi tạo số view cho bài hát mới là 0
+                song.CountView = 0;
                 _context.Add(song);
                 await _context.SaveChangesAsync();
                 if (ful != null)
@@ -85,7 +89,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric")] SongModel song, IFormFile ful)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView")] SongModel song, IFormFile ful)
         {
             if (id != song.Id)
             {

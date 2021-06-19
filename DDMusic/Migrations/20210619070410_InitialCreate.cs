@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class IntityCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,29 +36,6 @@ namespace DDMusic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Singer", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Song",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Gerne = table.Column<int>(type: "int", nullable: false),
-                    IdSinger = table.Column<int>(type: "int", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lyric = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    URLImg = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    URLMusic = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CountView = table.Column<int>(type: "int", nullable: false),
-                    Accept = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Song", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,6 +87,40 @@ namespace DDMusic.Migrations
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Song",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Genre = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdSinger = table.Column<int>(type: "int", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Lyric = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    URLImg = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    URLMusic = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CountView = table.Column<int>(type: "int", nullable: false),
+                    Accept = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Song", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Song_Singer_IdSinger",
+                        column: x => x.IdSinger,
+                        principalTable: "Singer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Song_Users_IdUser",
+                        column: x => x.IdUser,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,6 +221,16 @@ namespace DDMusic.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Song_IdSinger",
+                table: "Song",
+                column: "IdSinger");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Song_IdUser",
+                table: "Song",
+                column: "IdUser");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",
                 table: "UserClaims",
                 column: "UserId");
@@ -243,9 +264,6 @@ namespace DDMusic.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
-                name: "Singer");
-
-            migrationBuilder.DropTable(
                 name: "Song");
 
             migrationBuilder.DropTable(
@@ -259,6 +277,9 @@ namespace DDMusic.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Singer");
 
             migrationBuilder.DropTable(
                 name: "Roles");

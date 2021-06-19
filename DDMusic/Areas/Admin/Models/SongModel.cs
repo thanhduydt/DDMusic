@@ -19,7 +19,6 @@ namespace DDMusic.Areas.Admin.Models
         public string URLMusic { get; set; }
         public int CountView { get; set; }
         public bool Accept { get; set; }
-        public bool IsActive { get; set; }
         [ForeignKey("IdSinger")]
         public virtual SingerModel Singers { get; set; }
         [ForeignKey("IdUser")]
