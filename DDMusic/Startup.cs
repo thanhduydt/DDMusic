@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using DDMusic.Areas.Admin.Data;
 using DDMusic.Areas.Admin.Models;
+using DDMusic.Mail;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +33,7 @@ namespace DDMusic
             services.AddIdentity<UserModel, IdentityRole>()
     .AddEntityFrameworkStores<DPContext>()
     .AddDefaultTokenProviders();
+            services.AddRazorPages();
             services.Configure<IdentityOptions>(options => {
                 // Thiết lập về Password
                 options.Password.RequireDigit = false; // Không bắt phải có số
@@ -55,7 +58,32 @@ namespace DDMusic
                 options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
 
             });
+            services.AddOptions();                                        // Kích hoạt Options
+            var mailsettings = Configuration.GetSection("MailSettings");  // đọc config
+            services.Configure<MailSettings>(mailsettings);               // đăng ký để Inject
+
+            services.AddTransient<IEmailSender, SendMailService>();        // Đăng ký dịch vụ Mail
+            services.AddAuthentication();
             services.AddControllersWithViews();
+            services.AddAuthentication()
+             .AddGoogle(googleOptions =>
+             {
+                 // Đọc thông tin Authentication:Google từ appsettings.json
+                 IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+
+                 // Thiết lập ClientID và ClientSecret để truy cập API google
+                 googleOptions.ClientId = googleAuthNSection["ClientId"];
+                 googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+             })
+             .AddFacebook(facebookOptions => {
+                 // Đọc cấu hình
+                 IConfigurationSection facebookAuthNSection = Configuration.GetSection("Authentication:Facebook");
+                 facebookOptions.AppId = facebookAuthNSection["AppId"];
+                 facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
+                 // Thiết lập đường dẫn Facebook chuyển hướng đến
+                 facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
+             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,6 +115,7 @@ namespace DDMusic
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

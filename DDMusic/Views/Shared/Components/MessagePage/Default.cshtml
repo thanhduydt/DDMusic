@@ -1,0 +1,22 @@
+﻿@model DDMusic.Views.Shared.Components.MessagePage.MessagePage.Message
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = @Model.title;
+}
+<section class="login-area section-padding-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="login-content">
+                    <div class="card m-4">
+                        <div class="card-header bg-danger text-light">
+                            <h4>@Model.title</h4>
+                        </div>
+                        <div class="card-body">
+                            @Html.Raw(Model.htmlcontent)
+                        </div>
+                        <div class="card-footer">
+                            Chuyển đến - <a href="@Model.urlredirect">@Model.urlredirect</a>
+                        </div>
+                    </div>
+</div></div></div></div></section>

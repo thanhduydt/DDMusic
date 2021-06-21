@@ -51,7 +51,7 @@
                                         foreach (DDMusic.Areas.Admin.Models.UserModel item in ViewBag.ListUser)
                                         {
                                     <tr>
-                                        <td><img src="~/img/user-img/@Html.DisplayFor(modelItem => item.URLImg)" /></td>
+                                        <td><img src="~/img/user-img/@Html.DisplayFor(modelItem => item.URLImg)" alt="Không có hình"/></td>
                                         <td>@Html.DisplayFor(m => item.UserName)</td>
                                         @*<td>@Html.DisplayFor(m=>item.PasswordHash)</td>*@
                                         <td>@Html.DisplayFor(m => item.Email)</td>

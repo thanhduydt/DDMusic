@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class AlbumController : Controller
     {
         public IActionResult Index()

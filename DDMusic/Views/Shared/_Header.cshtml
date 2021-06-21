@@ -84,8 +84,9 @@
                                 </li>
                                 <li><a asp-action="TopSong" asp-controller="Home">Bảng Xếp Hạng</a></li>
                                 @*<li><a asp-action="Playlist" asp-controller="Home">Playlist</a></li>*@
-                                <li><a asp-action="Login" asp-controller="Home" id="loginBtn">Đăng Nhập</a></li>
-                                <li><a asp-action="Register" asp-controller="Home" id="loginBtn">Đăng Ký</a></li>
+                                @*<li><a asp-action="Login" asp-controller="Home" id="loginBtn">Đăng Nhập</a></li>
+        <li><a asp-action="Register" asp-controller="Home" id="loginBtn">Đăng Ký</a></li>*@
+                                @await Html.PartialAsync("_LoginPartial")
                             </ul>
 
 

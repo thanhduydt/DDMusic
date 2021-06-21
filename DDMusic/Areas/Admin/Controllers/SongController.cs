@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class SongController : Controller
     {
         private readonly DPContext _context;

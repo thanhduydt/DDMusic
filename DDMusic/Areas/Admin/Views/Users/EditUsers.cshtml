@@ -1,4 +1,13 @@
 ﻿@model DDMusic.Areas.Admin.Models.EditUserModel
+    <style>
+        .avatarU {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+    </style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -35,7 +44,16 @@
                                     <div class="col-12">
                                         <center>
                                             <div class="image-upload">
-                                                <label for="ful"><img id="Img" style=" width:200px;   height:200px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;" src="~/img/user-img/@Model.URLImg" alt="" /></label>
+                                                <label for="ful">
+                                                    @if (Model.URLImg != null)
+                                                    {
+                                                        <img id="Img" class="avatarU" src="~/img/user-img/@Model.URLImg" alt="" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img id="Img" class="avatarU" src="~/img/bg-img/noimage.jpg" alt="" />
+                                                    }
+                                                </label>
                                                 <input type="file" accept=".jpeg,.gif,.png,.tiff,.bmp,.jpg" class="custom-file-input" id="ful" name="ful">
                                                 <input asp-for="URLImg" hidden />
                                                 <input asp-for="Id" hidden />

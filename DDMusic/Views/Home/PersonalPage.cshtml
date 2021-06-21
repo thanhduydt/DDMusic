@@ -1,6 +1,19 @@
-﻿<style>
+﻿@model DDMusic.Areas.Admin.Models.EditUserModel
+<style>
     .image-upload > input {
         display: none;
+    }
+
+    .avatarU {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+    }
+
+  option,label {
+        color: gray
     }
 </style>
 <section class="contact-area section-padding-100 bg-img bg-overlay bg-fixed has-bg-img" style="background-image: url(../img/bg-img/bg-2.jpg);">
@@ -16,63 +29,78 @@
             <div class="col-12">
                 <!-- Contact Form Area -->
                 <div class="contact-form-area">
-                    <form action="#" method="post" enctype="multipart/form-data">
+                    <form  asp-controller="Home" asp-action="PersonalPage" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-12">
                                 <center>
                                     <div class="image-upload">
-                                        <label for="ful"><img style=" width:200px;   height:200px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;" src="~/img/bg-img/ttd.jpg" alt="" /></label>
+                                        <label for="ful">
+                                            @if (Model.URLImg != null)
+                                            {
+                                                <img id="Img" class="avatarU" src="~/img/user-img/@Model.URLImg" alt="" />
+                                            }
+                                            else
+                                            {
+                                                <img id="Img" class="avatarU" src="~/img/bg-img/noimage.jpg" alt="" />
+                                            }
+                                        </label>
                                         <input type="file" accept=".jpeg,.gif,.png,.tiff,.bmp,.jpg" class="custom-file-input" id="ful" name="ful">
+                                        <input asp-for="URLImg" hidden />
+                                        <input asp-for="Id" hidden />
                                     </div>
                                 </center>
 
                             </div>
 
-                         
-                   
+
+
 
                             @*<div class="image-upload">
-                                    <label for="file-input">
-                                        <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
-                                    </label>
+                    <label for="file-input">
+                        <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
+                    </label>
 
-                                    <input id="file-input" name="ful" type="file" />
-                                </div>*@
+                    <input id="file-input" name="ful" type="file" />
+                </div>*@
 
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="100ms">
-                                    <label style="color:gray">Tên</label>
-                                    <input type="text" class="form-control" id="name" value="Trần Thanh Duy">
+                                    <label>Tên</label>
+                                    <input asp-for="Name" class="form-control" id="name">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <label style="color:gray">Email</label>
-                                    <input type="email" class="form-control" id="email" value="ttduydt66@gmail.com">
+                                    <label>Tên đăng nhập</label>
+                                    <input asp-for="UserName" class="form-control" id="email">
+                                    <input asp-for="Email" hidden />
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <label style="color:gray">Số điện thoại</label>
-                                    <input type="text" class="form-control" id="phone" value="0706877807">
+                                    <label>Số điện thoại</label>
+                                    <input asp-for="PhoneNumber" class="form-control" id="phone">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <label style="color:gray">Địa chỉ</label>
-                                    <input type="text" class="form-control" id="address" value="Phú Đức,Tam Nông,Đồng Tháp">
+                                    <label>Địa chỉ</label>
+                                    <input asp-for="Address" class="form-control" id="address">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <label style="color:gray">Sinh nhật</label>
-                                    <input type="text" class="form-control" id="" value="16/03/2000">
+                                    <label>Sinh nhật</label>
+                                    <input asp-for="Birthday" class="form-control" id="">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <label style="color:gray">Giới tính</label>
-                                    <input type="text" class="form-control" id="" value="Nam">
+                                    <label>Giới tính</label>
+                                    <select asp-for="Gender" class="form-control">
+                                        <option>Nam</option>
+                                        <option>Nữ</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -94,7 +122,7 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function (e) {
-                    $('img').attr('src', e.target.result);
+                    document.getElementById("Img").src = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);
             }

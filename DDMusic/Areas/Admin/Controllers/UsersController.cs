@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class UsersController : Controller
     {
         private readonly DPContext _context;
@@ -133,6 +134,7 @@ namespace DDMusic.Areas.Admin.Controllers
                     userModel.URLImg = editUserModel.URLImg;
                     if (ful != null)
                     {
+                        editUserModel.URLImg = "noimage.jpg";
                         string t = editUserModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
                         var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img",editUserModel.URLImg);
                         if (System.IO.File.Exists(path))
@@ -158,7 +160,7 @@ namespace DDMusic.Areas.Admin.Controllers
                     //{
                     //    throw;
                     //}
-                }
+                }  
                 return RedirectToAction(nameof(Users));
             }
             return View(editUserModel);

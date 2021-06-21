@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DDMusic.Areas.Admin.Models
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
+<style>
+    .b1 {
+        border: none;
+        background: none;
+        cursor: pointer;
+        margin: 0;
+        padding: 10px;
+        outline: none !important;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+    }
+</style>
+@if (SignInManager.IsSignedIn(User))
+{
+
+
+    @*<li>
+            <a id="manage"  asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@UserManager.GetUserName(User)</a>
+        </li>
+        <li >
+            <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" class="btn btn-dark" type="submit" >Đăng xuất</button>
+            </form>
+        </li>*@<li>
+        @*<a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">*@
+    <a asp-controller="Home" asp-action="PersonalPage">
+            @if (UserManager.GetUserAsync(User).Result.URLImg != null)
+            {
+                <img class="avatar" src="~/img/user-img/@UserManager.GetUserAsync(User).Result.URLImg" alt="" />
+            }
+            else
+            {
+                <img id="Img" class="avatar" src="~/img/bg-img/noimage.jpg" alt="" />
+            }
+            @UserManager.GetUserName(User)
+        </a>
+        <ul class="dropdown">
+            <li>
+                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button class="b1" type="submit"><b>Đăng xuất</b></button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li>
+        <a id="register" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
+    </li>
+    <li>
+        <a id="login" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+    </li>
+}
+

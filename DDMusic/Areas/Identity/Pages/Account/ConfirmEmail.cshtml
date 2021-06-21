@@ -1,0 +1,19 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Xác thực email";
+}
+<section class="login-area section-padding-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="login-content">
+                    <div class="login-form">
+                        <h1>@ViewData["Title"]</h1>
+                        <p>@Model.StatusMessage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

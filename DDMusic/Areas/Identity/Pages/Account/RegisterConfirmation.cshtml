@@ -1,0 +1,23 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+<br />
+<br />
+<section class="login-area section-padding-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                <div class="login-content">
+                    <div class="login-form">
+                        <p>
+                            Một email xác thức tài khoản đã được gửi đến bạn.Hãy kiểm tra email và làm theo hướng dẫn trong email sau đó
+                            <a href="@Model.UrlContinue">Bấm vào đây để tiếp tục</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
