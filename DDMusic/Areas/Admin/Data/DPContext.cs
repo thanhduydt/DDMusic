@@ -26,5 +26,6 @@ namespace DDMusic.Areas.Admin.Data
         public DbSet<UserModel> User { get; set; }
         public DbSet<SongModel> Song { get; set; }
         public DbSet<SingerModel> Singer { get; set; }
+        public DbSet<AlbumModel> Album { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace DDMusic.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var Song = _context.Song.Include(s => s.Singers);
+            var Song = _context.Song.Include(s => s.Singer);
             return View(await Song.ToListAsync());
         }
         public IActionResult CreateSong()
