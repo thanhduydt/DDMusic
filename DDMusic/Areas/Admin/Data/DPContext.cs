@@ -24,8 +24,14 @@ namespace DDMusic.Areas.Admin.Data
             }
         }
         public DbSet<UserModel> User { get; set; }
-        public DbSet<SongModel> Song { get; set; }
         public DbSet<SingerModel> Singer { get; set; }
-        public DbSet<AlbumModel> Album { get; set; }
+        //public DbSet<AlbumModel> Album { get; set; }
+        public DbSet<SongModel> Song { get; set; }
+        public DbSet<TopSongOnWeek> TopSongOnWeek { get; set; }
+        public DbSet<TopSongOnWeekDetail> TopSongOnWeekDetail { get; set; }
+        public DbSet<TopSongOnMonth> TopSongOnMonth { get; set; }
+        public DbSet<TopSongOnMonthDetail> TopSongOnMonthDetail { get; set; }
+       
+       
     }
 }

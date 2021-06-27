@@ -11,6 +11,7 @@ using DDMusic.Areas.Admin.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using DDMusic.Areas.Admin.Data;
 
 namespace DDMusic.Controllers
 {
@@ -19,13 +20,19 @@ namespace DDMusic.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public HomeController(ILogger<HomeController> logger, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager)
+        private DPContext _context;
+        public HomeController(ILogger<HomeController> logger, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager,DPContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _logger = logger;
+            _context = context;
         }
-
+        
+        //public HomeController(DPContext context)
+        //{
+        //    this._context = context;
+        //}
         public IActionResult Index()
         {
             return View();
@@ -36,8 +43,25 @@ namespace DDMusic.Controllers
             return View();
         }
         [Route("bang-xep-hang")]
-        public IActionResult TopSong()
+        public async Task<IActionResult> TopSongAsync()
         {
+            var AllTopSongOnWeek = await _context.TopSongOnWeek.ToListAsync();
+            var TopSongOnWeek = AllTopSongOnWeek.OrderByDescending(m => m.TimeRestart).First();
+            var AllTopSongOnWeekDetail = await _context.TopSongOnWeekDetail.ToListAsync();
+            var TopSongOnWeekDetail = AllTopSongOnWeekDetail.Where(m => m.IdTopSongOnWeek == TopSongOnWeek.Id);
+            //Gán song cho vào TopSongOnWeekDetail
+            List<TopSongOnWeekDetail> topSongOnWeekDetails = new List<TopSongOnWeekDetail>();
+            foreach(var item in TopSongOnWeekDetail)
+            {
+                TopSongOnWeekDetail TopOnWeek = new TopSongOnWeekDetail();
+                TopOnWeek = item;
+                var song = await _context.Song.FindAsync(TopOnWeek.IdSong);
+                var singer = await _context.Singer.FindAsync(song.IdSinger);
+                song.Singer = singer;
+                TopOnWeek.Song = song;
+                topSongOnWeekDetails.Add(TopOnWeek);
+            }
+            ViewBag.TopSongOnWeek = topSongOnWeekDetails;
             return View();
         }
 

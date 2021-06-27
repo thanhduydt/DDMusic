@@ -9,10 +9,6 @@ namespace DDMusic.Areas.Admin.Models
     public class TopSongOnWeek
     {
         public int Id { get; set; }
-        public int Top { get; set; }
-        public int SongId { get; set; }
         public DateTime TimeRestart { get; set; }
-        [ForeignKey("SongId")]
-        public virtual SongModel Song { get; set; }
     }
 }
