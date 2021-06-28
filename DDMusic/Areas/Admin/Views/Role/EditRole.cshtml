@@ -1,0 +1,68 @@
+﻿@model DDMusic.Areas.Admin.Models.RoleModel
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Edit Role</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-action="Index">Role</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form asp-area="Admin" asp-controller="Role" asp-action="EditRole" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                            <label>Tên</label>
+                                            <input asp-for="@Model.Name" type="text" class="form-control" id="Name">
+                                            @if (ViewBag.eName != null)
+                                            {
+                                                <div>
+                                                    <span class="badge badge-danger">@ViewBag.eName</span>
+                                                </div>
+                                                <br />
+                                            }
+                                            <input type="hidden" asp-for="@Model.Id" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
+                                        <button type="submit" style="width:150px" class="btn btn-primary">Cập nhật</button>
+                                        @*<button onclick="'location.href = @Url.Action("Users","Users")'" style="width:100px" class="btn btn-light">Hủy</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

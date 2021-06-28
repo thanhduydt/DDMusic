@@ -1,5 +1,6 @@
 ﻿using DDMusic.Areas.Admin.Data;
 using DDMusic.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+   //[Authorize(Roles="Admin")]
     [Area("Admin")]
     public class UsersController : Controller
     {
@@ -28,7 +30,6 @@ namespace DDMusic.Areas.Admin.Controllers
         public async Task<IActionResult> Users()
         {
             ViewBag.ListUser = null;
-            //     ViewBag.ListUser = await _context.User.ToListAsync();
             ViewBag.ListUser =await _userManager.Users.ToListAsync();
             return View();
         }
@@ -43,7 +44,9 @@ namespace DDMusic.Areas.Admin.Controllers
             
             if (ModelState.IsValid)
             {
+                //Kiểm tra Emal có tồn tại
                 var checkEmail = _context.Users.FirstOrDefault(s => s.Email == userModel.Email);
+                //Kiểm tra User có tồn tại 
                 var checkUserName = _context.Users.FirstOrDefault(s => s.UserName == userModel.UserName);
                 if (checkEmail != null && checkUserName != null)
                 {
@@ -60,26 +63,25 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 else
                 {
+                    //Không cần xác nhận qua Email
                     userModel.EmailConfirmed = true;
                     userModel.URLImg = "noimage.jpg";
+                    //Tạo mới User
                     await _userManager.CreateAsync(userModel,userModel.PasswordHash);
-                    //_context.Add(userModel);
-                    //await _context.SaveChangesAsync();
                     if(ful!=null){
+                        //Thêm hình
                         var path = Path.Combine(
-         Directory.GetCurrentDirectory(), "wwwroot/img/user-img", userModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1]);
+                        Directory.GetCurrentDirectory(), "wwwroot/img/user-img", userModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1]);
                         using (var stream = new FileStream(path, FileMode.Create))
                         {
                             await ful.CopyToAsync(stream);
                         }
-                        userModel.URLImg = userModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
-                        //_context.Update(userModel);
-                        //await _context.SaveChangesAsync();                   
+                        userModel.URLImg = userModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];                 
                     }
+                    //Cập nhật thay đổi User
                     await _userManager.UpdateAsync(userModel);
                     return RedirectToAction(nameof(Users));
                 }
-                //return RedirectToAction(nameof(CreateUsers));
             }
             return View(userModel);
         }
@@ -89,9 +91,10 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            EditUserModel editUserModel = new EditUserModel();
-            // var user = await _context.Users.FindAsync(id);
+            //Lấy thông tin User
             var user = await _userManager.FindByIdAsync(id);
+            //Gán thông tin User từ csdl vào Model
+            EditUserModel editUserModel = new EditUserModel();
             editUserModel.Id = user.Id;
             editUserModel.Name = user.Name;
             editUserModel.UserName = user.UserName;
@@ -105,9 +108,6 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            //var userClaims = await _userManager.GetClaimsAsync(user);
-            //var userRoles = await _userManager.GetRolesAsync(user);
-            
             return View(editUserModel);
         }
 
@@ -123,6 +123,7 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 try
                 {
+                    //Lấy thông tin User từ csdl
                     var userModel = await _userManager.FindByIdAsync(editUserModel.Id);
                     userModel.Name = editUserModel.Name;
                     userModel.UserName = editUserModel.UserName;
@@ -134,6 +135,7 @@ namespace DDMusic.Areas.Admin.Controllers
                     userModel.URLImg = editUserModel.URLImg;
                     if (ful != null)
                     {
+                        //Cập nhật Hình ảnh
                         editUserModel.URLImg = "noimage.jpg";
                         string t = editUserModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
                         var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img",editUserModel.URLImg);
@@ -148,6 +150,7 @@ namespace DDMusic.Areas.Admin.Controllers
                         }
                         userModel.URLImg = t;               
                     }
+                    //Cập nhật thông tin User vào csdl
                     await _userManager.UpdateAsync(userModel);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -177,12 +180,51 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             var user = await _userManager.FindByIdAsync(id);
             await _userManager.DeleteAsync(user);
-            //var user = await _context.Users
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-            //  _context.Users.Remove(user);
-            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Users));
         }
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult>ChangePassword(ChangePasswordAModel model)
+        {
+            //Kiểm tra UserName có tồn tại
+            var userN =await _userManager.FindByNameAsync(model.EmailOrUserName);
+            //Kiểm tra Email có tồn tại
+            var userE = await _userManager.FindByNameAsync(model.EmailOrUserName);
+            if (userN!=null)
+          {
+                //Tạo mã xác thực User
+               var t= await _userManager.GeneratePasswordResetTokenAsync(userN);
+                await _userManager.ResetPasswordAsync(userN, t, model.Password);
+                ViewBag.Success = "Cập nhật mật khẩu thành công";
+            }
+        else if(userE!=null)
+            {
+                var t = await _userManager.GeneratePasswordResetTokenAsync(userN);
+                await _userManager.ResetPasswordAsync(userE, t, model.Password);
+                ViewBag.Success = "Cập nhật mật khẩu thành công";
+            }
+            else
+            {
+                ViewBag.eEmailOrUserName = "UserName,Email không hợp lệ";
+            }
+            return View();
+        }
+        public async Task<IActionResult> CreateDataUser()
+        {
+            for(int i=0;i<16;i++)
+            {
 
+                UserModel user = new UserModel();
+                user.Id = i.ToString();
+                user.UserName = "thanhduy" + i;
+                user.Email = "ttduy" + i+".@gmail.com";
+                user.EmailConfirmed = true;
+              await  _userManager.CreateAsync(user,"tduy"+i);            
+            }
+            return RedirectToAction(nameof(Users));
+        }
     }
 }

@@ -44,13 +44,16 @@
             }
             @UserManager.GetUserName(User)
         </a>
-        <ul class="dropdown">
-            <li>
-                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button class="b1" type="submit"><b>Đăng xuất</b></button>
-                </form>
-            </li>
-        </ul>
+    <ul class="dropdown">
+        <li>
+            <a id="changepassword" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Đổi mật khẩu</a>
+        </li>
+        <li>
+            <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button class="b1" type="submit"><b style="padding-left:12px; font-size:16px;">Đăng xuất</b></button>
+            </form>
+        </li>
+    </ul>
     </li>
 }
 else

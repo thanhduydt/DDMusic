@@ -1,0 +1,77 @@
+﻿@model DDMusic.Areas.Admin.Models.UserRoleViewModel
+@{ 
+    var userId = ViewBag.userId;
+}
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Edit UserRole</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a asp-action="UserRole">UserRole</a></li>
+                        <li class="breadcrumb-item active">Create</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form asp-area="Admin" asp-controller="Role" asp-action="EditUserRole" enctype="multipart/form-data">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>@Model.NameUser</h4>
+                                    </div>
+                                 
+                                    <input type="hidden" asp-for="@Model.IdUser" />
+                                    <div class="col-md-6 col-lg-4">
+                                        @for (int i = 0; i < Model.ListRole.Count; i++)
+                                        {
+                                            <div class="form-check">
+                                  <input type="hidden" asp-for="@Model.ListRole[i].IdRole">
+                                        <input type="hidden" asp-for="@Model.ListRole[i].NameRole" />
+                                        <input asp-for="@Model.ListRole[i].IsSelected" class="form-check-input" />
+                                        <label class="form-check-label" asp-for="@Model.ListRole[i].IsSelected">
+                                            @Model.ListRole[i].NameRole
+                                        </label>
+                                                </div>
+     
+                                        }
+                                    </div>
+                       
+                                    <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
+                                        <button type="submit" style="width:150px" class="btn btn-primary">Cập nhật</button>
+                                        @*<button onclick="'location.href = @Url.Action("Users","Users")'" style="width:100px" class="btn btn-light">Hủy</button>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--/.col (left) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}
