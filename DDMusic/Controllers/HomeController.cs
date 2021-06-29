@@ -21,11 +21,13 @@ namespace DDMusic.Controllers
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private DPContext _context;
-        public HomeController(ILogger<HomeController> logger, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager,DPContext context)
+        public HomeController(ILogger<HomeController> logger, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager,
+       DPContext context)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _logger = logger;
+        //    _signInManager = signInManager;
             _context = context;
         }
         
@@ -84,9 +86,10 @@ namespace DDMusic.Controllers
         {
             return View();
         }
-        [Route("thong-tin-tai-khoan")]
-        public IActionResult PersonalPage(string? id)
+        //[Route("thong-tin-tai-khoan")]
+        public IActionResult PersonalPage()
         {
+            //Lấy thông tin User đang đăng nhập gán vào Model
             UserModel user = _userManager.GetUserAsync(User).Result;
             EditUserModel editUserModel = new EditUserModel();
             editUserModel.Id = user.Id;
@@ -101,17 +104,18 @@ namespace DDMusic.Controllers
             return View(editUserModel);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PersonalPage(string id, [Bind("Id,Name,Birthday,UserName,URLImg,Address,PhoneNumber,Email,Gender")] EditUserModel editUserModel, IFormFile ful)
+        public async Task<IActionResult> PersonalPage([Bind("Id,Name,Birthday,UserName,URLImg,Address,PhoneNumber,Email,Gender")] EditUserModel editUserModel, IFormFile ful)
         {
-            if (id != editUserModel.Id)
-            {
-                return NotFound();
-            }
             if (ModelState.IsValid)
             {
                 try
                 {
+                    //Kiểm tra UserName có tồn tại
+                    if(_userManager.FindByNameAsync(editUserModel.UserName)!=null&&_userManager.GetUserName(User)!=editUserModel.UserName)
+                    {
+                        ViewBag.eUserName = editUserModel.UserName + " đã tồn tại.";
+                        return View(editUserModel);
+                    }
                     var userModel = await _userManager.FindByIdAsync(editUserModel.Id);
                     userModel.Name = editUserModel.Name;
                     userModel.UserName = editUserModel.UserName;
@@ -154,9 +158,58 @@ namespace DDMusic.Controllers
             }
             return View(editUserModel);
         }
-        public IActionResult UploadSong()
+        public async Task<IActionResult> UploadSong()
         {
+            //Lấy danh sách Singer
+            ViewBag.listSinger = await _context.Singer.ToListAsync();
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> UploadSong([Bind("Name,IdSinger,URLImg,URLMusic,Lyric")] SongModel model, IFormFile ful, IFormFile fulMusic)
+        {
+            if (ModelState.IsValid)
+            {
+                //Lấy thông tin User đang đăng nhập
+                var user = _userManager.GetUserAsync(User);
+                model.IdUser = user.Result.Id;
+                //User tạo bài hát thì không được hiển thị lên frontend
+                model.Accept = false;
+                //Khởi tạo số view cho bài hát mới là 0
+                model.CountView = 0;
+                _context.Add(model);
+                await _context.SaveChangesAsync();
+                if (ful != null)
+                {
+                    var path = Path.Combine(
+                    Directory.GetCurrentDirectory(), "wwwroot/img/song", model.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1]);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await ful.CopyToAsync(stream);
+                    }
+                    model.URLImg = model.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
+                    _context.Update(model);
+                    await _context.SaveChangesAsync();
+
+                }
+                if (fulMusic != null)
+                {
+                    //Bỏ dấu
+                      string NameMusic = RemoveUnicode(model.Name);
+                    //Bỏ khoảng cách
+                    NameMusic = NameMusic.Replace(" ", String.Empty);
+                    var path = Path.Combine(
+                    Directory.GetCurrentDirectory(), "wwwroot/audio", NameMusic + "." + fulMusic.FileName.Split(".")[fulMusic.FileName.Split(".").Length - 1]);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await fulMusic.CopyToAsync(stream);
+                    }
+                    model.URLMusic = NameMusic + "." + fulMusic.FileName.Split(".")[fulMusic.FileName.Split(".").Length - 1];
+                    _context.Update(model);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(UploadSong));
+            
         }
         [Route("album")]
         public IActionResult Album()
@@ -177,6 +230,29 @@ namespace DDMusic.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public static string RemoveUnicode(string text)
+        {
+            string[] arr1 = new string[] { "á", "à", "ả", "ã", "ạ", "â", "ấ", "ầ", "ẩ", "ẫ", "ậ", "ă", "ắ", "ằ", "ẳ", "ẵ", "ặ",
+                                            "đ",
+                                            "é","è","ẻ","ẽ","ẹ","ê","ế","ề","ể","ễ","ệ",
+                                            "í","ì","ỉ","ĩ","ị",
+                                            "ó","ò","ỏ","õ","ọ","ô","ố","ồ","ổ","ỗ","ộ","ơ","ớ","ờ","ở","ỡ","ợ",
+                                            "ú","ù","ủ","ũ","ụ","ư","ứ","ừ","ử","ữ","ự",
+                                            "ý","ỳ","ỷ","ỹ","ỵ",};
+            string[] arr2 = new string[] { "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a", "a",
+                                            "d",
+                                            "e","e","e","e","e","e","e","e","e","e","e",
+                                            "i","i","i","i","i",
+                                            "o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o","o",
+                                            "u","u","u","u","u","u","u","u","u","u","u",
+                                            "y","y","y","y","y",};
+            for (int i = 0; i < arr1.Length; i++)
+            {
+                text = text.Replace(arr1[i], arr2[i]);
+                text = text.Replace(arr1[i].ToUpper(), arr2[i].ToUpper());
+            }
+            return text;
         }
     }
 }

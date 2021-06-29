@@ -68,7 +68,7 @@ namespace DDMusic.Areas.Admin.Controllers
                     Directory.GetCurrentDirectory(), "wwwroot/audio", NameMusic + "." + fulMusic.FileName.Split(".")[fulMusic.FileName.Split(".").Length - 1]);
                     using (var stream = new FileStream(path, FileMode.Create))
                     {
-                        await ful.CopyToAsync(stream);
+                        await fulMusic.CopyToAsync(stream);
                     }
                     song.URLMusic = NameMusic + "." + fulMusic.FileName.Split(".")[fulMusic.FileName.Split(".").Length - 1];
                     _context.Update(song);

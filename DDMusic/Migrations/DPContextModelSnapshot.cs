@@ -19,24 +19,6 @@ namespace DDMusic.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("DDMusic.Areas.Admin.Models.AlbumModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("QuantitySong")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Album");
-                });
-
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SingerModel", b =>
                 {
                     b.Property<int>("Id")
@@ -80,9 +62,6 @@ namespace DDMusic.Migrations
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdAlbum")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdSinger")
                         .HasColumnType("int");
 
@@ -106,13 +85,51 @@ namespace DDMusic.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdAlbum");
-
                     b.HasIndex("IdSinger");
 
                     b.HasIndex("IdUser");
 
                     b.ToTable("Song");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnMonth", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("TimeRestart")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TopSongOnMonth");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnMonthDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IdSong")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTopSongOnMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Top")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdSong");
+
+                    b.HasIndex("IdTopSongOnMonth");
+
+                    b.ToTable("TopSongOnMonthDetail");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnWeek", b =>
@@ -122,20 +139,37 @@ namespace DDMusic.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("SongId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TimeRestart")
                         .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TopSongOnWeek");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnWeekDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IdSong")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTopSongOnWeek")
+                        .HasColumnType("int");
 
                     b.Property<int>("Top")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SongId");
+                    b.HasIndex("IdSong");
 
-                    b.ToTable("TopSongOnWeek");
+                    b.HasIndex("IdTopSongOnWeek");
+
+                    b.ToTable("TopSongOnWeekDetail");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.UserModel", b =>
@@ -351,12 +385,6 @@ namespace DDMusic.Migrations
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>
                 {
-                    b.HasOne("DDMusic.Areas.Admin.Models.AlbumModel", "Album")
-                        .WithMany()
-                        .HasForeignKey("IdAlbum")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DDMusic.Areas.Admin.Models.SingerModel", "Singer")
                         .WithMany()
                         .HasForeignKey("IdSinger")
@@ -367,22 +395,47 @@ namespace DDMusic.Migrations
                         .WithMany()
                         .HasForeignKey("IdUser");
 
-                    b.Navigation("Album");
-
                     b.Navigation("Singer");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnWeek", b =>
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnMonthDetail", b =>
                 {
                     b.HasOne("DDMusic.Areas.Admin.Models.SongModel", "Song")
                         .WithMany()
-                        .HasForeignKey("SongId")
+                        .HasForeignKey("IdSong")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DDMusic.Areas.Admin.Models.TopSongOnMonth", "TopSongOnMonth")
+                        .WithMany()
+                        .HasForeignKey("IdTopSongOnMonth")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Song");
+
+                    b.Navigation("TopSongOnMonth");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.TopSongOnWeekDetail", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.SongModel", "Song")
+                        .WithMany()
+                        .HasForeignKey("IdSong")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DDMusic.Areas.Admin.Models.TopSongOnWeek", "TopSongOnWeek")
+                        .WithMany()
+                        .HasForeignKey("IdTopSongOnWeek")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Song");
+
+                    b.Navigation("TopSongOnWeek");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

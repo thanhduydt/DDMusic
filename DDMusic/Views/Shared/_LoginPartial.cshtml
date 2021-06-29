@@ -19,6 +19,7 @@
         -moz-border-radius: 50%;
         -webkit-border-radius: 50%;
     }
+
 </style>
 @if (SignInManager.IsSignedIn(User))
 {
@@ -31,12 +32,14 @@
             <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" class="btn btn-dark" type="submit" >Đăng xuất</button>
             </form>
-        </li>*@<li>
-        @*<a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">*@
-    <a asp-controller="Home" asp-action="PersonalPage">
+        </li>*@
+    @*<a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">*@
+<liv><a asp-action="UploadSong"><i class="fa fa-arrow-circle-up fa-2x" style="color:darkgrey; text-align:center" aria-hidden="true" title="Tải lên"></i></a></liv>
+    <li>
+        <a asp-controller="Home" asp-action="PersonalPage">
             @if (UserManager.GetUserAsync(User).Result.URLImg != null)
             {
-                <img class="avatar" src="~/img/user-img/@UserManager.GetUserAsync(User).Result.URLImg" alt="" />
+                <img id="avatar" class="avatar" src="~/img/user-img/@UserManager.GetUserAsync(User).Result.URLImg" alt="" />
             }
             else
             {
@@ -44,16 +47,16 @@
             }
             @UserManager.GetUserName(User)
         </a>
-    <ul class="dropdown">
-        <li>
-            <a id="changepassword" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Đổi mật khẩu</a>
-        </li>
-        <li>
-            <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button class="b1" type="submit"><b style="padding-left:12px; font-size:16px;">Đăng xuất</b></button>
-            </form>
-        </li>
-    </ul>
+        <ul class="dropdown">
+            <li>
+                <a id="changepassword" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Đổi mật khẩu</a>
+            </li>
+            <li>
+                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button class="b1" type="submit"><b style="padding-left:12px; font-size:16px;">Đăng xuất</b></button>
+                </form>
+            </li>
+        </ul>
     </li>
 }
 else

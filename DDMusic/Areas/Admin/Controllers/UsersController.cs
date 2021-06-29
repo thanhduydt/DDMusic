@@ -113,18 +113,38 @@ namespace DDMusic.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult>EditUsers(string id,[Bind("Id,Name,Birthday,UserName,URLImg,Address,PhoneNumber,Email,Gender")] EditUserModel editUserModel, IFormFile ful)
+        public async Task<IActionResult>EditUsers([Bind("Id,Name,Birthday,UserName,URLImg,Address,PhoneNumber,Email,Gender")] EditUserModel editUserModel, IFormFile ful)
         {
-            if(id!=editUserModel.Id)
-            {
-                return NotFound();
-            }
-            if(ModelState.IsValid)
+
+            if (ModelState.IsValid)
             {
                 try
                 {
+                    UserModel userModel = await _userManager.FindByIdAsync(editUserModel.Id);
+                    var eUserName = _userManager.FindByNameAsync(editUserModel.UserName);
+                    var eEmail = _userManager.FindByEmailAsync(editUserModel.Email);
+                    //Kiểm tra UserName và Email có tồn tại
+
+                    if (eUserName.Result != null && userModel.UserName != editUserModel.UserName && eEmail.Result != null && userModel.Email != editUserModel.Email)
+                    {
+                        ViewBag.eUserName = editUserModel.UserName + " đã tồn tại.";
+                        ViewBag.eEmail = editUserModel.Email + " đã tồn tại.";
+                        return View(editUserModel);
+                    }
+                    //Kiểm tra UserName có tồn tại
+                    if (eUserName.Result != null && userModel.UserName != editUserModel.UserName)
+                    {
+                        ViewBag.eUserName = editUserModel.UserName + " đã tồn tại.";
+                        return View(editUserModel);
+                    }
+                    //Kiểm tra Email có tồn tại
+                    if (eEmail.Result != null && userModel.Email != editUserModel.Email)
+                    {
+                        ViewBag.eEmail = editUserModel.Email + " đã tồn tại.";
+                        return View(editUserModel);
+                    }
                     //Lấy thông tin User từ csdl
-                    var userModel = await _userManager.FindByIdAsync(editUserModel.Id);
+                    //  var userModel = await _userManager.FindByIdAsync(editUserModel.Id);
                     userModel.Name = editUserModel.Name;
                     userModel.UserName = editUserModel.UserName;
                     userModel.PhoneNumber = editUserModel.PhoneNumber;
