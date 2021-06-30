@@ -64,6 +64,24 @@ namespace DDMusic.Controllers
                 topSongOnWeekDetails.Add(TopOnWeek);
             }
             ViewBag.TopSongOnWeek = topSongOnWeekDetails;
+
+            var AllTopSongOnMonth = await _context.TopSongOnMonth.ToListAsync();
+            var TopSongOnMonth = AllTopSongOnMonth.OrderByDescending(m => m.TimeRestart).First();
+            var AllTopSongOnMonthDetail = await _context.TopSongOnMonthDetail.ToListAsync();
+            var TopSongOnMonthDetail = AllTopSongOnMonthDetail.Where(m => m.IdTopSongOnMonth == TopSongOnMonth.Id);
+            //Gán song cho vào TopSongOnWeekDetail
+            List<TopSongOnMonthDetail> topSongOnMonthDetails = new List<TopSongOnMonthDetail>();
+            foreach (var item in TopSongOnMonthDetail)
+            {
+                TopSongOnMonthDetail TopOnMonth = new TopSongOnMonthDetail();
+                TopOnMonth = item;
+                var song = await _context.Song.FindAsync(TopOnMonth.IdSong);
+                var singer = await _context.Singer.FindAsync(song.IdSinger);
+                song.Singer = singer;
+                TopOnMonth.Song = song;
+                topSongOnMonthDetails.Add(TopOnMonth);
+            }
+            ViewBag.TopSongOnMonth = topSongOnMonthDetails;
             return View();
         }
 
