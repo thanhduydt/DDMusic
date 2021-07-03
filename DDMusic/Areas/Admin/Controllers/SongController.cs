@@ -25,13 +25,29 @@ namespace DDMusic.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var Song = _context.Song.Include(s => s.Singer);
-            return View(await Song.ToListAsync());
+            var AllSong = Song.Where(m => m.Accept == true);
+            return View(AllSong);
         }
         public IActionResult CreateSong()
         {
             ViewData["ListGenre"] = new SelectList(SongModel.GetAllGerne());
             ViewData["IdSinger"] = new SelectList(_context.Singer, "Id", "Name");
             return View();
+        }
+        public async Task<IActionResult> AcceptSong()
+        {
+            var Song = _context.Song.Include(s => s.Singer);
+            var AllSong = await Song.ToListAsync();
+            var SongNotAccept = AllSong.Where(m => m.Accept == false);
+            return View(SongNotAccept);
+        }
+        public async Task<IActionResult> Accept(int id)
+        {
+            var SongModel = await _context.Song.FindAsync(id);
+            SongModel.Accept = true;
+            _context.Update(SongModel);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(AcceptSong));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

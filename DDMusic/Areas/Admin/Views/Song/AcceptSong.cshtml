@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
+<style>
+    img {
+        width: 10%
+    }
+
+    a {
+        color: #000;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Song</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Song</a></li>
+                        <li class="breadcrumb-item active"></li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <a asp-action="CreateSong" asp-controller="Song"><i class="nav-icon fas fa-plus"></i></a>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tên bài hát</th>
+                                        <th>Ca sĩ</th>
+                                        <th>Ngày phát hành</th>
+                                        <th>Hình ảnh</th>
+                                        <th>Thể Loại</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.Singer.Name</td>
+                                            <td>@String.Format("{0:dd/MM/yyyy}", item.ReleaseDate)</td>
+                                            <td><img src="~/img/song/@item.URLImg" /></td>
+                                            <td>@item.Genre</td>
+                                            <td><a asp-controller="Song" asp-action="Accept" asp-route-id="@item.Id">Duyệt</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>

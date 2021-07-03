@@ -39,9 +39,40 @@ namespace DDMusic.Controllers
         {
             return View();
         }
-        [Route("the-loai")]
-        public IActionResult Genre()
+        [Route("the-loai/{routingDetail}")]
+        public async Task<IActionResult> GenreAsync(string routingDetail)
         {
+            string Genre = null;
+            switch (routingDetail)
+            {
+                case "edm":
+                    Genre = "EDM";
+                    break;
+                case "acoustic":
+                    Genre = "Acoustic";
+                    break;
+                case "pop":
+                    Genre = "Pop";
+                    break;
+                case "ballad":
+                    Genre = "Ballad";
+                    break;
+            }
+            var SingerOfSong = _context.Song.Include(s => s.Singer);
+            var AllSong = await SingerOfSong.ToListAsync();
+            var Song = AllSong.Where(m => m.Genre == Genre && m.Accept == true).OrderByDescending(m=>m.Id);
+            var NewSong = Song.Take(12);
+            var SongOfGenre = Song.Skip(12);
+            if(NewSong.Count() > 0)
+            {
+                ViewBag.NewSong = NewSong;
+            }
+            if(SongOfGenre.Count() > 0)
+            {
+                ViewBag.SongOfGenre = SongOfGenre;
+            }
+            ViewBag.Title = Genre;
+            
             return View();
         }
         [Route("bang-xep-hang")]

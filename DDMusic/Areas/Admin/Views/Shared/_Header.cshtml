@@ -206,6 +206,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a asp-action="AcceptSong" asp-controller="Song" class="nav-link">
+                                <p>Duyệt bài hát</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <p>Playlist</p>
                             </a>
@@ -217,14 +222,35 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-music"></i>
+                        <p>
+                            Bảng xếp hạng
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="TopSongOnWeek" class="nav-link">
+                                <p>Bảng xếp hạng tuần</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="TopSongOnMonth" class="nav-link">
+                                <p>Bảng xếp hạng tháng</p>
+                            </a>
+                        </li>                       
+                    </ul>
+                </li>
                 <li class="nav-item">
-            <a asp-action="Index" asp-controller="Singer" class="nav-link">
-                <i class="nav-icon fas fa-music"></i>
-                <p>
-                    Ca sĩ
-                </p>
-            </a>
-        </li>
+                    <a asp-action="Index" asp-controller="Singer" class="nav-link">
+                        <i class="nav-icon fas fa-music"></i>
+                        <p>
+                            Ca sĩ
+                        </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
