@@ -1,0 +1,72 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.CommentModel>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Comment</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">Comment</li>
+                        <li class="breadcrumb-item active"></li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            @*<a asp-action="CreateRole" asp-controller="Role"><i title="Thêm" class="nav-icon fas fa-plus"></i></a>*@
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Song</th>
+                                        <th>User</th>
+                                        <th>Description</th>
+                                        <th>Time</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                              
+                                        @foreach (var m in Model)
+                                        {
+                                            <tr>
+
+                                                <td>@m.Song.Name</td>
+                                                <td>@m.User.UserName</td>
+                                                <td>@m.Description</td>
+                                                <td>@m.Time</td>
+                                               
+
+                                                <td>
+                                                    <a class="btn btn-danger btn-xs" asp-controller="Comment" asp-action="Delete" asp-route-id="@m.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i title="Xóa" class="fas fa-trash-alt"></i></a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>

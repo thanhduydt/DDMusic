@@ -1,4 +1,9 @@
 ﻿@model DDMusic.Areas.Admin.Controllers.RoleController
+<style>
+    .c {
+        width: 150px;
+    }
+</style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -25,13 +30,14 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a asp-action="CreateRole" asp-controller="Role"><i title="Thêm" class="nav-icon fas fa-plus"></i></a>
+                            <a class="btn btn-success btn-xs" asp-action="CreateRole" asp-controller="Role">Thêm<i title="Thêm" class="nav-icon fas fa-plus"></i></a>
+                           <br /><br />
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Id</th>
                                         <th>Tên</th>
-                                        <th>Thao tác</th>
+                                        <th class="c">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,8 +51,8 @@
                                                 <td>@role.Name</td>
 
                                                 <td>
-                                                    <a asp-controller="Role" asp-action="EditRole" asp-route-id="@role.Id"><i title="Cập nhật" class="nav-icon fas fa-edit"></i></a>
-                                                    <a asp-controller="Role" asp-action="DeleteRole" asp-route-id="@role.Id" onclick="return confirm('Bạn có muốn xóa không?');"><i title="Xóa" class="fas fa-trash-alt"></i></a>
+                                                    <a class="btn btn-info btn-xs" asp-controller="Role" asp-action="EditRole" asp-route-id="@role.Id">Cập nhật <i title="Cập nhật" class="nav-icon fas fa-edit"></i></a>
+                                                    <a class="btn btn-danger btn-xs" asp-controller="Role" asp-action="DeleteRole" asp-route-id="@role.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i title="Xóa" class="fas fa-trash-alt"></i></a>
                                                 </td>
                                             </tr>
                                         }

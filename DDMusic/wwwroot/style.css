@@ -126,9 +126,15 @@ img {
   height: 800px !important; }
 
 /* :: 3.3.0 Section Padding */
+.section-padding-200
+{
+    padding-top:215px;
+    padding-bottom:200px;
+}
 .section-padding-100 {
-  padding-top: 100px;
-  padding-bottom: 100px; }
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
 
 .section-padding-100-0 {
   padding-top: 100px;

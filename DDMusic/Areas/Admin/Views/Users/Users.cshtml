@@ -1,7 +1,10 @@
 ﻿@model DDMusic.Areas.Admin.Models.UserModel
 <style>
     img {
-        width: 10%
+        width:50%;
+    }
+    .c {
+        width: 150px;
     }
 </style>
 <div class="content-wrapper">
@@ -30,42 +33,46 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a asp-action="CreateUsers" asp-controller="Users"><i title="Thêm" class="nav-icon fas fa-user-plus"></i></a>
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Hình ảnh</th>
-                                        <th>Tên đăng nhập</th>
-                                        @*<th>Mật khẩu</th>*@
-                                        <th>Email</th>
-                                        <th>Tên</th>
+                            <a class="btn btn-success btn-xs" asp-action="CreateUsers" asp-controller="Users">
+                              Thêm <span class="av-icon fas fa-plus"></span>
+                              </a>  <br /><br />
+                                @*<a asp-action="CreateUsers" asp-controller="Users"><i title="Thêm" class="nav-icon fas fa-user-plus"></i></a>*@
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="c">Hình ảnh</th>
+                                            <th>Tên đăng nhập</th>
+                                            @*<th>Mật khẩu</th>*@
+                                            <th>Email</th>
+                                            <th>Tên</th>
 
-                                        @*<th>Hình</th>*@
-                                        <th>Địa chỉ</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if (ViewBag.ListUser != null)
-                                    {
-                                        foreach (DDMusic.Areas.Admin.Models.UserModel item in ViewBag.ListUser)
+                                            @*<th>Hình</th>*@
+                                            <th>Địa chỉ</th>
+                                            <th class="c"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (ViewBag.ListUser != null)
                                         {
-                                    <tr>
-                                        <td><img src="~/img/user-img/@Html.DisplayFor(modelItem => item.URLImg)" alt="Không có hình"/></td>
-                                        <td>@Html.DisplayFor(m => item.UserName)</td>
-                                        @*<td>@Html.DisplayFor(m=>item.PasswordHash)</td>*@
-                                        <td>@Html.DisplayFor(m => item.Email)</td>
-                                        <td>@Html.DisplayFor(m => item.Name)</td>
-                                        @*<td>ttduy.jpg</td>*@
-                                        <td>@Html.DisplayFor(m => item.Address)</td>
-                                        <td><a asp-controller="Users" asp-action="EditUsers" asp-route-id="@item.Id"><i title="Cập nhật" class="nav-icon fas fa-edit"></i></a><a asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');"><i title="Xóa" class="fas fa-trash-alt"></i></a></td>
-                                    </tr>
+                                            foreach (DDMusic.Areas.Admin.Models.UserModel item in ViewBag.ListUser)
+                                            {
+                                                <tr>
+                                                    <td><img src="~/img/user-img/@Html.DisplayFor(modelItem => item.URLImg)" alt="Không có hình" /></td>
+                                                    <td>@Html.DisplayFor(m => item.UserName)</td>
+                                                    @*<td>@Html.DisplayFor(m=>item.PasswordHash)</td>*@
+                                                    <td>@Html.DisplayFor(m => item.Email)</td>
+                                                    <td>@Html.DisplayFor(m => item.Name)</td>
+                                                    @*<td>ttduy.jpg</td>*@
+                                                    <td>@Html.DisplayFor(m => item.Address)</td>
+                                                    <td><a class="btn btn-info btn-xs" asp-controller="Users" asp-action="EditUsers" asp-route-id="@item.Id">Cập nhật <i title="Cập nhật" class="nav-icon fas fa-edit"></i></a>
+                                                    <a class="btn btn-danger btn-xs" asp-controller="Users" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i title="Xóa" class="fas fa-trash-alt"></i></a></td>
+                                                </tr>
+                                            }
                                         }
-                                    }
-                                </tbody>
+                                    </tbody>
 
-                            </table>
-                        </div>
+                                </table>
+</div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->

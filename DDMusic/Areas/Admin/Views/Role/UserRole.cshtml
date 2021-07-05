@@ -1,4 +1,9 @@
 ﻿@model List<DDMusic.Areas.Admin.Models.UserRoleViewModel>
+<style>
+    .c {
+        width: 150px;
+    }
+</style>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -30,7 +35,7 @@
                                     <tr>
                                         <th>UserName</th>
                                         <th>Role</th>
-                                        <th>Thao tác</th>
+                                        <th class="c">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -43,13 +48,12 @@
                                                 <td>
                                                     @foreach (var iRole in item.ListRole)
                                                     {
-                                                        @iRole.NameRole 
-                                                    
+                                                        @iRole.NameRole
                                                     }
                                                 </td>
 
                                                 <td>
-                                                    <a asp-controller="Role" asp-action="EditUserRole" asp-route-idUser="@item.IdUser"><i title="Cập nhật" class="nav-icon fas fa-edit"></i></a>
+                                                    <a class="btn btn-info btn-xs" asp-controller="Role" asp-action="EditUserRole" asp-route-idUser="@item.IdUser">Cập nhật <i title="Cập nhật" class="nav-icon fas fa-edit"></i></a>
                                                 </td>
                                             </tr>
                                         

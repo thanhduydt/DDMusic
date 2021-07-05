@@ -61,7 +61,7 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> UserRoleAsync()
+        public async Task<IActionResult> UserRole()
         {
             //Lấy danh sách User
             List<UserModel> ListUser = await _userManager.Users.ToListAsync();
@@ -140,7 +140,7 @@ namespace DDMusic.Areas.Admin.Controllers
                     await _userManager.RemoveFromRoleAsync(user, item.NameRole);
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(UserRole));
         }
         public async Task<IActionResult>EditRole(string id)
         {

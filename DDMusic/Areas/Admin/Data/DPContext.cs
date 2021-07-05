@@ -32,6 +32,7 @@ namespace DDMusic.Areas.Admin.Data
         public DbSet<TopSongOnMonth> TopSongOnMonth { get; set; }
         public DbSet<TopSongOnMonthDetail> TopSongOnMonthDetail { get; set; }
        
+        public DbSet<CommentModel> Comment { get; set; }
        
     }
 }

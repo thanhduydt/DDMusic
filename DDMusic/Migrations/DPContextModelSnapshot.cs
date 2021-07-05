@@ -19,6 +19,34 @@ namespace DDMusic.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.CommentModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IdSong")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdUser")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdSong");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("Comment");
+                });
+
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SingerModel", b =>
                 {
                     b.Property<int>("Id")
@@ -381,6 +409,23 @@ namespace DDMusic.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.CommentModel", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.SongModel", "Song")
+                        .WithMany()
+                        .HasForeignKey("IdSong")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser");
+
+                    b.Navigation("Song");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>

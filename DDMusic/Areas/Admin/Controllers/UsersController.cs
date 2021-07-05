@@ -121,30 +121,6 @@ namespace DDMusic.Areas.Admin.Controllers
                 try
                 {
                     UserModel userModel = await _userManager.FindByIdAsync(editUserModel.Id);
-                    var eUserName = _userManager.FindByNameAsync(editUserModel.UserName);
-                    var eEmail = _userManager.FindByEmailAsync(editUserModel.Email);
-                    //Kiểm tra UserName và Email có tồn tại
-
-                    if (eUserName.Result != null && userModel.UserName != editUserModel.UserName && eEmail.Result != null && userModel.Email != editUserModel.Email)
-                    {
-                        ViewBag.eUserName = editUserModel.UserName + " đã tồn tại.";
-                        ViewBag.eEmail = editUserModel.Email + " đã tồn tại.";
-                        return View(editUserModel);
-                    }
-                    //Kiểm tra UserName có tồn tại
-                    if (eUserName.Result != null && userModel.UserName != editUserModel.UserName)
-                    {
-                        ViewBag.eUserName = editUserModel.UserName + " đã tồn tại.";
-                        return View(editUserModel);
-                    }
-                    //Kiểm tra Email có tồn tại
-                    if (eEmail.Result != null && userModel.Email != editUserModel.Email)
-                    {
-                        ViewBag.eEmail = editUserModel.Email + " đã tồn tại.";
-                        return View(editUserModel);
-                    }
-                    //Lấy thông tin User từ csdl
-                    //  var userModel = await _userManager.FindByIdAsync(editUserModel.Id);
                     userModel.Name = editUserModel.Name;
                     userModel.UserName = editUserModel.UserName;
                     userModel.PhoneNumber = editUserModel.PhoneNumber;
@@ -171,18 +147,29 @@ namespace DDMusic.Areas.Admin.Controllers
                         userModel.URLImg = t;               
                     }
                     //Cập nhật thông tin User vào csdl
-                    await _userManager.UpdateAsync(userModel);
+                    var userEdit=   await _userManager.UpdateAsync(userModel);
+                    //Kiểm tra cập nhật thông tin thành công không.
+                    if(userEdit.Errors.Count()!=0)
+                    {
+                        //Xảy ra lỗi
+                        foreach(var e in userEdit.Errors)
+                             {
+                            if(e.Code== "DuplicateEmail")
+                            {
+                                ViewBag.eEmail = "Email "+userModel.Email+" đã tồn tại";
+                            }
+                            if(e.Code== "DuplicateUserName")
+                            {
+                                ViewBag.eUserName = "UserName "+userModel.UserName+" đã tồn tại";
+                            }
+                        }
+                        return View(editUserModel);
+                    }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    //if (!UserExists(userModel.Id))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
+
                 }  
                 return RedirectToAction(nameof(Users));
             }
