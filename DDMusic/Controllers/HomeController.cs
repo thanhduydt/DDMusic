@@ -115,10 +115,26 @@ namespace DDMusic.Controllers
             ViewBag.TopSongOnMonth = topSongOnMonthDetails;
             return View();
         }
-
-        public IActionResult SongDetail()
-        {
-            return View();
+        [Route("bai-hat/{id}")]
+        public async Task<IActionResult> SongDetail(int id)
+        { 
+            var song = await _context.Song.FindAsync(id);
+            var singer = await _context.Singer.FindAsync(song.IdSinger);
+            song.Singer = singer;
+            var AllSong = await _context.Song.ToListAsync();
+            var AllSongOfGenre = AllSong.Where(m => m.Id != song.Id && m.Genre == song.Genre);
+            var random = new Random();
+            var GetRelatedSongs = AllSongOfGenre.OrderBy(m => random.Next()).Take(4);
+            List<SongModel> RelatedSongs = new List<SongModel>();
+            foreach(var item in GetRelatedSongs)
+            {
+                SongModel relatedSong = new SongModel();
+                relatedSong = item;
+                SingerModel singer1 = await _context.Singer.FindAsync(relatedSong.IdSinger);
+                RelatedSongs.Add(relatedSong);
+            }
+            ViewBag.RelatedSongs = RelatedSongs;
+            return View(song);
         }
         [Route("dang-nhap")]
         public IActionResult Login()

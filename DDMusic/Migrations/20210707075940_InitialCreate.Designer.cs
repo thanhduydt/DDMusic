@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDMusic.Migrations
 {
     [DbContext(typeof(DPContext))]
-    [Migration("20210705053541_IntitaCreate")]
-    partial class IntitaCreate
+    [Migration("20210707075940_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -92,7 +92,7 @@ namespace DDMusic.Migrations
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdSinger")
+                    b.Property<int?>("IdSinger")
                         .HasColumnType("int");
 
                     b.Property<string>("IdUser")
@@ -434,9 +434,7 @@ namespace DDMusic.Migrations
                 {
                     b.HasOne("DDMusic.Areas.Admin.Models.SingerModel", "Singer")
                         .WithMany()
-                        .HasForeignKey("IdSinger")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdSinger");
 
                     b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
                         .WithMany()

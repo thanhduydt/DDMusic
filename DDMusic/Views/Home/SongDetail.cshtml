@@ -1,4 +1,5 @@
-﻿<style>
+﻿@model DDMusic.Areas.Admin.Models.SongModel
+<style>
     .divLyric {
         height: auto;
         max-height: 255px;
@@ -48,13 +49,14 @@
 
     h6 {
         font-weight: 500;
-        letter-spacing:1px;
+        letter-spacing: 1px;
     }
-    .title-related-song{
-        font-weight:700;
-        letter-spacing:2px;
-        text-transform:uppercase;
-        font-size:20px !important;
+
+    .title-related-song {
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 20px !important;
     }
 </style>
 <br />
@@ -67,11 +69,11 @@
                 <div>
                     <div class="row">
                         <div class="col-md-4">
-                            <img class="img-song" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
+                            <img class="img-song" src="~/img/song/@Model.URLImg" alt="" />
                         </div>
                         <div class="col-md-8 title-song">
-                            <h4>Chỉ là không cùng nhau</h4>
-                            <h6>Tăng Phúc,Trương Thảo Nhi</h6>
+                            <h4>@Model.Name</h4>
+                            <h6>@Model.Singer.Name</h6>
                         </div>
                     </div>
                 </div>
@@ -79,37 +81,12 @@
 
                 <br />
                 <audio preload="auto" controls>
-                    <source src="~/audio/ChiLaKhongCungNhau.mp3">
+                    <source src="~/audio/@Model.URLMusic">
                 </audio>
                 <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
                 <h3>Lời bài hát</h3>
                 <div class="divLyric" id="divLyric">
-                    <h6>
-                        Chiều hôm ấy có mưa rơi nhẹ vương mi ai<br />
-                        Con đường ngỡ bước chung đôi bây giờ chia hai<br />
-                        Ai nói ra lời gian dối làm tan nát con tim ai.<br />
-                        Một người nỡ, một người vỡ bao mộng mơ<br /><br />
-
-                        Rời xa nhau dẫu tim vẫn còn mang tên nhau<br />
-                        Chỉ là giấu, giấu che đi ta còn yêu nhau<br />
-                        Phía cuối cuộc đời ta hứa sẽ chờ dẫu qua bao lâu.<br />
-                        Tình vẫn đậm sâu!<br /><br />
-
-                        Từng yêu nhau, từng là của nhau thật lâu<br />
-                        Đến sau cùng chẳng thể có nhau bạc đầu<br />
-                        Chẳng cần tương lai, chẳng biết có thương đau ngày mai<br />
-                        Chỉ cần nhau.<br /><br />
-
-                        Giờ buông tay để được thấy nhau về sau<br />
-                        Trả người về những ngày tháng chưa bắt đầu<br />
-                        Ai rồi cũng sẽ tìm được ấm êm sau khổ đau<br />
-                        Chỉ là không cùng nhau.<br /><br />
-
-                        Hẹn nhau nhé, kiếp sau ta lại nhận ra nhau.<br />
-                        Không lùi bước nắm tay nhau qua đời thương đau.<br />
-                        Nước mắt để dành ta khóc những ngày có nhau bên nhau.<br />
-                        Hẹn nhau nhé, hẹn nhau kiếp sau tìm nhau.<br />
-                    </h6>
+                    @Html.Raw(Model.Lyric)
                 </div>
                 <div class="more_add" id="divMoreAddLyric">
                     <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
@@ -122,87 +99,25 @@
             <div class="col-12 col-lg-4">
                 <div class="new-hits-area mb-100">
                     <div class="section-heading text-left mb-50 wow fadeInUp" style="text-align:center !important" data-wow-delay="50ms">
-                       <p class="title-related-song">Những bài hát liên quan</p>
+                        <p class="title-related-song">Những bài hát liên quan</p>
                     </div>
                     <!-- Single Top Item -->
-                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
-                        <div class="first-part d-flex align-items-center">
-                            <div class="thumbnail">
-                                <img src="~/img/song/HoaNoKhongMau.jpg" alt="">
-                            </div>
-                            <div class="content-">
-                                <h6>Hoa nở không màu</h6>
-                                <p>Hoài Lâm</p>
-                            </div>
-                        </div>
-                        @*<audio preload="auto" controls>
-                                <source src="audio/dummy-audio.mp3">
-                            </audio>*@
-                    </div>
 
-                    <!-- Single Top Item -->
-                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="150ms">
-                        <div class="first-part d-flex align-items-center">
-                            <div class="thumbnail">
-                                <img src="~/img/song/NiuDuyen.jpg" alt="">
-                            </div>
-                            <div class="content-">
-                                <h6>Níu Duyên</h6>
-                                <p>Lê Bảo Bình</p>
+                    @foreach (var item in ViewBag.RelatedSongs)
+                    {
+                        <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
+                            <div class="first-part d-flex align-items-center">
+                                <div class="thumbnail">
+                                    <img src="~/img/song/@item.URLImg" alt="">
+                                </div>
+                                <div class="content-">
+                                    <h6>@item.Name</h6>
+                                    <p>@item.Singer.Name</p>
+                                </div>
                             </div>
                         </div>
-                        @*<audio preload="auto" controls>
-                                <source src="audio/dummy-audio.mp3">
-                            </audio>*@
-                    </div>
+                    }
 
-                    <!-- Single Top Item -->
-                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="200ms">
-                        <div class="first-part d-flex align-items-center">
-                            <div class="thumbnail">
-                                <img src="~/img/song/PhaChangEmDaYeu.jpg" alt="">
-                            </div>
-                            <div class="content-">
-                                <h6>Phải Chăng Em Đã Yêu</h6>
-                                <p>Juky San</p>
-                            </div>
-                        </div>
-                        @*<audio preload="auto" controls>
-                                <source src="audio/dummy-audio.mp3">
-                            </audio>*@
-                    </div>
-
-                    <!-- Single Top Item -->
-                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="250ms">
-                        <div class="first-part d-flex align-items-center">
-                            <div class="thumbnail">
-                                <img src="~/img/song/NangTho.jpg" alt="">
-                            </div>
-                            <div class="content-">
-                                <h6>Nàng thơ</h6>
-                                <p>Hoàng Dũng</p>
-                            </div>
-                        </div>
-                        @*<audio preload="auto" controls>
-                                <source src="audio/dummy-audio.mp3">
-                            </audio>*@
-                    </div>
-
-                    <!-- Single Top Item -->
-                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="300ms">
-                        <div class="first-part d-flex align-items-center">
-                            <div class="thumbnail">
-                                <img src="~/img/song/CauHenCauThe.jpg" alt="">
-                            </div>
-                            <div class="content-">
-                                <h6>Câu hẹn câu thề</h6>
-                                <p>Đình Dũng</p>
-                            </div>
-                        </div>
-                        @*<audio preload="auto" controls>
-                                <source src="audio/dummy-audio.mp3">
-                            </audio>*@
-                    </div>
                 </div>
             </div>
 

@@ -90,7 +90,7 @@ namespace DDMusic.Migrations
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdSinger")
+                    b.Property<int?>("IdSinger")
                         .HasColumnType("int");
 
                     b.Property<string>("IdUser")
@@ -432,9 +432,7 @@ namespace DDMusic.Migrations
                 {
                     b.HasOne("DDMusic.Areas.Admin.Models.SingerModel", "Singer")
                         .WithMany()
-                        .HasForeignKey("IdSinger")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdSinger");
 
                     b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
                         .WithMany()

@@ -68,8 +68,9 @@
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Ca sĩ</label>
                                             <br />
-                                            <select class="form-control" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
+                                            <select class="form-control select2" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
                                             </select>
+
                                         </div>
                                     </div>
 
@@ -298,6 +299,6 @@
         document.querySelector("#actions .cancel").onclick = function () {
             myDropzone.removeAllFiles(true)
         }
-                  // DropzoneJS Demo Code End
+                      // DropzoneJS Demo Code End
     </script>
 }

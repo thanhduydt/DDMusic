@@ -11,7 +11,7 @@ namespace DDMusic.Areas.Admin.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Genre { get; set; }
-        public int IdSinger { get; set; }
+        public int? IdSinger { get; set; }
         public DateTime ReleaseDate { get; set; }
         //public int IdAlbum { get; set; }
         public string IdUser { get; set; }

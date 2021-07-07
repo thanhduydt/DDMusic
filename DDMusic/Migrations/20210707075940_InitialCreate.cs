@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class IntitaCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -123,7 +123,7 @@ namespace DDMusic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdSinger = table.Column<int>(type: "int", nullable: false),
+                    IdSinger = table.Column<int>(type: "int", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdUser = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Lyric = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -140,7 +140,7 @@ namespace DDMusic.Migrations
                         column: x => x.IdSinger,
                         principalTable: "Singer",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Song_Users_IdUser",
                         column: x => x.IdUser,
