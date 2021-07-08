@@ -223,6 +223,46 @@ namespace DDMusic.Controllers
             }
             return View(editUserModel);
         }
+        [HttpGet]
+        public JsonResult ListName(string term)
+        {
+            //List<string> nSong= _context.Song.Where(m => m.Name.Contains(term)).Select(m => m.Name).ToList();
+            //var data = nSong;
+            var song = (from c in _context.Song
+                        where c.Name.Contains(term)
+                        select new Search
+                        {
+                            label = c.Name,
+                            category = "Bài Hát",
+                        });
+            var singer = (from sg in _context.Singer
+                          where sg.Name.Contains(term)
+                          select new Search
+                          {
+                              label = sg.Name,
+                              category = "Ca sĩ"
+                          });
+            var data = new List<Search>();
+            foreach (var item in song)
+            {
+                data.Add(item);
+            }
+            foreach (var item in singer)
+            {
+                data.Add(item);
+            }
+            return Json(new
+            {
+                data = data,
+                status = true
+
+            });
+
+        }
+        public IActionResult Search()
+        {
+            return View();
+        }
         public async Task<IActionResult> UploadSong()
         {
             //Lấy danh sách Singer

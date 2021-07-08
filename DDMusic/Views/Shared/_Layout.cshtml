@@ -12,7 +12,8 @@
 
     <!-- Favicon -->
     <link rel="icon" href="~/img/core-img/favicon.ico">
-
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="~/style.css">
 </head>
@@ -25,5 +26,42 @@
 </body>
 </html>
 <script>
-   
+    $(function () {
+        $.widget("custom.catcomplete", $.ui.autocomplete, {
+            _create: function () {
+                this._super();
+                this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+            },
+            _renderMenu: function (ul, items) {
+                var that = this,
+                    currentCategory = "";
+                $.each(items, function (index, item) {
+                    var li;
+                    if (item.category != currentCategory) {
+                        ul.append("<li class='ui-autocomplete-category m'>" + item.category + "</li>");
+                        currentCategory = item.category;
+                    }
+                    li = that._renderItemData(ul, item);
+                    if (item.category) {
+                        li.attr("aria-label", item.category + " : " + item.label);
+                    }
+                });
+            }
+        });
+        $("#search").catcomplete({
+            delay: 0,
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Home/ListName",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response(data.data);
+                    }
+                });
+            }
+        });
+    });
 </script>
