@@ -74,6 +74,7 @@
                         <div class="col-md-8 title-song">
                             <h4>@Model.Name</h4>
                             <h6>@Model.Singer.Name</h6>
+                            <input id="idSong" hidden value="@Model.Id"/>
                         </div>
                     </div>
                 </div>
@@ -133,59 +134,38 @@
                 @*</div>*@
             </div>
         </div>
-
         <div class="row">
             <div class="col-12">
                 <!-- Contact Form Area -->
-                <div class="contact-form-area">
-                    <form action="#" method="post">
+                <div class="login-form">
+             
                         <div class="row">
                             <div class="col-md-6 col-lg-4">
-                                <div class="form-group wow fadeInUp" data-wow-delay="100ms">
-                                    <input type="text" class="form-control" id="name" placeholder="Bình luận">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <button class="btn oneMusic-btn w-25" type="submit">Gửi</button>
+                                    <button class="btn btn-primary w-25" name="btnComment" >Gửi</button>
                                 </div>
                             </div>
-                            @*<div class="col-md-6 col-lg-4">
-                                    <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                        <input type="email" class="form-control" id="email" placeholder="E-mail">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group wow fadeInUp" data-wow-delay="300ms">
-                                        <input type="text" class="form-control" id="subject" placeholder="Subject">
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-group wow fadeInUp" data-wow-delay="400ms">
-                                        <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
-                                    </div>
-                                </div>*@
-                        </div>
-                    </form>
+                        </div>         
                     <br />
+                    <div id="commentlist">
+                    @foreach (var comment in ViewBag.ListComment)
+                    {
                     <div class="row padding-comment">
                         <div class="col-md-1">
-                            <img class="img-comment" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
+                            <img class="img-comment" src="~/img//user-img/@comment.User.URLImg" alt="" />
                         </div>
                         <div class="col-md-6 comment">
-                            <h6 class="user-name">Kỳ Đạt</h6>
-                            <h6 class="user-comment">Bài hát thật tuyệt vời!</h6>
+                            <h6 class="user-name">@comment.User.UserName</h6>
+                            <h6 class="user-comment">@comment.Content</h6>
                         </div>
                     </div>
-                    <div class="row padding-comment">
-                        <div class="col-md-1">
-                            <img class="img-comment" src="~/img/song/ChiLaKhongCungNhau.jpg" alt="" />
+                    }
                         </div>
-                        <div class="col-md-6 comment">
-                            <h6 class="user-name">Thanh Duy</h6>
-                            <h6 class="user-comment">Nghe thật thích tai!</h6>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -205,5 +185,23 @@
             document.getElementById("seeMoreLyric").style.display = 'block';
             document.getElementById("hideMoreLyric").style.display = 'none';
         }
+        $('button[name=btnComment]').click(function () {
+            var txtComment = document.getElementById("txtComment").value;
+            var idSong = document.getElementById("idSong").value;
+            $.ajax({
+                type: 'post',
+                url: '/Home/AddComment',
+                dataType: 'html',
+                data: {
+                    "txtComment": txtComment, "idSong": idSong
+                },
+                success: function (data) {
+               //     alert(data);
+                    $("#commentlist").html(data);
+                }
+              
+            });
+        });
+       
     </script>
 }

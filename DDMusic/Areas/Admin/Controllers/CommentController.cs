@@ -47,7 +47,7 @@ namespace DDMusic.Areas.Admin.Controllers
                                    Id = c.Id,
                                    User = u,
                                    Song = s,
-                                   Description = c.Description,
+                                   Content = c.Content,
                                    Time = c.Time,
                                }).OrderByDescending(m => m.Time).ToListAsync());
         }

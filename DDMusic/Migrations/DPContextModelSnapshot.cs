@@ -19,6 +19,26 @@ namespace DDMusic.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.AlbumModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("IdSinger")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdSinger");
+
+                    b.ToTable("Album");
+                });
+
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.CommentModel", b =>
                 {
                     b.Property<int>("Id")
@@ -26,7 +46,7 @@ namespace DDMusic.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdSong")
@@ -409,6 +429,15 @@ namespace DDMusic.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.AlbumModel", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.SingerModel", "Singer")
+                        .WithMany()
+                        .HasForeignKey("IdSinger");
+
+                    b.Navigation("Singer");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.CommentModel", b =>

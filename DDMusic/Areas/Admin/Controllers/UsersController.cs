@@ -221,7 +221,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         public async Task<IActionResult> CreateDataUser()
         {
-            for(int i=0;i<16;i++)
+            for(int i=1;i<16;i++)
             {
 
                 UserModel user = new UserModel();
@@ -229,8 +229,9 @@ namespace DDMusic.Areas.Admin.Controllers
                 user.UserName = "thanhduy" + i;
                 user.Email = "ttduy" + i+".@gmail.com";
                 user.EmailConfirmed = true;
-              await  _userManager.CreateAsync(user,"tduy"+i);            
+              await  _userManager.CreateAsync(user,"tduy"+i);
             }
+            
             return RedirectToAction(nameof(Users));
         }
     }

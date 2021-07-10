@@ -27,10 +27,10 @@ namespace DDMusic.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _logger = logger;
-        //    _signInManager = signInManager;
+            //    _signInManager = signInManager;
             _context = context;
         }
-        
+
         //public HomeController(DPContext context)
         //{
         //    this._context = context;
@@ -60,19 +60,19 @@ namespace DDMusic.Controllers
             }
             var SingerOfSong = _context.Song.Include(s => s.Singer);
             var AllSong = await SingerOfSong.ToListAsync();
-            var Song = AllSong.Where(m => m.Genre == Genre && m.Accept == true).OrderByDescending(m=>m.Id);
+            var Song = AllSong.Where(m => m.Genre == Genre && m.Accept == true).OrderByDescending(m => m.Id);
             var NewSong = Song.Take(12);
             var SongOfGenre = Song.Skip(12);
-            if(NewSong.Count() > 0)
+            if (NewSong.Count() > 0)
             {
                 ViewBag.NewSong = NewSong;
             }
-            if(SongOfGenre.Count() > 0)
+            if (SongOfGenre.Count() > 0)
             {
                 ViewBag.SongOfGenre = SongOfGenre;
             }
             ViewBag.Title = Genre;
-            
+
             return View();
         }
         [Route("bang-xep-hang")]
@@ -84,7 +84,7 @@ namespace DDMusic.Controllers
             var TopSongOnWeekDetail = AllTopSongOnWeekDetail.Where(m => m.IdTopSongOnWeek == TopSongOnWeek.Id);
             //Gán song cho vào TopSongOnWeekDetail
             List<TopSongOnWeekDetail> topSongOnWeekDetails = new List<TopSongOnWeekDetail>();
-            foreach(var item in TopSongOnWeekDetail)
+            foreach (var item in TopSongOnWeekDetail)
             {
                 TopSongOnWeekDetail TopOnWeek = new TopSongOnWeekDetail();
                 TopOnWeek = item;
@@ -117,7 +117,7 @@ namespace DDMusic.Controllers
         }
         [Route("bai-hat/{id}")]
         public async Task<IActionResult> SongDetail(int id)
-        { 
+        {
             var song = await _context.Song.FindAsync(id);
             var singer = await _context.Singer.FindAsync(song.IdSinger);
             song.Singer = singer;
@@ -126,7 +126,7 @@ namespace DDMusic.Controllers
             var random = new Random();
             var GetRelatedSongs = AllSongOfGenre.OrderBy(m => random.Next()).Take(4);
             List<SongModel> RelatedSongs = new List<SongModel>();
-            foreach(var item in GetRelatedSongs)
+            foreach (var item in GetRelatedSongs)
             {
                 SongModel relatedSong = new SongModel();
                 relatedSong = item;
@@ -134,7 +134,41 @@ namespace DDMusic.Controllers
                 RelatedSongs.Add(relatedSong);
             }
             ViewBag.RelatedSongs = RelatedSongs;
+            ViewBag.ListComment = await (from c in _context.Comment
+                                         join u in _context.User on c.IdUser equals u.Id
+                                         where c.IdSong == id
+                                         select new CommentModel {
+                                             Id = c.Id,
+                                             Content = c.Content,
+                                             Time = c.Time,
+                                             User = u,
+                                         }).OrderByDescending(m => m.Time).ToListAsync();
             return View(song);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddComment(string txtComment,int idSong)
+        {
+            //Thông tin User đăng nhập
+            string idUser = _userManager.GetUserId(User);
+            //Tạo mới item Comment
+            CommentModel commentModel = new CommentModel();
+            commentModel.IdSong = idSong;
+            commentModel.IdUser = idUser;
+            commentModel.Content = txtComment;
+            commentModel.Time = DateTime.Now;
+            _context.Comment.Add(commentModel);
+            _context.SaveChanges();
+            List<CommentModel> listComment = await (from c in _context.Comment
+                                                    join u in _context.User on c.IdUser equals u.Id
+                                                    where c.IdSong == idSong
+                                                    select new CommentModel
+                                                    {
+                                                        Id = c.Id,
+                                                        Content = c.Content,
+                                                        Time = c.Time,
+                                                        User = u,
+                                                    }).OrderByDescending(m => m.Time).ToListAsync();
+            return PartialView("_CommentPartial",listComment);
         }
         [Route("dang-nhap")]
         public IActionResult Login()
@@ -263,6 +297,19 @@ namespace DDMusic.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult>Search(string txtSearch)
+        {
+            //ViewBag.listSong = await _context.Song.Where(m => m.Name.Contains(txtSearch)).ToListAsync();
+            //ViewBag.listAlbum=await _context.Album.Where(m=>m.Name.Contains(txtSearch)).ToListAsync();
+            return View();
+        }
+        //[HttpGet]
+        //public async Task<IActionResult> Comment(string txtC)
+        //{
+            
+        //    return PartialView("_CommentPartial",);
+        //}
         public async Task<IActionResult> UploadSong()
         {
             //Lấy danh sách Singer

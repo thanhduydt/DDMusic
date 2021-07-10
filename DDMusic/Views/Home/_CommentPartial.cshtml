@@ -1,0 +1,13 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.CommentModel>
+    @foreach (var comment in Model)
+    {
+        <div class="row padding-comment">
+            <div class="col-md-1">
+                <img class="img-comment" src="~/img//user-img/@comment.User.URLImg" alt="" />
+            </div>
+            <div class="col-md-6 comment">
+                <h6 class="user-name">@comment.User.UserName</h6>
+                <h6 class="user-comment">@comment.Content</h6>
+            </div>
+        </div>
+    }
