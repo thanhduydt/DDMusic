@@ -28,6 +28,17 @@ namespace DDMusic.Areas.Admin.Controllers
             var AllSong = Song.Where(m => m.Accept == true);
             return View(AllSong);
         }
+        [HttpGet]
+        public JsonResult GetAlbumOfSinger(int idSinger)
+        {
+            //List<SingerModel> List = new List<SingerModel>();
+            var List = _context.Album.Where(m => m.IdSinger == idSinger).Select(a => new SelectListItem()
+            {
+                Value = a.Id.ToString(),
+                Text = a.Name
+            }).ToList();
+            return Json(List);
+        }
         public IActionResult CreateSong()
         {
             ViewData["ListGenre"] = new SelectList(SongModel.GetAllGerne());
@@ -51,12 +62,16 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric")] SongModel song, IFormFile ful, IFormFile fulMusic)
+        public async Task<IActionResult> Create([Bind("Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,IdAlbum")] SongModel song, IFormFile ful, IFormFile fulMusic)
         {
             if (ModelState.IsValid)
             {
                 //Admin tạo bài hát thì luôn được cho phép hiển thị lên frontend
                 song.Accept = true;
+                if(song.IdAlbum == null)
+                {
+                    song.IdAlbum = 0;
+                }
                 //Khởi tạo số view cho bài hát mới là 0
                 song.CountView = 0;
                 _context.Add(song);

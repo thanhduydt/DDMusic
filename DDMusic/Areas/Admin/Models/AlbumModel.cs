@@ -10,6 +10,7 @@ namespace DDMusic.Areas.Admin.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Image { get; set; }
         public int? IdSinger { get; set; }
         [ForeignKey("IdSinger")]
         public virtual SingerModel Singer { get; set; }

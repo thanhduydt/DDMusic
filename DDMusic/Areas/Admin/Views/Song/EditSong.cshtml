@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Create Users</h1>
+                    <h1>Edit Song</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -69,7 +69,7 @@
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Ca sĩ</label>
                                             <br />
-                                            <select class="form-control" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
+                                            <select class="form-control" onchange="GetAlbum()" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
                                             </select>
                                         </div>
                                     </div>
@@ -81,6 +81,14 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6">
+                                        <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                            <label>Album</label>
+                                            <br />
+                                            <select class="form-control select2" asp-for="IdAlbum" id="Album">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
                                         <label>Số lượng lượt nghe nhạc: <span>@Model.CountView</span></label>
                                         <div class="input-group">
                                             <input type="text" asp-for="CountView" class="form-control" hidden>
@@ -88,9 +96,9 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6">
                                         <label>Kích Hoạt: <input type="checkbox" asp-for="Accept" disabled /></label>
-                                        <div class="input-group">                        
-                                            <input type="checkbox" asp-for="Accept" class="form-control" disabled/>
-                                        </div>
+                                        @*<div class="input-group">
+                                            <input type="checkbox" asp-for="Accept" class="form-control" disabled />
+                                        </div>*@
                                     </div>
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
@@ -161,7 +169,36 @@
                 sortField: 'text'
             });
         });
-
+        ////On Load Album
+        $list = $("#Album");
+        $.ajax({
+            url: '/Admin/Song/GetAlbumOfSinger',
+            type: "GET",
+            data: { idSinger: parseInt($("#Singer").val()) },
+            success: function (data) {
+                $list.empty();
+                $list.append('<option value="' + 0 + '"> ' + "Hãy chọn album(Nếu có)" + ' </option>');
+                $.each(data, function (i, item) {
+                    $list.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
+                });
+            },
+        })
+        //Change Singer
+        function GetAlbum() {
+            $list = $("#Album");
+            $.ajax({
+                url: '/Admin/Song/GetAlbumOfSinger',
+                type: "GET",
+                data: { idSinger: parseInt($("#Singer").val()) },
+                success: function (data) {
+                    $list.empty();
+                    $list.append('<option value="' + 0 + '"> ' + "Hãy chọn album(Nếu có)" + ' </option>');
+                    $.each(data, function (i, item) {
+                        $list.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
+                    });
+                },
+            })
+        }
         ClassicEditor
             .create(document.querySelector('#editor'))
             .catch(error => {

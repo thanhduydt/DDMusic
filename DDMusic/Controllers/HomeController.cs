@@ -180,9 +180,35 @@ namespace DDMusic.Controllers
         {
             return View();
         }
-        [Route("ca-si")]
-        public IActionResult Singer()
+        [Route("ca-si/{routingDetail}")]
+        public async Task<IActionResult> Singer(string routingDetail)
         {
+            string country = "";
+            switch (routingDetail)
+            {
+                case "viet-nam":
+                    country = "Việt Nam"; break;
+                case "au-my":
+                    country = "Âu Mỹ"; break;
+                case "han-quoc":
+                    country = "Hàn Quốc"; break;
+            }
+            var AllSinger = await _context.Singer.ToListAsync();
+            var SingerOfCountry = AllSinger.Where(m => m.Country == country);
+            if (SingerOfCountry.Count() > 0)
+            {
+                ViewBag.Singer = SingerOfCountry;
+            }
+            ViewBag.Title = country;
+            return View();
+        }
+        [Route("thong-tin-ca-si/{id}")]
+        public async Task<IActionResult> SingleDetail(int id)
+        {
+            var Singer = await _context.Singer.FindAsync(id);
+            var AllSong = await _context.Song.ToListAsync();
+            var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
+
             return View();
         }
         //[Route("thong-tin-tai-khoan")]

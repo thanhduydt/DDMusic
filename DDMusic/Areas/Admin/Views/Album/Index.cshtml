@@ -1,6 +1,10 @@
-﻿<style>
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.AlbumModel>
+<style>
     img {
-        width: 10%
+        width: 100%
+    }
+    a {
+        color: #000;
     }
 </style>
 <div class="content-wrapper">
@@ -34,18 +38,21 @@
                                 <thead>
                                     <tr>
                                         <th>Tên Album</th>
-                                        <th>Thuộc ca sĩ</th>
-                                        <th>Hình ảnh</th>
+                                        <th>Ca sĩ</th>
+                                        <th style="width:10%">Hình ảnh</th>
                                         <th>Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Chúng ta</td>
-                                        <td>Sơn Tùng M-TP</td>
-                                        <td><img src="~/img/Singer/SonTungMTP.jpg" /></td>
-                                        <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
-                                    </tr>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.Singer.Name</td>
+                                            <td><img src="~/img/Album/@item.Image" /></td>
+                                            <td><a asp-action="EditAlbum" asp-controller="Album" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a> <a asp-controller="Album" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa album này không?');"><i class="fas fa-trash-alt"></i></a></td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
                         </div>

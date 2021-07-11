@@ -1,4 +1,5 @@
-﻿<div class="content-wrapper">
+﻿@model DDMusic.Areas.Admin.Models.AlbumModel
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -27,7 +28,7 @@
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form action="#" method="get" enctype="multipart/form-data">
+                        <form asp-area="Admin" asp-controller="Album" asp-action="Create" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
@@ -49,37 +50,16 @@
                                     <div class="col-md-6 col-lg-6">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên Album</label>
-                                            <input type="text" class="form-control" id="namesinger" value="">
+                                            <input type="text" class="form-control" asp-for="Name" id="name-album" value="">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 col-lg-6">
                                         <label>Thuộc Ca Sĩ</label>
-                                        <div class="input-group">
-                                            <select class="form-control" name="singer" id="singer">
-                                                <option value="Hoàng Dũng">Hoàng Dũng</option>
-                                                <option value="LXBand">LXBand</option>
-                                                <option value="Jack">Jack</option>
-                                                <option value="Sơn Tùng M-TP">Sơn Tùng M-TP</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12">
-                                        <label>Chọn bài hát</label>
-                                        <div class="input-group">
-                                            <select class="form-control" multiple name="song" id="singer">
-                                                <option value="Nàng thơ">Nàng thơ</option>
-                                                <option value="Cớ sao vậy">Cớ sao vậy</option>
-                                                <option value="Đom đóm">Đom đóm</option>
-                                                <option value="Chúng ta của hiện tại">Chúng ta của hiện tại</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 col-lg-12">
-                                        <div class="form-group wow fadeInUp" data-wow-delay="100ms">
-                                            <label>Mô tả về album</label>
-                                            <textarea name="Description" id="editor"></textarea>
-                                        </div>
+                                        <br />
+                                        <select class="form-control select2" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
+                                        </select>
+
                                     </div>
 
                                     <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
@@ -285,6 +265,6 @@
         document.querySelector("#actions .cancel").onclick = function () {
             myDropzone.removeAllFiles(true)
         }
-              // DropzoneJS Demo Code End
+                  // DropzoneJS Demo Code End
     </script>
 }

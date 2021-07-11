@@ -1,7 +1,7 @@
 ﻿<style>
-    img{
-        max-width:400px;
-        max-height:400px;
+    img {
+        max-width: 400px;
+        max-height: 400px;
     }
 </style>
 <section class="oneMusic-buy-now-area has-fluid bg-gray section-padding-100">
@@ -9,101 +9,35 @@
         <div class="row">
             <div class="col-12">
                 <div class="section-heading style-2">
-                    <h2>Ca sĩ Việt Nam</h2>
+                    <h2>Ca sĩ @ViewBag.Title</h2>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="section-heading style-2">
-                    <h2>Ca sĩ Nổi Bật</h2>
-                </div>
-            </div>
+            @*<div class="col-12">
+                    <div class="section-heading style-2">
+                        <h2>Ca sĩ Nổi Bật</h2>
+                    </div>
+                </div>*@
         </div>
 
         <div class="row">
-
-            <!-- Single Album Area -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                    <div class="album-thumb">
-                        <img src="~/img/Singer/SonTungMTP.jpg" alt="">
+            @if (ViewBag.Singer != null)
+                @foreach (var item in ViewBag.Singer)
+                {
+                    <!-- Single Album Area -->
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                        <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
+                            <div class="album-thumb">
+                                <img src="~/img/Singer/@item.Image" alt="">
+                            </div>
+                            <div class="album-info">
+                                <a href="#">
+                                    <h5>@item.Name</h5>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="album-info">
-                        <a href="#">
-                            <h5>Sơn Tùng M-TP</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Single Album Area -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                    <div class="album-thumb">
-                        <img src="~/img/Singer/jack.jpg" alt="">
-                    </div>
-                    <div class="album-info">
-                        <a href="#">
-                            <h5>Jack</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Single Album Area -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                    <div class="album-thumb">
-                        <img src="~/img/Singer/K-Icm.jpg" alt="">
-                    </div>
-                    <div class="album-info">
-                        <a href="#">
-                            <h5>K-ICM</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Single Album Area -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                    <div class="album-thumb">
-                        <img src="~/img/bg-img/b1.jpg" alt="">
-                    </div>
-                    <div class="album-info">
-                        <a href="#">
-                            <h5>Tăng Duy Tân</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Single Album Area -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                    <div class="album-thumb">
-                        <img src="~/img/bg-img/b1.jpg" alt="">
-                    </div>
-                    <div class="album-info">
-                        <a href="#">
-                            <h5>Hoàng Dũng</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Single Album Area -->
-            <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                    <div class="album-thumb">
-                        <img src="~/img/bg-img/b1.jpg" alt="">
-                    </div>
-                    <div class="album-info">
-                        <a href="#">
-                            <h5>Đạt-G</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>     
+                }
         </div>
+    </div>
 </section>
 
