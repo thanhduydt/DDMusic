@@ -286,17 +286,16 @@ namespace DDMusic.Controllers
         [HttpGet]
         public JsonResult ListName(string term)
         {
-            //List<string> nSong= _context.Song.Where(m => m.Name.Contains(term)).Select(m => m.Name).ToList();
-            //var data = nSong;
+            term = RemoveUnicode(term);
             var song = (from c in _context.Song
-                        where c.Name.Contains(term)
+                        where c.NameUnsigned.Contains(term)
                         select new Search
                         {
                             label = c.Name,
                             category = "Bài Hát",
                         });
             var singer = (from sg in _context.Singer
-                          where sg.Name.Contains(term)
+                          where sg.NameUnsigned.Contains(term)
                           select new Search
                           {
                               label = sg.Name,
@@ -319,23 +318,37 @@ namespace DDMusic.Controllers
             });
 
         }
-        public IActionResult Search()
-        {
-            return View();
-        }
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult>Search(string txtSearch)
         {
-            //ViewBag.listSong = await _context.Song.Where(m => m.Name.Contains(txtSearch)).ToListAsync();
-            //ViewBag.listAlbum=await _context.Album.Where(m=>m.Name.Contains(txtSearch)).ToListAsync();
+            txtSearch = RemoveUnicode(txtSearch);
+            //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
+            ViewBag.listSong = await (from s in _context.Song.Include(m => m.Singer)
+                                      where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
+                                      select s).Take(5).ToListAsync();
+            //   Tìm kiếm album theo tên bài và tên ca sĩ
+            ViewBag.listAlbum = await (from a in _context.Album.Include(m => m.Singer)
+                                      where a.NameUnsigned.Contains(txtSearch) || a.Singer.NameUnsigned.Contains(txtSearch)
+                                      select a).Take(10).ToListAsync();
+            ViewBag.txtSearch = txtSearch.ToString();
             return View();
         }
-        //[HttpGet]
-        //public async Task<IActionResult> Comment(string txtC)
-        //{
-            
-        //    return PartialView("_CommentPartial",);
-        //}
+        public async Task<IActionResult>AllSong(string txtSearch)
+        {
+            //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
+            List<SongModel> listSong = await (from s in _context.Song.Include(m => m.Singer)
+                                      where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
+                                      select s).ToListAsync();
+            return View(listSong);
+        }
+        public async Task<IActionResult>AllAlbum(string txtSearch)
+        {
+            //   Tìm kiếm album theo tên album và tên ca sĩ
+               List<AlbumModel> listAlbum =await (from a in _context.Album.Include(m => m.Singer)
+                                                where a.NameUnsigned.Contains(txtSearch) || a.Singer.NameUnsigned.Contains(txtSearch)
+                                               select a).ToListAsync();
+            return View( listAlbum);
+        }
         public async Task<IActionResult> UploadSong()
         {
             //Lấy danh sách Singer

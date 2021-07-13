@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\img\album\" />
     <Folder Include="wwwroot\img\playlist\" />
   </ItemGroup>
 

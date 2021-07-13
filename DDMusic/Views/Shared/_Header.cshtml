@@ -131,13 +131,13 @@
                                 <div class="login-register-btn mr-50">
 
                                     <div class="form-group wow fadeInUp" data-wow-delay="100ms">
-                                        <form asp-action="Search" method="get">
+                                        <form asp-controller="Home" asp-action="Search" method="get">
                                             @*<input class="input-search" type="text" id="txtKeyword" name="txtKeyword" placeholder=" Tìm Kiếm">
         <button class="btn-search"><i class="fa fa-search"></i></button>*@
                                     
                                             <div class="container-1">
                                                 <span class="icon"><i class="fa fa-search"></i></span>
-                                                <input type="search" id="search" placeholder="Tìm kiếm ..." />
+                                                <input type="search" id="search" name="txtSearch" placeholder="Tìm kiếm ..." />
                                                 <input type="button" hidden />
                                             </div>
 

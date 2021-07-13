@@ -1,0 +1,44 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
+    <style>
+        th img {
+            width: 70px;
+            height: 70px;
+            -webkit-border-radius: 10%;
+        }
+
+        .s {
+            min-height: 500px;
+        }
+
+        .e {
+            padding-top: 100px;
+            padding-left: 50px;
+        }
+    </style>
+    <h2 class="e">TÌM KIẾM</h2>
+<br />
+    <div class="container s">
+        <h5>BÀI HÁT</h5>
+        <br />
+        <table class="table">
+            <tbody>
+                @foreach (var song in Model)
+                {
+                    <tr>
+
+                        <th width="100px" scope="row"><img src="~/img/song/@song.URLImg" /></th>
+                        <td>
+                            <a href="~/bai-hat/@song.Id">
+                                <b style="font-size:18px;">@song.Name</b>
+                            </a>
+                            <br />
+                            <p>@song.Singer.Name</p>
+                        </td>
+                        <td style="font-size:18px; color:gainsboro; padding-top:30px;"><i class="fa fa-user" aria-hidden="true">&nbsp;thanh duy</i></td>
+                        <td style="font-size:18px; color:gainsboro; padding-top:30px;"><i class="fa fa-headphones" aria-hidden="true">&nbsp;1000</i></td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>

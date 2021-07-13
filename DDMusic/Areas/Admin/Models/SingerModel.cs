@@ -9,6 +9,7 @@ namespace DDMusic.Areas.Admin.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string NameUnsigned { get; set; }
         public DateTime BirthDay { get; set; }
         public string Description { get; set; }
         public string Image { get; set; }

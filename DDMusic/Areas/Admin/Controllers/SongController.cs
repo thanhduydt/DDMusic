@@ -74,6 +74,7 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 //Khởi tạo số view cho bài hát mới là 0
                 song.CountView = 0;
+                song.NameUnsigned = RemoveUnicode(song.Name);
                 _context.Add(song);
                 await _context.SaveChangesAsync();
                 if (ful != null)
@@ -131,6 +132,7 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 try
                 {
+                    song.NameUnsigned = RemoveUnicode(song.Name);
                     if (ful != null)
                     {
                         string t = song.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];

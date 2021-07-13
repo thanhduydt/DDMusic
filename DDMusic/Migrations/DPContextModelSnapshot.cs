@@ -29,7 +29,13 @@ namespace DDMusic.Migrations
                     b.Property<int?>("IdSinger")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NameUnsigned")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -89,6 +95,9 @@ namespace DDMusic.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NameUnsigned")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Singer");
@@ -110,6 +119,9 @@ namespace DDMusic.Migrations
                     b.Property<string>("Genre")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("IdAlbum")
+                        .HasColumnType("int");
+
                     b.Property<int?>("IdSinger")
                         .HasColumnType("int");
 
@@ -122,6 +134,9 @@ namespace DDMusic.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("NameUnsigned")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
@@ -132,6 +147,8 @@ namespace DDMusic.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdAlbum");
 
                     b.HasIndex("IdSinger");
 
@@ -459,6 +476,10 @@ namespace DDMusic.Migrations
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>
                 {
+                    b.HasOne("DDMusic.Areas.Admin.Models.AlbumModel", "Album")
+                        .WithMany()
+                        .HasForeignKey("IdAlbum");
+
                     b.HasOne("DDMusic.Areas.Admin.Models.SingerModel", "Singer")
                         .WithMany()
                         .HasForeignKey("IdSinger");
@@ -466,6 +487,8 @@ namespace DDMusic.Migrations
                     b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
                         .WithMany()
                         .HasForeignKey("IdUser");
+
+                    b.Navigation("Album");
 
                     b.Navigation("Singer");
 
