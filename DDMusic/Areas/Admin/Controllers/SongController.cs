@@ -68,9 +68,9 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 //Admin tạo bài hát thì luôn được cho phép hiển thị lên frontend
                 song.Accept = true;
-                if(song.IdAlbum == null)
+                if(song.IdAlbum == 0)
                 {
-                    song.IdAlbum = 0;
+                    song.IdAlbum = null;
                 }
                 //Khởi tạo số view cho bài hát mới là 0
                 song.CountView = 0;
@@ -133,6 +133,10 @@ namespace DDMusic.Areas.Admin.Controllers
                 try
                 {
                     song.NameUnsigned = RemoveUnicode(song.Name);
+                    if(song.IdAlbum == 0)
+                    {
+                        song.IdAlbum = null;
+                    }
                     if (ful != null)
                     {
                         string t = song.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];

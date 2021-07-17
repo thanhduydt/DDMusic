@@ -41,6 +41,7 @@
                                         <th>Ca sĩ</th>
                                         <th style="width:10%">Hình ảnh</th>
                                         <th>Thao tác</th>
+                                        <th>Chi Tiết</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,6 +52,7 @@
                                             <td>@item.Singer.Name</td>
                                             <td><img src="~/img/Album/@item.Image" /></td>
                                             <td><a asp-action="EditAlbum" asp-controller="Album" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a> <a asp-controller="Album" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa album này không?');"><i class="fas fa-trash-alt"></i></a></td>
+                                            <td><a asp-action="DetailAlbum" asp-controller="Album" asp-route-id="@item.Id">Chi Tiết</a></td>
                                         </tr>
                                     }
                                 </tbody>

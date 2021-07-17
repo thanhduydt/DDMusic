@@ -1,0 +1,50 @@
+﻿<style>
+    img {
+        width: 100%
+    }
+
+    a {
+        color: #000;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Album: @ViewBag.NameAlbum</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Song</a></li>
+                        <li class="breadcrumb-item active"></li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <input id="id-album" value="@ViewBag.IdAlbum" hidden />
+    <!-- Main content -->
+
+    <div id="GetSongFromAlbum"></div>
+
+</div>
+<script>
+    window.onload = function () {
+        var idAlbum = $("#id-album").val();
+        $.ajax({
+            type: 'get',
+            url: '/Admin/Album/GetSongFromAlbum',
+            dataType: 'html',
+            data: {
+                "id": idAlbum
+            },
+            success: function (data) {
+                //     alert(data);
+                $("#GetSongFromAlbum").html(data);
+            }
+
+        });
+    }
+</script>

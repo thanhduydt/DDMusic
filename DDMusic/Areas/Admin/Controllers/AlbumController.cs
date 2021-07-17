@@ -36,6 +36,65 @@ namespace DDMusic.Areas.Admin.Controllers
             var album = await _context.Album.FindAsync(id);
             return View(album);
         }
+        public IActionResult DetailAlbum(int id)
+        {
+            var album = _context.Album.Find(id);
+            ViewBag.NameAlbum = album.Name;
+            ViewBag.IdAlbum = id;
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetSongFromAlbum(int id)
+        {
+            var song = await _context.Song.ToListAsync();
+            var SongOfAlbum = song.Where(m => m.IdAlbum == id);
+            List<SongModel> SongFromAlbum = new List<SongModel>();
+            foreach(var item in SongOfAlbum)
+            {
+                SongModel songModel = new SongModel();
+                var singer = _context.Singer.Find(item.IdSinger);
+                songModel = item;
+                songModel.Singer = singer;
+                SongFromAlbum.Add(songModel);
+            }
+            return PartialView("_GetSongFromAlbum", SongFromAlbum);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RemoveSongFromAlbum(int id)
+        {
+            int? IdAlbum;
+            var song = await _context.Song.FindAsync(id);
+            IdAlbum = song.IdAlbum;
+            song.IdAlbum = null;
+            //var album = await _context.Album.FindAsync(song.IdAlbum);
+            _context.SaveChanges();
+
+            var AllSong = await _context.Song.ToListAsync();
+            var SongOfAlbum = AllSong.Where(m => m.IdAlbum == IdAlbum);
+            List<SongModel> SongFromAlbum = new List<SongModel>();
+            foreach (var item in SongOfAlbum)
+            {
+                SongModel songModel = new SongModel();
+                var singer = _context.Singer.Find(item.IdSinger);
+                songModel = item;
+                songModel.Singer = singer;
+                SongFromAlbum.Add(songModel);
+            }
+            return PartialView("_GetSongFromAlbum", SongFromAlbum);
+            //var AllSong = await _context.Song.ToListAsync();
+            //var SongOfAlbum = AllSong.Where(m => m.IdAlbum == IdAlbum);
+            //List<SongModel> SongFromAlbum = new List<SongModel>();
+            //foreach (var item in SongOfAlbum)
+            //{
+            //    SongModel songModel = new SongModel();
+            //    var singer = _context.Singer.Find(item.IdSinger);
+            //    songModel = item;
+            //    songModel.Singer = singer;
+            //    SongFromAlbum.Add(songModel);
+            //}
+            //return PartialView("_GetSongFromAlbum", SongFromAlbum);
+            //return PartialView();
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,IdSinger,Image")] AlbumModel album, IFormFile ful)

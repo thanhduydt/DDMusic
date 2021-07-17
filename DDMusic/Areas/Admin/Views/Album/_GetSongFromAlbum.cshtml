@@ -1,0 +1,64 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tên bài hát</th>
+                                        <th>Ca sĩ</th>
+                                        <th style="width:10%">Hình ảnh</th>
+                                        <th>Thể Loại</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.Singer.Name</td>
+                                            <td><img src="~/img/song/@item.URLImg" /></td>
+                                            <td>@item.Genre</td>
+                                            <td><button style="border:none" onclick="RemoveSongFromAlbum(@item.Id)"><i class="fas fa-trash-alt"></i></button></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    <script>
+        function RemoveSongFromAlbum(e) {
+            if (confirm("Bạn muốn xóa bài hát ra khỏi album?") == true) {
+                $.ajax({
+                    type: 'post',
+                    url: '/Admin/Album/RemoveSongFromAlbum',
+                    dataType: 'html',
+                    data: {
+                        "id": e
+                    },
+                    success: function (data) {
+                        //     alert(data);
+                        $("#GetSongFromAlbum").html(data);
+                    }
+
+                });
+            }
+            
+        }
+    </script>
