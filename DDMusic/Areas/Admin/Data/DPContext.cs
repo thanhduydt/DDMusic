@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Data
 {
-    public class DPContext:IdentityDbContext<UserModel>
+    public class DPContext : IdentityDbContext<UserModel>
     {
         public DPContext(DbContextOptions<DPContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -32,6 +32,7 @@ namespace DDMusic.Areas.Admin.Data
         public DbSet<TopSongOnMonth> TopSongOnMonth { get; set; }
         public DbSet<TopSongOnMonthDetail> TopSongOnMonthDetail { get; set; }
         public DbSet<CommentModel> Comment { get; set; }
-       
+        public DbSet<Playlist> Playlist { get; set; }
+        public DbSet<PlaylistDetail> PlaylistDetail { get; set; }
     }
 }

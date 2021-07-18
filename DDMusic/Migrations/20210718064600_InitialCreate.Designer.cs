@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDMusic.Migrations
 {
     [DbContext(typeof(DPContext))]
-    [Migration("20210715024850_InitialCreate")]
+    [Migration("20210718064600_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,6 +73,46 @@ namespace DDMusic.Migrations
                     b.HasIndex("IdUser");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.Playlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("IdUser")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("Playlist");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.PlaylistDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IdSong")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdSong");
+
+                    b.ToTable("PlaylistDetail");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SingerModel", b =>
@@ -474,6 +514,26 @@ namespace DDMusic.Migrations
                     b.Navigation("Song");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.Playlist", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.PlaylistDetail", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.SongModel", "Song")
+                        .WithMany()
+                        .HasForeignKey("IdSong")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Song");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.SongModel", b =>

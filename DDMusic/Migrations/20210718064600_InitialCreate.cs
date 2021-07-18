@@ -139,6 +139,27 @@ namespace DDMusic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Playlist",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdUser = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Playlist", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Playlist_Users_IdUser",
+                        column: x => x.IdUser,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserClaims",
                 columns: table => new
                 {
@@ -294,6 +315,25 @@ namespace DDMusic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PlaylistDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdSong = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlaylistDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlaylistDetail_Song_IdSong",
+                        column: x => x.IdSong,
+                        principalTable: "Song",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TopSongOnMonthDetail",
                 columns: table => new
                 {
@@ -361,6 +401,16 @@ namespace DDMusic.Migrations
                 name: "IX_Comment_IdUser",
                 table: "Comment",
                 column: "IdUser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Playlist_IdUser",
+                table: "Playlist",
+                column: "IdUser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistDetail_IdSong",
+                table: "PlaylistDetail",
+                column: "IdSong");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -441,6 +491,12 @@ namespace DDMusic.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comment");
+
+            migrationBuilder.DropTable(
+                name: "Playlist");
+
+            migrationBuilder.DropTable(
+                name: "PlaylistDetail");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
