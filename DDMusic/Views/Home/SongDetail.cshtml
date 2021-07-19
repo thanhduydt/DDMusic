@@ -1,93 +1,107 @@
-﻿@model DDMusic.Areas.Admin.Models.SongModel
+﻿<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="~/styleMusic.css">
 <style>
-    .divLyric {
-        height: auto;
-        max-height: 255px;
-        overflow: hidden;
-    }
+        .divLyric {
+            height: auto;
+            max-height: 255px;
+            overflow: hidden;
+        }
 
-    .img-song {
-        width: 100px;
-        height: 100px;
-        border-radius: 10%;
-    }
+        .img-song {
+            width: 100px;
+            height: 100px;
+            border-radius: 10%;
+        }
 
-    .title-song {
-        margin-top: 10px;
-        margin-left: -120px;
-    }
+        .title-song {
+            margin-top: 10px;
+            margin-left: -120px;
+        }
 
-    .img-comment {
-        width: 60px;
-        height: 60px;
-        border-radius: 12%;
-    }
+        .img-comment {
+            width: 60px;
+            height: 60px;
+            border-radius: 12%;
+        }
 
-    .user-name {
-        width: 100px;
-        margin-left: 10px;
-        margin-right: 10px;
-        font-weight: 600 !important;
-    }
+        .user-name {
+            width: 100px;
+            margin-left: 10px;
+            margin-right: 10px;
+            font-weight: 600 !important;
+        }
 
-    .user-comment {
-        margin-left: 10px;
-        font-weight: 400 !important;
-    }
+        .user-comment {
+            margin-left: 10px;
+            font-weight: 400 !important;
+        }
 
-    .padding-comment {
-        padding-bottom: 10px;
-    }
+        .padding-comment {
+            padding-bottom: 10px;
+        }
 
-    .comment {
-        margin-left: -30px;
-    }
+        .comment {
+            margin-left: -30px;
+        }
 
-    h4 {
-        font-size: 40px;
-    }
+        h4 {
+            font-size: 40px;
+        }
 
-    h6 {
-        font-weight: 500;
-        letter-spacing: 1px;
-    }
+        h6 {
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
 
-    .title-related-song {
-        font-weight: 700;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        font-size: 20px !important;
+        .title-related-song {
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 20px !important;
+        }
+    .m {
+        max-height: 250px;
+        border-radius: 15px;
+        box-shadow: 0px 6px 15px var(--lightbshadow);
     }
-</style>
-<br />
-<section class="miscellaneous-area section-padding-100-0">
-    <div class="container">
+    </style>
+<div class="container section-padding-100-0">
+    <div class="wrapper">
         <div class="row">
-            <!-- ***** Popular Artists ***** -->
+            <div class="col-lg-8">
+                <div class="m">
+                    <div class="song-details">
+                        <div class="img-area">
+                            <img src="" alt="">
+                        </div>
+                        <p class="name"></p>
+                        <p class="artist"></p>
 
-            <div class="col-12 col-lg-8">
-                <div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img class="img-song" src="~/img/song/@Model.URLImg" alt="" />
+                    </div>
+                    <div class="progress-area">
+                        <div class="progress-bar">
+                            <audio id="main-audio" src=""></audio>
                         </div>
-                        <div class="col-md-8 title-song">
-                            <h4>@Model.Name</h4>
-                            <h6>@Model.Singer.Name</h6>
-                            <input id="idSong" hidden value="@Model.Id"/>
+
+                    </div>
+                    <div class="song-timer">
+                        <span class="current-time t">0:00</span>
+                        <span class="max-duration k">0:00</span>
+                    </div>
+                    <div class="controls">
+
+                        <i id="repeat-plist" class="material-icons t" title="Playlist looped">repeat</i>
+                        <i id="prev" class="material-icons">skip_previous</i>
+                        <div class="play-pause">
+                            <i class="material-icons play">play_arrow</i>
                         </div>
+                        <i id="next" class="material-icons d">skip_next</i>        
                     </div>
                 </div>
-
-
-                <br />
-                <audio preload="auto" controls>
-                    <source src="~/audio/@Model.URLMusic">
-                </audio>
                 <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
                 <h3>Lời bài hát</h3>
                 <div class="divLyric" id="divLyric">
-                    @Html.Raw(Model.Lyric)
+                    <p class="lyrics"></p>
                 </div>
                 <div class="more_add" id="divMoreAddLyric">
                     <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
@@ -95,87 +109,338 @@
 
                 </div>
             </div>
-
-            <!-- ***** New Hits Songs ***** -->
-            <div class="col-12 col-lg-4">
-                <div class="new-hits-area mb-100">
-                    <div class="section-heading text-left mb-50 wow fadeInUp" style="text-align:center !important" data-wow-delay="50ms">
-                        <p class="title-related-song">Những bài hát liên quan</p>
-                    </div>
-                    <!-- Single Top Item -->
-
-                    @foreach (var item in ViewBag.RelatedSongs)
-                    {
-                        <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
-                            <div class="first-part d-flex align-items-center">
-                                <div class="thumbnail">
-                                    <img src="~/img/song/@item.URLImg" alt="">
-                                </div>
-                                <div class="content-">
-                                    <h6>@item.Name</h6>
-                                    <p>@item.Singer.Name</p>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                @*<div class="section-heading white wow fadeInUp" data-wow-delay="100ms">*@
-                @*<p>See what’s new</p>*@
-                <h2>Bình luận</h2>
-                @*</div>*@
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <!-- Contact Form Area -->
-                <div class="login-form">
-             
+            <div class="col-lg-4">
+                <div class="music-list">
+                    <div class="header">
                         <div class="row">
-                            <div class="col-md-6 col-lg-4">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4">
-                                <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                    <button class="btn btn-primary w-25" name="btnComment" >Gửi</button>
-                                </div>
-                            </div>
-                        </div>         
-                    <br />
-                    <div id="commentlist">
-                    @foreach (var comment in ViewBag.ListComment)
-                    {
-                    <div class="row padding-comment">
-                        <div class="col-md-1">
-                            <img class="img-comment" src="~/img//user-img/@comment.User.URLImg" alt="" />
+                            <i class="list material-icons">queue_music</i>
+                            <span>Bài hát liên quan</span>
                         </div>
-                        <div class="col-md-6 comment">
-                            <h6 class="user-name">@comment.User.UserName</h6>
-                            <h6 class="user-comment">@comment.Content</h6>
-                        </div>
+                        <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
                     </div>
-                    }
-                        </div>
+                    <ul>
+                        <!-- here li list are coming from js -->
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-</section>
+
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            @*<div class="section-heading white wow fadeInUp" data-wow-delay="100ms">*@
+            @*<p>See what’s new</p>*@
+            <h2>Bình luận</h2>
+            @*</div>*@
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <!-- Contact Form Area -->
+            <div class="login-form">
+
+                <div class="row">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                            <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <input id="listSong" value="@ViewBag.listSong" hidden>
+                 <p id="time"></p>
+                <div id="commentlist">
+         
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        function seeMoreLyric() {
+        const wrapper = document.querySelector(".wrapper"),
+            musicImg = wrapper.querySelector(".img-area img"),
+            musicName = wrapper.querySelector(".song-details .name"),
+            musicLyrics = wrapper.querySelector(".lyrics"),
+            musicId = wrapper.querySelector(".idSong"),
+            musicArtist = wrapper.querySelector(".song-details .artist"),
+            playPauseBtn = wrapper.querySelector(".play-pause"),
+            prevBtn = wrapper.querySelector("#prev"),
+            nextBtn = wrapper.querySelector("#next"),
+            mainAudio = wrapper.querySelector("#main-audio"),
+            progressArea = wrapper.querySelector(".progress-area"),
+            progressBar = progressArea.querySelector(".progress-bar"),
+            musicList = wrapper.querySelector(".music-list"),
+            moreMusicBtn = wrapper.querySelector("#more-music"),
+            closemoreMusic = musicList.querySelector("#close");
 
+        isMusicPaused = true;
+        var allMusic = JSON.parse( document.getElementById('listSong').value);
+        var musicIndex = 1;
+        console.log(musicIndex);
+        $(document).ready(function () {
+            window.addEventListener("load", () => {
+                loadMusic(musicIndex);
+                playMusic();
+                playingSong();
+            });
+         
+        });          
+        function loadMusic(indexNumb) {
+            musicName.innerText = allMusic[indexNumb - 1].name;
+            musicLyrics.innerHTML = allMusic[indexNumb - 1].lyrics;
+            musicArtist.innerText = allMusic[indexNumb - 1].artist;
+            musicImg.src = `../img/song/${allMusic[indexNumb - 1].img}`;
+            mainAudio.src = `../audio/${allMusic[indexNumb - 1].src}`;
+            //Load Comment và tạo session
+            let idSong = allMusic[indexNumb - 1].id;
+            $.ajax({
+                type: 'get',
+                url: '/Home/GetComment',
+                dataType: 'html',
+                data: {
+                    "idSong": idSong
+                },
+                success: function (data) {
+                    //     alert(data);
+                    $("#commentlist").html(data);
+                }
+            });    
+            //Lấy thời gian bài hát
+          mainAudio.addEventListener("loadeddata", () => { 
+              var time = mainAudio.duration;
+              $("p#time").val(time);
+              return time;               
+          });
+            //Tăng view sau timeS
+            var timeS = Math.floor($("p#time").val() * 1000);
+            setTimeout(function () {
+                $.ajax({
+                    type: 'post',
+                    url: '/Home/AddView',
+                
+                });
+            }, timeS); 
+        }
+
+        //play music function
+        function playMusic() {
+            wrapper.classList.add("paused");
+            playPauseBtn.querySelector("i").innerText = "pause";
+            mainAudio.play();
+        }
+
+        //pause music function
+        function pauseMusic() {
+            wrapper.classList.remove("paused");
+            playPauseBtn.querySelector("i").innerText = "play_arrow";
+            mainAudio.pause();
+        }
+
+        //prev music function
+        function prevMusic() {
+            musicIndex--; //decrement of musicIndex by 1
+            //if musicIndex is less than 1 then musicIndex will be the array length so the last music play
+            musicIndex < 1 ? musicIndex = allMusic.length : musicIndex = musicIndex;
+            loadMusic(musicIndex);
+            playMusic();
+            playingSong();
+        }
+
+        //next music function
+        function nextMusic() {
+            musicIndex++; //increment of musicIndex by 1
+            //if musicIndex is greater than array length then musicIndex will be 1 so the first music play
+            musicIndex > allMusic.length ? musicIndex = 1 : musicIndex = musicIndex;
+            loadMusic(musicIndex);
+            playMusic();
+            playingSong();
+        }
+
+        // play or pause button event
+        playPauseBtn.addEventListener("click", () => {
+            const isMusicPlay = wrapper.classList.contains("paused");
+            //if isPlayMusic is true then call pauseMusic else call playMusic
+            isMusicPlay ? pauseMusic() : playMusic();
+            playingSong();
+        });
+
+        //prev music button event
+        prevBtn.addEventListener("click", () => {
+            prevMusic();
+        });
+
+        //next music button event
+        nextBtn.addEventListener("click", () => {
+            nextMusic();
+        });
+
+        // update progress bar width according to music current time
+        mainAudio.addEventListener("timeupdate", (e) => {
+            const currentTime = e.target.currentTime; //getting playing song currentTime
+            const duration = e.target.duration; //getting playing song total duration
+            let progressWidth = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressWidth}%`;
+
+            let musicCurrentTime = wrapper.querySelector(".current-time"),
+                musicDuartion = wrapper.querySelector(".max-duration");
+            mainAudio.addEventListener("loadeddata", () => {
+                // update song total duration
+                let mainAdDuration = mainAudio.duration;
+                let totalMin = Math.floor(mainAdDuration / 60);
+                let totalSec = Math.floor(mainAdDuration % 60);
+                if (totalSec < 10) { //if sec is less than 10 then add 0 before it
+                    totalSec = `0${totalSec}`;
+                }
+                musicDuartion.innerText = `${totalMin}:${totalSec}`;
+            });
+            // update playing song current time
+            let currentMin = Math.floor(currentTime / 60);
+            let currentSec = Math.floor(currentTime % 60);
+            if (currentSec < 10) { //if sec is less than 10 then add 0 before it
+                currentSec = `0${currentSec}`;
+            }
+            musicCurrentTime.innerText = `${currentMin}:${currentSec}`;
+        });
+
+        // update playing song currentTime on according to the progress bar width
+        progressArea.addEventListener("click", (e) => {
+            let progressWidth = progressArea.clientWidth; //getting width of progress bar
+            let clickedOffsetX = e.offsetX; //getting offset x value
+            let songDuration = mainAudio.duration; //getting song total duration
+
+            mainAudio.currentTime = (clickedOffsetX / progressWidth) * songDuration;
+            playMusic(); //calling playMusic function
+            playingSong();
+        });
+
+        //change loop, shuffle, repeat icon onclick
+        const repeatBtn = wrapper.querySelector("#repeat-plist");
+        repeatBtn.addEventListener("click", () => {
+            let getText = repeatBtn.innerText; //getting this tag innerText
+            switch (getText) {
+                case "repeat":
+                    repeatBtn.innerText = "repeat_one";
+                    repeatBtn.setAttribute("title", "Song looped");
+                    break;
+                case "repeat_one":
+                    repeatBtn.innerText = "shuffle";
+                    repeatBtn.setAttribute("title", "Playback shuffled");
+                    break;
+                case "shuffle":
+                    repeatBtn.innerText = "repeat";
+                    repeatBtn.setAttribute("title", "Playlist looped");
+                    break;
+            }
+        });
+
+        //code for what to do after song ended
+        mainAudio.addEventListener("ended", () => {
+            // we'll do according to the icon means if user has set icon to
+            // loop song then we'll repeat the current song and will do accordingly
+            let getText = repeatBtn.innerText; //getting this tag innerText
+            switch (getText) {
+                case "repeat":
+                    nextMusic(); //calling nextMusic function
+                    break;
+                case "repeat_one":
+                    mainAudio.currentTime = 0; //setting audio current time to 0
+                    loadMusic(musicIndex); //calling loadMusic function with argument, in the argument there is a index of current song
+                    playMusic(); //calling playMusic function
+                    break;
+                case "shuffle":
+                    let randIndex = Math.floor((Math.random() * allMusic.length) + 1); //genereting random index/numb with max range of array length
+                    do {
+                        randIndex = Math.floor((Math.random() * allMusic.length) + 1);
+                    } while (musicIndex == randIndex); //this loop run until the next random number won't be the same of current musicIndex
+                    musicIndex = randIndex; //passing randomIndex to musicIndex
+                    loadMusic(musicIndex);
+                    playMusic();
+                    playingSong();
+                    break;
+            }
+        });
+
+        //show music list onclick of music icon
+        //moreMusicBtn.addEventListener("click", ()=>{
+        //  musicList.classList.toggle("show");
+        //});
+        //closemoreMusic.addEventListener("click", ()=>{
+        //  moreMusicBtn.click();
+        //});
+
+        const ulTag = wrapper.querySelector("ul");
+        // let create li tags according to array length for list
+        for (let i = 0; i < allMusic.length; i++) {
+            //let's pass the song name, artist from the array
+            let liTag = `<li li-index="${i + 1}">
+                <div class="row">
+                <img class="im" src="../img/song/${allMusic[i].img}">
+                  <span>${allMusic[i].name}   <h6 >${allMusic[i].artist}</h6></span>
+               
+
+                </div>
+                <span id="${allMusic[i].src}" class="audio-duration"></span>
+                <audio class="${allMusic[i].src}" src="../audio/${allMusic[i].src}"></audio>
+              </li>`;
+            ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
+
+            let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].src}`);
+            let liAudioTag = ulTag.querySelector(`.${allMusic[i].src}`);
+            //liAudioTag.addEventListener("loadeddata", () => {
+            //    let duration = liAudioTag.duration;
+            //    let totalMin = Math.floor(duration / 60);
+            //    let totalSec = Math.floor(duration % 60);
+            //    if (totalSec < 10) { //if sec is less than 10 then add 0 before it
+            //        totalSec = `0${totalSec}`;
+            //    };
+            //    liAudioDuartionTag.innerText = `${totalMin}:${totalSec}`; //passing total duation of song
+            //    liAudioDuartionTag.setAttribute("t-duration", `${totalMin}:${totalSec}`); //adding t-duration attribute with total duration value
+            //});
+        }
+
+        //play particular song from the list onclick of li tag
+        function playingSong() {
+            const allLiTag = ulTag.querySelectorAll("li");
+
+            for (let j = 0; j < allLiTag.length; j++) {
+                let audioTag = allLiTag[j].querySelector(".audio-duration");
+
+                if (allLiTag[j].classList.contains("playing")) {
+                    allLiTag[j].classList.remove("playing");
+                    let adDuration = audioTag.getAttribute("t-duration");
+                    audioTag.innerText = adDuration;
+                }
+
+                //if the li tag index is equal to the musicIndex then add playing class in it
+                if (allLiTag[j].getAttribute("li-index") == musicIndex) {
+                    allLiTag[j].classList.add("playing");
+                    /*audioTag.innerText = "Playing";*/
+                }
+
+                allLiTag[j].setAttribute("onclick", "clicked(this)");
+            }
+        }
+
+        //particular li clicked function
+        function clicked(element) {
+            let getLiIndex = element.getAttribute("li-index");
+            musicIndex = getLiIndex; //updating current song index with clicked li index
+            loadMusic(musicIndex);
+            playMusic();
+            playingSong();
+        }
+        function seeMoreLyric() {
             document.getElementById("divLyric").className = "";
             document.getElementById("seeMoreLyric").style.display = 'none';
             document.getElementById("hideMoreLyric").style.display = 'block';
@@ -187,7 +452,8 @@
         }
         $('button[name=btnComment]').click(function () {
             var txtComment = document.getElementById("txtComment").value;
-            var idSong = document.getElementById("idSong").value;
+            var idSong = allMusic[musicIndex - 1].id;
+            console.log(idSong)
             $.ajax({
                 type: 'post',
                 url: '/Home/AddComment',
@@ -196,12 +462,13 @@
                     "txtComment": txtComment, "idSong": idSong
                 },
                 success: function (data) {
-               //     alert(data);
+                    //     alert(data);
                     $("#commentlist").html(data);
                 }
-              
+
             });
         });
-       
     </script>
 }
+@*<script src="~/js/music-list.js"></script>
+    <script src="~/js/script.js"></script>*@
