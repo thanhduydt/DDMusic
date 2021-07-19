@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using DDMusic.Areas.Admin.Data;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace DDMusic.Controllers
 {
@@ -124,8 +126,9 @@ namespace DDMusic.Controllers
             var AllSong = await _context.Song.ToListAsync();
             var AllSongOfGenre = AllSong.Where(m => m.Id != song.Id && m.Genre == song.Genre);
             var random = new Random();
-            var GetRelatedSongs = AllSongOfGenre.OrderBy(m => random.Next()).Take(4);
+            var GetRelatedSongs = AllSongOfGenre.OrderBy(m => random.Next()).Take(10);
             List<SongModel> RelatedSongs = new List<SongModel>();
+            RelatedSongs.Add(song);
             foreach (var item in GetRelatedSongs)
             {
                 SongModel relatedSong = new SongModel();
@@ -143,6 +146,17 @@ namespace DDMusic.Controllers
                                              Time = c.Time,
                                              User = u,
                                          }).OrderByDescending(m => m.Time).ToListAsync();
+          var listSong = from s in RelatedSongs select new SongViewModel {
+                id = s.Id,
+                name = s.Name,
+                img = s.URLImg,
+                src = s.URLMusic,
+                lyrics = s.Lyric,
+                artist = s.Singer.Name
+            };
+            ViewBag.listSong = JsonConvert.SerializeObject(listSong);
+           
+      
             return View(song);
         }
         [HttpPost]
@@ -169,6 +183,30 @@ namespace DDMusic.Controllers
                                                         User = u,
                                                     }).OrderByDescending(m => m.Time).ToListAsync();
             return PartialView("_CommentPartial",listComment);
+        }
+        [HttpGet]
+        public async Task<IActionResult>GetComment(int idSong)
+        {
+            HttpContext.Session.Remove("idSong");
+            HttpContext.Session.SetInt32("idSong",idSong);
+            List<CommentModel> listComment = await _context.Comment.Include(m => m.User)
+                .Where(m => m.IdSong == idSong).OrderByDescending(m => m.Time).ToListAsync();                                              
+            return PartialView("_CommentPartial",listComment);
+        }
+        [HttpPost]
+        public async Task<string> AddView()
+        {
+         int idSong = (int)HttpContext.Session.GetInt32("idSong");
+            if (idSong!=0)
+            {
+                var song = await _context.Song.FindAsync(idSong);
+                song.CountView++;
+                _context.Song.Update(song);
+                await _context.SaveChangesAsync();
+                HttpContext.Session.Remove("idSong");
+            }
+            
+            return "";
         }
         [Route("dang-nhap")]
         public IActionResult Login()
