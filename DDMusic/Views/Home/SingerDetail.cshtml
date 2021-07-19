@@ -1,0 +1,195 @@
+﻿@model DDMusic.Areas.Admin.Models.SingerModel
+<style>
+       .divLyric {
+           height: auto;
+           max-height: 140px;
+           overflow: hidden;
+       }
+
+       .avatarU {
+           width: 100%;
+           max-width: 500px;
+           max-height: 500px;
+           padding-bottom: 20px;
+           /*  height: 200px;
+    border-radius: 50%;
+           -moz-border-radius: 50%;
+           -webkit-border-radius: 50%;*/
+       }
+
+       option, label {
+           color: gray
+       }
+
+       .section-heading {
+           margin-bottom: 20px !important;
+       }
+
+           .section-heading h2 {
+               letter-spacing: 3px !important;
+           }
+    .genre-song {
+        display: none;
+    }
+       p {
+           font-size: 17px !important;
+           font-weight: 500;
+       }
+</style>
+<section class="contact-area section-padding-100" style="background-color:#FFF">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading wow fadeInUp" style="margin-bottom:20px;" data-wow-delay="100ms">
+                    <h2 style="font-size:30px;">Thông tin cá nhân</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!-- Contact Form Area -->
+                <div class="contact-form-area">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <center>
+                                <div class="image-upload">
+
+                                    <img id="Img" class="avatarU" src="~/img/singer/@Model.Image" alt="" />
+
+                                </div>
+                            </center>
+
+                        </div>
+
+
+
+
+                        @*<div class="image-upload">
+                                <label for="file-input">
+                                    <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
+                                </label>
+
+                                <input id="file-input" name="ful" type="file" />
+                            </div>*@
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="section-heading form-group wow fadeInUp" data-wow-delay="100ms">
+                                <h2>Tên: <labal style="font-weight:100">@Model.Name</labal></h2>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="section-heading form-group wow fadeInUp" data-wow-delay="100ms">
+                                <h2>Ngày Sinh: <labal style="font-weight:100">@String.Format("{0:dd/MM/yyyy}", Model.BirthDay)</labal></h2>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="section-heading form-group wow fadeInUp" data-wow-delay="100ms">
+                                <h2>Quốc Gia: <labal style="font-weight:100">@Model.Country</labal></h2>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="section-heading form-group wow fadeInUp text-center" data-wow-delay="300ms">
+                                <h2>Mô Tả</h2>
+                                <p></p>
+                                <div class="divLyric" id="divLyric">
+                                    @Html.Raw(Model.Description)
+                                </div>
+                                <div class="more_add" id="divMoreAddLyric">
+                                    <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem Thêm<span class="down"></span></a>
+                                    <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@if (ViewBag.SongOfSinger != null)
+{
+    <section class="oneMusic-buy-now-area has-fluid bg-gray section-padding-100">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading style-2">
+                        <h2>Những bài hát của ca sĩ @Model.Name</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row song-of-genre">
+                @foreach (var item in ViewBag.SongOfSinger)
+                {
+                    <!-- Single Album Area -->
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2 genre-song">
+                        <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
+                            <div class="album-thumb">
+                                <img src="~/img/song/@item.URLImg" alt="">
+                            </div>
+                            <div class="album-info">
+                                <a href="~/bai-hat/@item.Id">
+                                    <h5>@item.Name</h5>
+                                </a>
+                                <p>@Model.Name</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="load-more-btn text-center wow fadeInUp" data-wow-delay="300ms">
+                        <a href="#" class="btn oneMusic-btn " id="loadMore">Load More <i class="fa fa-angle-double-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<script>
+    function seeMoreLyric() {
+
+        document.getElementById("divLyric").className = "";
+        document.getElementById("seeMoreLyric").style.display = 'none';
+        document.getElementById("hideMoreLyric").style.display = 'block';
+    }
+    function hideMoreLyric() {
+        document.getElementById("divLyric").className = "divLyric";
+        document.getElementById("seeMoreLyric").style.display = 'block';
+        document.getElementById("hideMoreLyric").style.display = 'none';
+    }
+    window.onload = function () {
+        $(".genre-song:hidden").slice(0, 12).slideDown();
+        if ($(".genre-song:hidden").length != 0) {
+            $("#loadMore").show();
+        }
+        $("#loadMore").on('click', function (e) {
+            e.preventDefault();
+            $(".genre-song:hidden").slice(0, 12).slideDown();
+            if ($(".genre-song:hidden").length == 0) {
+                $("#loadMore").fadeOut('slow');
+            }
+        });
+    };
+</script>
+@*@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        <script>
+            function readURL(input, img) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById("Img").src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $("#ful").change(function () {
+                readURL(this, '#img');
+            })
+        </script>
+    }*@

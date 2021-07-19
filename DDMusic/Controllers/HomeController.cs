@@ -203,13 +203,14 @@ namespace DDMusic.Controllers
             return View();
         }
         [Route("thong-tin-ca-si/{id}")]
-        public async Task<IActionResult> SingleDetail(int id)
+        public async Task<IActionResult> SingerDetail(int id)
         {
             var Singer = await _context.Singer.FindAsync(id);
             var AllSong = await _context.Song.ToListAsync();
             var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
-
-            return View();
+            ViewBag.SongOfSinger = SongOfSinger;
+           
+            return View(Singer);
         }
         //[Route("thong-tin-tai-khoan")]
         public IActionResult PersonalPage()
