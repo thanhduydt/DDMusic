@@ -34,7 +34,6 @@
             </form>
         </li>*@
     @*<a id="manage" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">*@
-<liv><a asp-action="UploadSong"><i class="fa fa-arrow-circle-up fa-2x" style="color:darkgrey; text-align:center" aria-hidden="true" title="Tải lên"></i></a></liv>
     <li>
         <a asp-controller="Home" asp-action="PersonalPage">
             @if (UserManager.GetUserAsync(User).Result.URLImg != null)
@@ -48,6 +47,9 @@
             @UserManager.GetUserName(User)
         </a>
         <ul class="dropdown">
+            <li>
+                <a asp-action="UploadSong">Upload</a>
+            </li>
             <li>
                 <a id="changepassword" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Đổi mật khẩu</a>
             </li>

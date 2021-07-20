@@ -135,26 +135,8 @@ namespace DDMusic.Controllers
                 relatedSong = item;
                 SingerModel singer1 = await _context.Singer.FindAsync(relatedSong.IdSinger);
                 RelatedSongs.Add(relatedSong);
-            }
-            ViewBag.RelatedSongs = RelatedSongs;
-            ViewBag.ListComment = await (from c in _context.Comment
-                                         join u in _context.User on c.IdUser equals u.Id
-                                         where c.IdSong == id
-                                         select new CommentModel {
-                                             Id = c.Id,
-                                             Content = c.Content,
-                                             Time = c.Time,
-                                             User = u,
-                                         }).OrderByDescending(m => m.Time).ToListAsync();
-          var listSong = from s in RelatedSongs select new SongViewModel {
-                id = s.Id,
-                name = s.Name,
-                img = s.URLImg,
-                src = s.URLMusic,
-                lyrics = s.Lyric,
-                artist = s.Singer.Name
-            };
-            ViewBag.listSong = JsonConvert.SerializeObject(listSong);
+            }          
+            ViewBag.listSong = JsonConvert.SerializeObject(RelatedSongs);
            
       
             return View(song);

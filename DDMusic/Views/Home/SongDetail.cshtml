@@ -1,7 +1,7 @@
 ﻿<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="~/styleMusic.css">
 <style>
-        .divLyric {
+        .lyrics {
             height: auto;
             max-height: 255px;
             overflow: hidden;
@@ -64,6 +64,9 @@
         border-radius: 15px;
         box-shadow: 0px 6px 15px var(--lightbshadow);
     }
+    .cmt{
+        display:none;
+    }
     </style>
 <div class="container section-padding-100-0">
     <div class="wrapper">
@@ -95,14 +98,14 @@
                         <div class="play-pause">
                             <i class="material-icons play">play_arrow</i>
                         </div>
-                        <i id="next" class="material-icons d">skip_next</i>        
+                        <i id="next" class="material-icons d">skip_next</i>
                     </div>
                 </div>
                 <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
                 <h3>Lời bài hát</h3>
-                <div class="divLyric" id="divLyric">
-                    <p class="lyrics"></p>
-                </div>
+                
+                    <p class="lyrics" id="lyrics"></p>
+              
                 <div class="more_add" id="divMoreAddLyric">
                     <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
                     <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
@@ -156,10 +159,10 @@
                 </div>
                 <br />
                 <input id="listSong" value="@ViewBag.listSong" hidden>
-                 <p id="time"></p>
+                <p id="time"></p>
                 <div id="commentlist">
-         
                 </div>
+
             </div>
         </div>
     </div>
@@ -172,6 +175,7 @@
             musicImg = wrapper.querySelector(".img-area img"),
             musicName = wrapper.querySelector(".song-details .name"),
             musicLyrics = wrapper.querySelector(".lyrics"),
+            musicView = wrapper.querySelector(".view"),
             musicId = wrapper.querySelector(".idSong"),
             musicArtist = wrapper.querySelector(".song-details .artist"),
             playPauseBtn = wrapper.querySelector(".play-pause"),
@@ -197,13 +201,13 @@
          
         });          
         function loadMusic(indexNumb) {
-            musicName.innerText = allMusic[indexNumb - 1].name;
-            musicLyrics.innerHTML = allMusic[indexNumb - 1].lyrics;
-            musicArtist.innerText = allMusic[indexNumb - 1].artist;
-            musicImg.src = `../img/song/${allMusic[indexNumb - 1].img}`;
-            mainAudio.src = `../audio/${allMusic[indexNumb - 1].src}`;
+            musicName.innerText = allMusic[indexNumb - 1].Name;
+            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
+            musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
+            musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
+            mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
             //Load Comment và tạo session
-            let idSong = allMusic[indexNumb - 1].id;
+            let idSong = allMusic[indexNumb - 1].Id;
             $.ajax({
                 type: 'get',
                 url: '/Home/GetComment',
@@ -230,8 +234,18 @@
                     url: '/Home/AddView',
                 
                 });
-            }, timeS); 
+            }, timeS);
+            document.getElementById("lyrics").className = "lyrics";
+            $("a#seeMoreLyric").show();
+            $("a#hideMoreLyric").hide();
+            console.log($(".lyrics").height())
+            if ($(".lyrics").height() < 255) {
+                $("a#seeMoreLyric").hide();
+            } 
+            
         }
+     
+        
 
         //play music function
         function playMusic() {
@@ -385,18 +399,18 @@
             //let's pass the song name, artist from the array
             let liTag = `<li li-index="${i + 1}">
                 <div class="row">
-                <img class="im" src="../img/song/${allMusic[i].img}">
-                  <span>${allMusic[i].name}   <h6 >${allMusic[i].artist}</h6></span>
+                <img class="im" src="../img/song/${allMusic[i].URLImg}">
+                  <span>${allMusic[i].Name}  <p> ${allMusic[i].Singer.Name}</p></span>
                
 
                 </div>
-                <span id="${allMusic[i].src}" class="audio-duration"></span>
-                <audio class="${allMusic[i].src}" src="../audio/${allMusic[i].src}"></audio>
+                <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
+                <audio class="${allMusic[i].URLMusic}" src="../audio/${allMusic[i].URLMusic}"></audio>
               </li>`;
             ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
 
-            let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].src}`);
-            let liAudioTag = ulTag.querySelector(`.${allMusic[i].src}`);
+            //let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].URLMusic}`);
+            //let liAudioTag = ulTag.querySelector(`.${allMusic[i].URLMusic}`);
             //liAudioTag.addEventListener("loadeddata", () => {
             //    let duration = liAudioTag.duration;
             //    let totalMin = Math.floor(duration / 60);
@@ -440,19 +454,20 @@
             playMusic();
             playingSong();
         }
+
         function seeMoreLyric() {
-            document.getElementById("divLyric").className = "";
+            document.getElementById("lyrics").className = "";
             document.getElementById("seeMoreLyric").style.display = 'none';
             document.getElementById("hideMoreLyric").style.display = 'block';
         }
         function hideMoreLyric() {
-            document.getElementById("divLyric").className = "divLyric";
+            document.getElementById("lyrics").className = "lyrics";
             document.getElementById("seeMoreLyric").style.display = 'block';
             document.getElementById("hideMoreLyric").style.display = 'none';
         }
         $('button[name=btnComment]').click(function () {
             var txtComment = document.getElementById("txtComment").value;
-            var idSong = allMusic[musicIndex - 1].id;
+            var idSong = allMusic[musicIndex - 1].Id;
             console.log(idSong)
             $.ajax({
                 type: 'post',
@@ -468,7 +483,7 @@
 
             });
         });
+        
+      
     </script>
 }
-@*<script src="~/js/music-list.js"></script>
-    <script src="~/js/script.js"></script>*@

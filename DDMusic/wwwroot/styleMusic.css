@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+    font-family: "Archivo Narrow", sans-serif;
 }
 
     *::before, *::after {
@@ -38,7 +38,7 @@
 }
 
 .k {
-    margin-left: 56%;
+    margin-left: 58%;
 }
 
 .c {
@@ -308,6 +308,7 @@
         .music-list ul li .row span {
             padding-left: 10px;
             font-size: 17px;
+           font-weight:bold;
         }
 
         .music-list ul li .row p {
