@@ -13208,8 +13208,8 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 .user-panel img {
-  height: auto;
-  width: 2.1rem;
+  height: 40px;
+  width: 40px;
 }
 
 .user-panel .info {
@@ -22165,10 +22165,13 @@ body.text-sm .control-sidebar {
   color: #343a40;
 }
 
-.card .overlay.dark,
-.overlay-wrapper .overlay.dark,
-.info-box .overlay.dark,
-.small-box .overlay.dark {
+    .card .overlay.dark,
+    .overlay-wrapper .overlay.dark,
+    .info-box .overlay.dark,
+    .small-box .overlay.dark {
+        height: auto;
+        width: 2.1rem;
+    }
   background-color: rgba(0, 0, 0, 0.5);
 }
 

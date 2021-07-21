@@ -13207,8 +13207,8 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 .user-panel img {
-  height: auto;
-  width: 2.1rem;
+  height: 40px;
+  width: 40px;
 }
 
 .user-panel .info {
