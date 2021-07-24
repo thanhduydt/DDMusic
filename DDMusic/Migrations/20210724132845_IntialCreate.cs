@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class IntialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -320,11 +320,18 @@ namespace DDMusic.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdSong = table.Column<int>(type: "int", nullable: false)
+                    IdSong = table.Column<int>(type: "int", nullable: false),
+                    IdPlaylist = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlaylistDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlaylistDetail_Playlist_IdPlaylist",
+                        column: x => x.IdPlaylist,
+                        principalTable: "Playlist",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PlaylistDetail_Song_IdSong",
                         column: x => x.IdSong,
@@ -406,6 +413,11 @@ namespace DDMusic.Migrations
                 name: "IX_Playlist_IdUser",
                 table: "Playlist",
                 column: "IdUser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlaylistDetail_IdPlaylist",
+                table: "PlaylistDetail",
+                column: "IdPlaylist");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlaylistDetail_IdSong",
@@ -493,9 +505,6 @@ namespace DDMusic.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
-                name: "Playlist");
-
-            migrationBuilder.DropTable(
                 name: "PlaylistDetail");
 
             migrationBuilder.DropTable(
@@ -518,6 +527,9 @@ namespace DDMusic.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Playlist");
 
             migrationBuilder.DropTable(
                 name: "TopSongOnMonth");

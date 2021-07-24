@@ -1,40 +1,45 @@
 ﻿@model DDMusic.Areas.Admin.Models.SingerModel
 <style>
-       .divLyric {
-           height: auto;
-           max-height: 140px;
-           overflow: hidden;
-       }
+    .divLyric {
+        height: auto;
+        max-height: 140px;
+        overflow: hidden;
+    }
 
-       .avatarU {
-           width: 100%;
-           max-width: 500px;
-           max-height: 500px;
-           padding-bottom: 20px;
-           /*  height: 200px;
+    .avatarU {
+        width: 100%;
+        max-width: 500px;
+        max-height: 500px;
+        padding-bottom: 20px;
+        /*  height: 200px;
     border-radius: 50%;
            -moz-border-radius: 50%;
            -webkit-border-radius: 50%;*/
-       }
+    }
 
-       option, label {
-           color: gray
-       }
+    option, label {
+        color: gray
+    }
 
-       .section-heading {
-           margin-bottom: 20px !important;
-       }
+    .section-heading {
+        margin-bottom: 20px !important;
+    }
 
-           .section-heading h2 {
-               letter-spacing: 3px !important;
-           }
+        .section-heading h2 {
+            letter-spacing: 3px !important;
+        }
+
     .genre-song {
         display: none;
     }
-       p {
-           font-size: 17px !important;
-           font-weight: 500;
-       }
+
+    p {
+        font-size: 17px !important;
+        font-weight: 500;
+    }
+    .loadMore-album {
+        display: none;
+    }
 </style>
 <section class="contact-area section-padding-100" style="background-color:#FFF">
     <div class="container">
@@ -110,7 +115,7 @@
 </section>
 @if (ViewBag.SongOfSinger != null)
 {
-    <section class="oneMusic-buy-now-area has-fluid bg-gray section-padding-100">
+    <section class="oneMusic-buy-now-area has-fluid bg-gray section-padding-100" style="padding-top:0px;">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
@@ -150,6 +155,48 @@
         </div>
     </section>
 }
+@if (ViewBag.AlbumOfSinger != null)
+{
+    <section class="oneMusic-buy-now-area has-fluid bg-gray section-padding-100"style="padding-top:0px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-heading style-2">
+                        <h2>Những album của ca sĩ @Model.Name</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row song-of-genre">
+                @foreach (var item in ViewBag.AlbumOfSinger)
+                {
+                    <!-- Single Album Area -->
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 album-more">
+                        <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
+                            <div class="album-thumb">
+                                <img src="~/img/song/@item.Image" alt="">
+                            </div>
+                            <div class="album-info">
+                                <a href="~/album/@item.Id">
+                                    <h5>@item.Name</h5>
+                                </a>
+                                <p>@Model.Name</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="load-more-btn text-center wow fadeInUp" data-wow-delay="300ms">
+                        <a href="#" class="btn oneMusic-btn " id="loadMore-album">Load More <i class="fa fa-angle-double-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
 <script>
     function seeMoreLyric() {
 
@@ -167,11 +214,29 @@
         if ($(".genre-song:hidden").length != 0) {
             $("#loadMore").show();
         }
+        else {
+            $("#loadMore").fadeOut('slow');
+        }
         $("#loadMore").on('click', function (e) {
             e.preventDefault();
             $(".genre-song:hidden").slice(0, 12).slideDown();
             if ($(".genre-song:hidden").length == 0) {
                 $("#loadMore").fadeOut('slow');
+            }
+        });
+
+        $(".album-more:hidden").slice(0, 8).slideDown();
+        if ($(".album-more:hidden").length != 0) {
+            $("#loadMore-album").show();
+        }
+        else {
+            $("#loadMore-album").fadeOut('slow');
+        }
+        $("#loadMore").on('click', function (e) {
+            e.preventDefault();
+            $(".album-more:hidden").slice(0, 8).slideDown();
+            if ($(".album-more:hidden").length == 0) {
+                $("#loadMore-album").fadeOut('slow');
             }
         });
     };

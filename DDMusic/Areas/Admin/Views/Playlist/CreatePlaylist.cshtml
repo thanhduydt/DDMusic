@@ -1,4 +1,5 @@
-﻿<div class="content-wrapper">
+﻿@model DDMusic.Areas.Admin.Models.Playlist;
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -24,10 +25,7 @@
                 <div class="col-md-12">
                     <!-- general form elements -->
                     <div class="card card-primary">
-
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <form action="#" method="get" enctype="multipart/form-data">
+                        <form asp-area="Admin" asp-controller="Playlist" asp-action="Create" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
@@ -39,21 +37,56 @@
                                         </center>
 
                                     </div>
-                                    @*<div class="image-upload">
-                                            <label for="file-input">
-                                                <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
-                                            </label>
-
-                                            <input id="file-input" name="ful" type="file" />
-                                        </div>*@
                                     <div class="col-md-6 col-lg-6">
+                                        <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                                            <label>Tên Playlist</label>
+                                            <input type="text" class="form-control" asp-for="Name" id="namesong" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <label>Những bài hát thuộc playlist</label>
+                                        <br />
+                                        <select class="form-control select2" multiple="multiple" name="idSong" asp-items="ViewBag.IdSong" id="Song">
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
+                                        <button type="submit" style="width:100px" class="btn btn-primary">Lưu</button>
+                                        <button type="submit" style="width:100px" class="btn btn-light">Hủy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <!--<form action="#" method="get" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <center>
+                                        <div class="image-upload">
+                                            <label for="ful"><img id="Img" style=" width:200px;   height:200px;border-radius: 50%;-moz-border-radius: 50%;   -webkit-border-radius: 50%;" src="~/img/bg-img/noimage.jpg" alt="" /></label>
+                                            <input type="file" accept=".jpeg,.gif,.png,.tiff,.bmp,.jpg" class="custom-file-input" id="ful" name="ful">
+                                        </div>
+                                    </center>
+
+                                </div>-->
+                        @*<div class="image-upload">
+                                <label for="file-input">
+                                    <img id="Image" src="~/img/song/ChiLaKhongCungNhau.jpg" />
+                                </label>
+
+                                <input id="file-input" name="ful" type="file" />
+                            </div>*@
+                        <!--<div class="col-md-6 col-lg-6">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Tên Playlist</label>
                                             <input type="text" class="form-control" id="nameplaylist" value="">
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 col-lg-6">                                      
+                                    <div class="col-md-6 col-lg-6">
                                         <label>Chọn bài hát</label>
                                         <div class="input-group">
                                             <select class="form-control" multiple name="song" id="song">
@@ -77,8 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
-
+                        </form>-->
                         <!--<form>
                         <div class="card-body">
                             <div class="form-group">
@@ -274,6 +306,6 @@
         document.querySelector("#actions .cancel").onclick = function () {
             myDropzone.removeAllFiles(true)
         }
-              // DropzoneJS Demo Code End
+                  // DropzoneJS Demo Code End
     </script>
 }

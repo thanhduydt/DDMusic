@@ -1,73 +1,79 @@
 ﻿<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="~/styleMusic.css">
+@using Microsoft.AspNetCore.Identity
+@using DDMusic.Areas.Admin.Models
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
 <style>
-        .lyrics {
-            height: auto;
-            max-height: 255px;
-            overflow: hidden;
-        }
+    .lyrics {
+        height: auto;
+        max-height: 255px;
+        overflow: hidden;
+    }
 
-        .img-song {
-            width: 100px;
-            height: 100px;
-            border-radius: 10%;
-        }
+    .img-song {
+        width: 100px;
+        height: 100px;
+        border-radius: 10%;
+    }
 
-        .title-song {
-            margin-top: 10px;
-            margin-left: -120px;
-        }
+    .title-song {
+        margin-top: 10px;
+        margin-left: -120px;
+    }
 
-        .img-comment {
-            width: 60px;
-            height: 60px;
-            border-radius: 12%;
-        }
+    .img-comment {
+        width: 60px;
+        height: 60px;
+        border-radius: 12%;
+    }
 
-        .user-name {
-            width: 100px;
-            margin-left: 10px;
-            margin-right: 10px;
-            font-weight: 600 !important;
-        }
+    .user-name {
+        width: 100px;
+        margin-left: 10px;
+        margin-right: 10px;
+        font-weight: 600 !important;
+    }
 
-        .user-comment {
-            margin-left: 10px;
-            font-weight: 400 !important;
-        }
+    .user-comment {
+        margin-left: 10px;
+        font-weight: 400 !important;
+    }
 
-        .padding-comment {
-            padding-bottom: 10px;
-        }
+    .padding-comment {
+        padding-bottom: 10px;
+    }
 
-        .comment {
-            margin-left: -30px;
-        }
+    .comment {
+        margin-left: -30px;
+    }
 
-        h4 {
-            font-size: 40px;
-        }
+    h4 {
+        font-size: 40px;
+    }
 
-        h6 {
-            font-weight: 500;
-            letter-spacing: 1px;
-        }
+    h6 {
+        font-weight: 500;
+        letter-spacing: 1px;
+    }
 
-        .title-related-song {
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 20px !important;
-        }
+    .title-related-song {
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 20px !important;
+    }
+
     .m {
         max-height: 250px;
         border-radius: 15px;
         box-shadow: 0px 6px 15px var(--lightbshadow);
     }
-    .cmt{
-        display:none;
+
+    .cmt {
+        display: none;
     }
-    </style>
+</style>
 <div class="container section-padding-100-0">
     <div class="wrapper">
         <div class="row">
@@ -103,9 +109,9 @@
                 </div>
                 <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
                 <h3>Lời bài hát</h3>
-                
-                    <p class="lyrics" id="lyrics"></p>
-              
+
+                <p class="lyrics" id="lyrics"></p>
+
                 <div class="more_add" id="divMoreAddLyric">
                     <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
                     <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
@@ -117,7 +123,7 @@
                     <div class="header">
                         <div class="row">
                             <i class="list material-icons">queue_music</i>
-                            <span>Bài hát liên quan</span>
+                            <span>@ViewBag.Title</span>
                         </div>
                         <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
                     </div>
@@ -144,19 +150,21 @@
         <div class="col-12">
             <!-- Contact Form Area -->
             <div class="login-form">
-
-                <div class="row">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group">
-                            <input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group">
+                                <input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="form-group wow fadeInUp" data-wow-delay="200ms">
+                                <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                            <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
-                        </div>
-                    </div>
-                </div>
+                }
                 <br />
                 <input id="listSong" value="@ViewBag.listSong" hidden>
                 <p id="time"></p>
@@ -189,7 +197,7 @@
             closemoreMusic = musicList.querySelector("#close");
 
         isMusicPaused = true;
-        var allMusic = JSON.parse( document.getElementById('listSong').value);
+        var allMusic = JSON.parse(document.getElementById('listSong').value);
         var musicIndex = 1;
         console.log(musicIndex);
         $(document).ready(function () {
@@ -198,8 +206,8 @@
                 playMusic();
                 playingSong();
             });
-         
-        });          
+
+        });
         function loadMusic(indexNumb) {
             musicName.innerText = allMusic[indexNumb - 1].Name;
             musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
@@ -219,20 +227,20 @@
                     //     alert(data);
                     $("#commentlist").html(data);
                 }
-            });    
+            });
             //Lấy thời gian bài hát
-          mainAudio.addEventListener("loadeddata", () => { 
-              var time = mainAudio.duration;
-              $("p#time").val(time);
-              return time;               
-          });
+            mainAudio.addEventListener("loadeddata", () => {
+                var time = mainAudio.duration;
+                $("p#time").val(time);
+                return time;
+            });
             //Tăng view sau timeS
             var timeS = Math.floor($("p#time").val() * 1000);
             setTimeout(function () {
                 $.ajax({
                     type: 'post',
                     url: '/Home/AddView',
-                
+
                 });
             }, timeS);
             document.getElementById("lyrics").className = "lyrics";
@@ -241,11 +249,11 @@
             console.log($(".lyrics").height())
             if ($(".lyrics").height() < 255) {
                 $("a#seeMoreLyric").hide();
-            } 
-            
+            }
+
         }
-     
-        
+
+
 
         //play music function
         function playMusic() {
@@ -398,15 +406,15 @@
         for (let i = 0; i < allMusic.length; i++) {
             //let's pass the song name, artist from the array
             let liTag = `<li li-index="${i + 1}">
-                <div class="row">
-                <img class="im" src="../img/song/${allMusic[i].URLImg}">
-                  <span>${allMusic[i].Name}  <p> ${allMusic[i].Singer.Name}</p></span>
-               
+                            <div class="row">
+                            <img class="im" src="../img/song/${allMusic[i].URLImg}">
+                              <span>${allMusic[i].Name}  <p> ${allMusic[i].Singer.Name}</p></span>
 
-                </div>
-                <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
-                <audio class="${allMusic[i].URLMusic}" src="../audio/${allMusic[i].URLMusic}"></audio>
-              </li>`;
+
+                            </div>
+                            <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
+                            <audio class="${allMusic[i].URLMusic}" src="../audio/${allMusic[i].URLMusic}"></audio>
+                          </li>`;
             ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
 
             //let liAudioDuartionTag = ulTag.querySelector(`#${allMusic[i].URLMusic}`);
@@ -483,7 +491,7 @@
 
             });
         });
-        
-      
+
+
     </script>
 }

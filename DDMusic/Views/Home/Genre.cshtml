@@ -117,6 +117,9 @@
         if ($(".genre-song:hidden").length != 0) {
             $("#loadMore").show();
         }
+        else {
+            $("#loadMore").fadeOut('slow');
+        }
         $("#loadMore").on('click', function (e) {
             e.preventDefault();
             $(".genre-song:hidden").slice(0, 12).slideDown();

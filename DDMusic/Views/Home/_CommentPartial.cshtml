@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<DDMusic.Areas.Admin.Models.CommentModel>
 <style>
     .lm{
-        display:none;
-        padding-bottom:20px;
+        display:none;     
     }
 </style>
 @foreach (var comment in Model)
@@ -19,7 +18,11 @@
     </div>
     </div>
 }
-<a class="lm" href="#" id="loadMore">Xem thêm</a>
+<div class="row">
+    <div class="col-md-5 text-center" style="padding-bottom:2%">
+        <a class="lm" href="#" id="loadMore">Xem thêm bình luận</a>
+    </div>
+</div>
 <script>
    
     if ($(".cmt:hidden").length > 3) {

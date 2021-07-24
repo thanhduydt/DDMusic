@@ -137,7 +137,7 @@ namespace DDMusic.Controllers
                 RelatedSongs.Add(relatedSong);
             }          
             ViewBag.listSong = JsonConvert.SerializeObject(RelatedSongs);
-           
+            ViewBag.Title = "Những bài hát liên quan";
       
             return View(song);
         }
@@ -228,6 +228,8 @@ namespace DDMusic.Controllers
             var Singer = await _context.Singer.FindAsync(id);
             var AllSong = await _context.Song.ToListAsync();
             var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
+            var AlbumOfSinger = _context.Album.Where(m => m.IdSinger == id).ToList();
+            ViewBag.AlbumOfSinger = AlbumOfSinger;
             ViewBag.SongOfSinger = SongOfSinger;
            
             return View(Singer);
@@ -427,6 +429,19 @@ namespace DDMusic.Controllers
         public IActionResult Album()
         {
             return View();
+        }
+        [Route("album/{id}")]
+        public IActionResult AlbumDetail(int id)
+        {
+            //Lấy album
+            var Album =  _context.Album.Find(id);
+            //Lấy tất cả bài hát trong album
+            var SongOfAlbum = _context.Song.Where(m => m.IdAlbum == id).Include(m => m.Singer).ToList();
+            var Song = SongOfAlbum[0];
+            ViewBag.listSong = JsonConvert.SerializeObject(SongOfAlbum);
+            ViewBag.Title = "Những bài hát thuộc album: " + Album.Name;
+
+            return View("SongDetail",Song);
         }
         [Route("playlist")]
         public IActionResult Playlist()

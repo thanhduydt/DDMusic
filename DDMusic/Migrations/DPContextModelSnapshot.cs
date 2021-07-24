@@ -103,10 +103,15 @@ namespace DDMusic.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("IdPlaylist")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdSong")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdPlaylist");
 
                     b.HasIndex("IdSong");
 
@@ -525,11 +530,19 @@ namespace DDMusic.Migrations
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.PlaylistDetail", b =>
                 {
+                    b.HasOne("DDMusic.Areas.Admin.Models.Playlist", "PlayList")
+                        .WithMany()
+                        .HasForeignKey("IdPlaylist")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DDMusic.Areas.Admin.Models.SongModel", "Song")
                         .WithMany()
                         .HasForeignKey("IdSong")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("PlayList");
 
                     b.Navigation("Song");
                 });
