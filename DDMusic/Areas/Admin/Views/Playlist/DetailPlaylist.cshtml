@@ -1,0 +1,50 @@
+﻿<style>
+    img {
+        width: 100%
+    }
+
+    a {
+        color: #000;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Playlist: @ViewBag.NamePlaylist</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Playlist</a></li>
+                        <li class="breadcrumb-item active">Detail</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <input id="id-playlist" value="@ViewBag.IdPlaylist" hidden />
+    <!-- Main content -->
+
+    <div id="GetSongFromPlaylist"></div>
+
+</div>
+<script>
+    window.onload = function () {
+        var idPlaylist = $("#id-playlist").val();
+        $.ajax({
+            type: 'get',
+            url: '/Admin/Playlist/GetSongFromPlaylist',
+            dataType: 'html',
+            data: {
+                "id": idPlaylist
+            },
+            success: function (data) {
+                //     alert(data);
+                $("#GetSongFromPlaylist").html(data);
+            }
+
+        });
+    }
+</script>

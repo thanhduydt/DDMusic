@@ -37,6 +37,7 @@
                                         <th>Tên Playlist</th>
                                         <th>Hình ảnh</th>
                                         <th>Thao tác</th>
+                                        <th>Chi Tiết</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -45,7 +46,8 @@
                                         <tr>
                                             <td>@item.Name</td>
                                             <td><img src="~/img/playlist/@item.Image" /></td>
-                                            <td><i class="nav-icon fas fa-edit"></i> <i class="fas fa-trash-alt"></i></td>
+                                            <td><a asp-action="EditPlaylist" asp-controller="Playlist" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a> <a asp-controller="Playlist" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');"><i class="fas fa-trash-alt"></i></a></td>
+                                            <td><a asp-action="DetailPlaylist" asp-controller="Playlist" asp-route-id="@item.Id">Chi Tiết</a></td>
                                         </tr>
                                     }
                                 </tbody>
