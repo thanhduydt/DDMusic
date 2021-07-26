@@ -39,6 +39,15 @@ namespace DDMusic.Controllers
         //}
         public IActionResult Index()
         {
+            //12 Bài hát mới nhất
+            var NewSong = _context.Song.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).Where(m => m.Accept == true).ToList();
+            ViewBag.NewSong = NewSong;
+            //12 Album mới nhất
+            var NewAlbum = _context.Album.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).ToList();
+            ViewBag.NewAlbum = NewAlbum;
+            //12 Playlist mới nhất
+            var NewPlaylist = _context.Playlist.Take(12).OrderByDescending(m => m.Id).ToList();
+            ViewBag.NewPlaylist = NewPlaylist;
             return View();
         }
         [Route("the-loai/{routingDetail}")]
