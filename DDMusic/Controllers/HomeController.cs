@@ -43,10 +43,43 @@ namespace DDMusic.Controllers
             var NewSong = _context.Song.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).Where(m => m.Accept == true).ToList();
             ViewBag.NewSong = NewSong;
             //12 Album mới nhất
-            var NewAlbum = _context.Album.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).ToList();
+            var Albums = _context.Album.Include(m => m.Singer).OrderByDescending(m => m.Id).ToList();
+            List<AlbumModel> NewAlbum = new List<AlbumModel>();
+            int point = 0;
+            foreach(var item in Albums)
+            {
+                //Lấy 12 album mới nhất
+                if(point == 12)
+                {
+                    break;
+                }
+                var song = _context.Song.Where(m => m.IdAlbum == item.Id);
+                if(song.Count()!= 0)
+                {
+                    NewAlbum.Add(item);
+                    point++;
+                }
+            }
             ViewBag.NewAlbum = NewAlbum;
             //12 Playlist mới nhất
-            var NewPlaylist = _context.Playlist.Take(12).OrderByDescending(m => m.Id).ToList();
+            var Playlists = _context.Playlist.OrderByDescending(m => m.Id).ToList();
+            List<Playlist> NewPlaylist = new List<Playlist>();
+            point = 0;
+            foreach (var item in Playlists)
+            {
+                //Lấy 12 playlist 
+                if(point == 12)
+                {
+                    break;
+                }
+                var playlistDetail = _context.PlaylistDetail.Where(m => m.IdPlaylist == item.Id);
+                if (playlistDetail.Count() != 0)
+                {
+                    NewPlaylist.Add(item);
+                    point++;
+                }
+                
+            }
             ViewBag.NewPlaylist = NewPlaylist;
             return View();
         }
@@ -237,7 +270,16 @@ namespace DDMusic.Controllers
             var Singer = await _context.Singer.FindAsync(id);
             var AllSong = await _context.Song.ToListAsync();
             var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
-            var AlbumOfSinger = _context.Album.Where(m => m.IdSinger == id).ToList();
+            var AllAlbumOfSinger = _context.Album.Where(m => m.IdSinger == id).ToList();
+            List<AlbumModel> AlbumOfSinger = new List<AlbumModel>();
+            foreach(var item in AllAlbumOfSinger)
+            {
+                var song = _context.Song.Where(m => m.IdAlbum == item.Id);
+                if(song.Count() != 0)
+                {
+                    AlbumOfSinger.Add(item);
+                }
+            }
             ViewBag.AlbumOfSinger = AlbumOfSinger;
             ViewBag.SongOfSinger = SongOfSinger;
            
@@ -437,6 +479,25 @@ namespace DDMusic.Controllers
         [Route("album")]
         public IActionResult Album()
         {
+            var AllAlbum = _context.Album.Include(m => m.Singer).ToList();
+            List<AlbumModel> Albums = new List<AlbumModel>();
+            foreach(var item in AllAlbum)
+            {
+                var song = _context.Song.Where(m => m.IdAlbum == item.Id);
+                if(song.Count() != 0)
+                {
+                    Albums.Add(item);
+                }
+            }
+            //Lấy 8 album mới nhất
+            var NewAlbum = Albums.OrderByDescending(m => m.Id).Take(8).ToList();
+
+            //Lấy tất cả album ngoài 8 album mới nhất
+            var Album = Albums.OrderByDescending(m => m.Id).Skip(8).ToList();
+
+            ViewBag.NewAlbum = NewAlbum;
+            ViewBag.Album = Album;
+
             return View();
         }
         [Route("album/{id}")]
@@ -455,12 +516,31 @@ namespace DDMusic.Controllers
         [Route("playlist")]
         public IActionResult Playlist()
         {
-            //Lấy 8 Playlist mới nhất
-            var NewPlaylists = _context.Playlist.OrderByDescending(m => m.Id).Take(8).ToList();
+            ////Lấy 8 Playlist mới nhất
+            //var NewPlaylists = _context.Playlist.OrderByDescending(m => m.Id).Take(8).ToList();
+            ////Lấy tất cả playlist
+            //var Playlists = _context.Playlist.OrderByDescending(m => m.Id).Skip(8).ToList();
             //Lấy tất cả playlist
-            var Playlists = _context.Playlist.OrderByDescending(m => m.Id).Skip(8).ToList();
+            var AllPlaylists = _context.Playlist.ToList();
+            //Kiểm tra Playlist rỗng 
+            List<Playlist> Playlists = new List<Playlist>();
+            foreach(var item in AllPlaylists)
+            {
+                var PlaylistDetail = _context.PlaylistDetail.Where(m => m.IdPlaylist == item.Id);
+                if(PlaylistDetail.Count() != 0)
+                {
+                    Playlists.Add(item);
+                }
+            }
+            //Sắp xếp playlist theo Id giảm dần
+            //Lấy 8 playlist mới nhất
+            var NewPlaylists = Playlists.OrderByDescending(m => m.Id).Take(8).ToList();
+            //Lấy tất cả playlist trừ 8 playlist đã lấy
+            var Playlist = Playlists.OrderByDescending(m => m.Id).Skip(8).ToList();
+
             ViewBag.NewPlaylists = NewPlaylists;
-            ViewBag.Playlists = Playlists;
+            ViewBag.Playlists = Playlist;
+
             return View();
         }
         [Route("playlist/{id}")]
