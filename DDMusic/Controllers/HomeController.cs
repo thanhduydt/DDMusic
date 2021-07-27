@@ -455,6 +455,12 @@ namespace DDMusic.Controllers
         [Route("playlist")]
         public IActionResult Playlist()
         {
+            //Lấy 8 Playlist mới nhất
+            var NewPlaylists = _context.Playlist.OrderByDescending(m => m.Id).Take(8).ToList();
+            //Lấy tất cả playlist
+            var Playlists = _context.Playlist.OrderByDescending(m => m.Id).Skip(8).ToList();
+            ViewBag.NewPlaylists = NewPlaylists;
+            ViewBag.Playlists = Playlists;
             return View();
         }
         [Route("playlist/{id}")]

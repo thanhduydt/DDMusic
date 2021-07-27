@@ -35,34 +35,37 @@ namespace DDMusic.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Add Master để lấy id
-                _context.Add(model);
-                await _context.SaveChangesAsync();
-                if (ful != null)
+                if (idSong.Count != 0)
                 {
-                    var path = Path.Combine(
-                    Directory.GetCurrentDirectory(), "wwwroot/img/playlist", model.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1]);
-                    using (var stream = new FileStream(path, FileMode.Create))
+                    //Add Master để lấy id
+                    _context.Add(model);
+                    await _context.SaveChangesAsync();
+                    if (ful != null)
                     {
-                        await ful.CopyToAsync(stream);
+                        var path = Path.Combine(
+                        Directory.GetCurrentDirectory(), "wwwroot/img/playlist", model.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1]);
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await ful.CopyToAsync(stream);
+                        }
+                        model.Image = model.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
+                        _context.Update(model);
+                        await _context.SaveChangesAsync();
+
                     }
-                    model.Image = model.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
-                    _context.Update(model);
-                    await _context.SaveChangesAsync();
 
+                    //Lưu tất cả bài hát đã chọn vào playlistDetail
+                    foreach (var item in idSong)
+                    {
+                        PlaylistDetail playlistDetail = new PlaylistDetail();
+                        playlistDetail.IdPlaylist = model.Id;
+                        playlistDetail.IdSong = item;
+                        _context.Add(playlistDetail);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return RedirectToAction(nameof(Index));
                 }
-
-                //Lưu tất cả bài hát đã chọn vào playlistDetail
-                foreach (var item in idSong)
-                {
-                    PlaylistDetail playlistDetail = new PlaylistDetail();
-                    playlistDetail.IdPlaylist = model.Id;
-                    playlistDetail.IdSong = item;
-                    _context.Add(playlistDetail);
-                    await _context.SaveChangesAsync();
-                }
-
-                return RedirectToAction(nameof(Index));
             }
             ViewData["IdSong"] = new SelectList(_context.Song, "Id", "Name");
             return View("CreatePlaylist");
