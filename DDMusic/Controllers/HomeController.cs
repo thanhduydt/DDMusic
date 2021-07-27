@@ -457,6 +457,24 @@ namespace DDMusic.Controllers
         {
             return View();
         }
+        [Route("playlist/{id}")]
+        public IActionResult PlaylistDetail(int id)
+        {
+            //Lấy PlaylistDetail 
+            var PlaylistDetail = _context.PlaylistDetail.Include(m => m.Song).Where(m => m.IdPlaylist == id).ToList();
+            List<SongModel> ListSong = new List<SongModel>();
+            foreach(var item in PlaylistDetail)
+            {
+                SongModel song = new SongModel();
+                song = item.Song;
+                song.Singer = _context.Singer.Find(song.IdSinger);
+                ListSong.Add(song);
+            }
+            var Playlist = _context.Playlist.Find(id);
+            ViewBag.listSong = JsonConvert.SerializeObject(ListSong);
+            ViewBag.Title = "Những bài hát thuộc Playlist: " + Playlist.Name;
+            return View("SongDetail",ListSong[0]);
+        }
         [Route("lien-he")]
         public IActionResult Contact()
         {
