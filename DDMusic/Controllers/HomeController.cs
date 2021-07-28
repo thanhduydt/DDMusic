@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using DDMusic.Areas.Admin.Data;
 using System.Text.Json;
 using Newtonsoft.Json;
+using NAudio.Wave;
 
 namespace DDMusic.Controllers
 {
@@ -183,8 +184,17 @@ namespace DDMusic.Controllers
       
             return View(song);
         }
+        [HttpGet]
+        public JsonResult GetTimeSongAsync(int idSong)
+        {
+            string Url = _context.Song.FindAsync(idSong).Result.URLMusic;
+            AudioFileReader wf = new AudioFileReader("wwwroot/audio/" + Url);
+            TimeSpan span = wf.TotalTime;
+            int time = (int)span.TotalMilliseconds;
+            return Json(new { timeSong = time });
+        }
         [HttpPost]
-        public async Task<IActionResult> AddComment(string txtComment,int idSong)
+        public async Task<IActionResult> AddComment(string txtComment, int idSong)
         {
             //Thông tin User đăng nhập
             string idUser = _userManager.GetUserId(User);
@@ -196,32 +206,25 @@ namespace DDMusic.Controllers
             commentModel.Time = DateTime.Now;
             _context.Comment.Add(commentModel);
             _context.SaveChanges();
-            List<CommentModel> listComment = await (from c in _context.Comment
-                                                    join u in _context.User on c.IdUser equals u.Id
-                                                    where c.IdSong == idSong
-                                                    select new CommentModel
-                                                    {
-                                                        Id = c.Id,
-                                                        Content = c.Content,
-                                                        Time = c.Time,
-                                                        User = u,
-                                                    }).OrderByDescending(m => m.Time).ToListAsync();
-            return PartialView("_CommentPartial",listComment);
+            List<CommentModel> listComment = await GetListComment(idSong);
+            return PartialView("_CommentPartial", listComment);
         }
         [HttpGet]
-        public async Task<IActionResult>GetComment(int idSong)
+        public async Task<IActionResult> LoadComment(int idSong)
         {
-            HttpContext.Session.Remove("idSong");
-            HttpContext.Session.SetInt32("idSong",idSong);
+            List<CommentModel> listComment = await GetListComment(idSong);
+            return PartialView("_CommentPartial", listComment);
+        }
+        public async Task<List<CommentModel>> GetListComment(int idSong)
+        {
             List<CommentModel> listComment = await _context.Comment.Include(m => m.User)
-                .Where(m => m.IdSong == idSong).OrderByDescending(m => m.Time).ToListAsync();                                              
-            return PartialView("_CommentPartial",listComment);
+      .Where(m => m.IdSong == idSong).OrderByDescending(m => m.Time).ToListAsync();
+            return listComment;
         }
         [HttpPost]
-        public async Task<string> AddView()
+        public async Task<string> AddView(int idSong)
         {
-         int idSong = (int)HttpContext.Session.GetInt32("idSong");
-            if (idSong!=0)
+            if (idSong >= 0)
             {
                 var song = await _context.Song.FindAsync(idSong);
                 song.CountView++;
@@ -229,7 +232,6 @@ namespace DDMusic.Controllers
                 await _context.SaveChangesAsync();
                 HttpContext.Session.Remove("idSong");
             }
-            
             return "";
         }
         [Route("dang-nhap")]

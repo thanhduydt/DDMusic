@@ -73,6 +73,19 @@
     .cmt {
         display: none;
     }
+    .css-icon {
+        padding-top: 20px;
+        float: right;
+        font-size: 17px;
+    }
+
+    .lyr {
+        padding-top: 20px;
+    }
+
+    .like {
+        color: blue;
+    }
 </style>
 <div class="container section-padding-100-0">
     <div class="wrapper">
@@ -107,37 +120,39 @@
                         <i id="next" class="material-icons d">skip_next</i>
                     </div>
                 </div>
-                <p style="padding-left:600px"><i class="fa fa-thumbs-up"></i> &ensp; <i class="fa fa-heart"></i> &ensp;  <i class="fa fa-share-alt"></i></p>
-                <h3>Lời bài hát</h3>
-
-                <p class="lyrics" id="lyrics"></p>
-
-                <div class="more_add" id="divMoreAddLyric">
-                    <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
-                    <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
-
+                <div class="css-icon">
+                    <i id="checkLike" class="fa fa-thumbs-up"></i>
+                    <t id="countLike"></t>
+                    &ensp; <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                    &ensp; <i class="fa fa-share-alt"></i> Chia sẻ &ensp;
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="music-list">
-                    <div class="header">
-                        <div class="row">
-                            <i class="list material-icons">queue_music</i>
-                            <span>@ViewBag.Title</span>
-                        </div>
-                        <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
+                <div class="lyr">
+                    <h3>Lời bài hát</h3>
+
+                    <p class="lyrics" id="lyrics"></p>
                     </div>
-                    <ul>
-                        <!-- here li list are coming from js -->
-                    </ul>
+                    <div class="more_add" id="divMoreAddLyric">
+                        <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
+                        <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
+
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="music-list">
+                        <div class="header">
+                            <div class="row">
+                                <i class="list material-icons">queue_music</i>
+                                <span>@ViewBag.Title</span>
+                            </div>
+                            <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
+                        </div>
+                        <ul>
+                            <!-- here li list are coming from js -->
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-</div>
-
-<div class="container">
     <div class="row">
         <div class="col-12">
             @*<div class="section-heading white wow fadeInUp" data-wow-delay="100ms">*@
@@ -150,8 +165,7 @@
         <div class="col-12">
             <!-- Contact Form Area -->
             <div class="login-form">
-                @if (SignInManager.IsSignedIn(User))
-                {
+
                     <div class="row">
                         <div class="col-md-6 col-lg-4">
                             <div class="form-group">
@@ -160,14 +174,19 @@
                         </div>
                         <div class="col-md-6 col-lg-4">
                             <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
-                            </div>
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
+                                }
+            else
+            {
+                            <button class="btn btn-primary w-25"onclick="window.location.href='/Identity/Account/Register'">Gửi</button>
+            }
+                                </div>
                         </div>
                     </div>
-                }
                 <br />
-                <input id="listSong" value="@ViewBag.listSong" hidden>
-                <p id="time"></p>
+                <p id="timeSong" value="0"></p>
                 <div id="commentlist">
                 </div>
 
@@ -175,7 +194,7 @@
         </div>
     </div>
 </div>
-
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
@@ -197,28 +216,34 @@
             closemoreMusic = musicList.querySelector("#close");
 
         isMusicPaused = true;
-        var allMusic = JSON.parse(document.getElementById('listSong').value);
+        var allMusic = @Html.Raw(ViewBag.listSong);
         var musicIndex = 1;
-        console.log(musicIndex);
-        $(document).ready(function () {
-            window.addEventListener("load", () => {
-                loadMusic(musicIndex);
-                playMusic();
-                playingSong();
-            });
-
+        $(window).load(function () {
+            loadMusic(musicIndex);
+            playMusic();
+            playingSong();
         });
-        function loadMusic(indexNumb) {
-            musicName.innerText = allMusic[indexNumb - 1].Name;
-            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
-            musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
-            musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
-            mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
-            //Load Comment và tạo session
-            let idSong = allMusic[indexNumb - 1].Id;
+        function addViewsSong(idSong) {
             $.ajax({
                 type: 'get',
-                url: '/Home/GetComment',
+                url: '/Home/GetTimeSong',
+                data: { 'idSong': idSong },
+                success: function (data) {
+                    console.log(data.timeSong)
+                    setTimeout(function () {
+                        $.ajax({
+                            type: 'post',
+                            url: '/Home/AddView',
+                            data: { "idSong":idSong }
+                        });
+                    },data.timeSong);
+                }
+            });  
+        }
+        function loadComment(idSong) {
+            $.ajax({
+                type: 'get',
+                url: '/Home/LoadComment',
                 dataType: 'html',
                 data: {
                     "idSong": idSong
@@ -228,21 +253,8 @@
                     $("#commentlist").html(data);
                 }
             });
-            //Lấy thời gian bài hát
-            mainAudio.addEventListener("loadeddata", () => {
-                var time = mainAudio.duration;
-                $("p#time").val(time);
-                return time;
-            });
-            //Tăng view sau timeS
-            var timeS = Math.floor($("p#time").val() * 1000);
-            setTimeout(function () {
-                $.ajax({
-                    type: 'post',
-                    url: '/Home/AddView',
-
-                });
-            }, timeS);
+        }
+        function handleDisplaySeeAll() {
             document.getElementById("lyrics").className = "lyrics";
             $("a#seeMoreLyric").show();
             $("a#hideMoreLyric").hide();
@@ -250,11 +262,20 @@
             if ($(".lyrics").height() < 255) {
                 $("a#seeMoreLyric").hide();
             }
-
         }
-
-
-
+        function loadMusic(indexNumb) {
+            musicName.innerText = allMusic[indexNumb - 1].Name;
+            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
+            musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
+            musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
+            mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
+            //Load comment
+            let idSong = allMusic[indexNumb - 1].Id;
+            loadComment(idSong);
+            //Add views song
+            addViewsSong(idSong);
+            handleDisplaySeeAll();
+        }
         //play music function
         function playMusic() {
             wrapper.classList.add("paused");
@@ -488,10 +509,7 @@
                     //     alert(data);
                     $("#commentlist").html(data);
                 }
-
             });
         });
-
-
     </script>
 }
