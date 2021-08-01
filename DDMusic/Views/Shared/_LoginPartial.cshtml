@@ -42,9 +42,9 @@
             }
             else
             {
-                <img id="Img" class="avatar" src="~/img/bg-img/noimage.jpg" alt="" />
+                <img class="avatar" src="~/img/bg-img/noimage.jpg" alt="" />
             }
-            @UserManager.GetUserName(User)
+            @UserManager.GetUserAsync(User).Result.UserName
         </a>
         <ul class="dropdown">
             <li>

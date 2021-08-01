@@ -15,6 +15,7 @@ using DDMusic.Areas.Admin.Data;
 using System.Text.Json;
 using Newtonsoft.Json;
 using NAudio.Wave;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DDMusic.Controllers
 {
@@ -33,7 +34,6 @@ namespace DDMusic.Controllers
             //    _signInManager = signInManager;
             _context = context;
         }
-
         //public HomeController(DPContext context)
         //{
         //    this._context = context;
@@ -307,55 +307,58 @@ namespace DDMusic.Controllers
         [HttpPost]
         public async Task<IActionResult> PersonalPage([Bind("Id,Name,Birthday,UserName,URLImg,Address,PhoneNumber,Email,Gender")] EditUserModel editUserModel, IFormFile ful)
         {
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    //Kiểm tra UserName có tồn tại
-                    if(_userManager.FindByNameAsync(editUserModel.UserName)!=null&&_userManager.GetUserName(User)!=editUserModel.UserName)
+                    try
                     {
-                        ViewBag.eUserName = editUserModel.UserName + " đã tồn tại.";
-                        return View(editUserModel);
-                    }
-                    var userModel = await _userManager.FindByIdAsync(editUserModel.Id);
-                    userModel.Name = editUserModel.Name;
-                    userModel.UserName = editUserModel.UserName;
-                    userModel.PhoneNumber = editUserModel.PhoneNumber;
-                    userModel.Email = editUserModel.Email;
-                    userModel.Gender = editUserModel.Gender;
-                    userModel.Birthday = editUserModel.Birthday;
-                    userModel.Address = editUserModel.Address;
-                    userModel.URLImg = editUserModel.URLImg;
-                    if (ful != null)
+                        UserModel userModel = await _userManager.FindByIdAsync(editUserModel.Id);
+                        userModel.Name = editUserModel.Name;
+                        userModel.UserName = editUserModel.UserName;
+                        userModel.PhoneNumber = editUserModel.PhoneNumber;
+                        userModel.Gender = editUserModel.Gender;
+                        userModel.Birthday = editUserModel.Birthday;
+                        userModel.Address = editUserModel.Address;
+                        userModel.URLImg = editUserModel.URLImg;
+                        if (ful != null)
+                        {
+                            //Cập nhật Hình ảnh
+                            editUserModel.URLImg = "noimage.jpg";
+                            string t = editUserModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
+                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", editUserModel.URLImg);
+                            if (System.IO.File.Exists(path))
+                            {
+                                System.IO.File.Delete(path);
+                            }
+                            path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", t);
+                            using (var stream = new FileStream(path, FileMode.Create))
+                            {
+                                await ful.CopyToAsync(stream);
+                            }
+                            userModel.URLImg = t;
+                        }
+                        //Cập nhật thông tin User vào csdl
+                        var userEdit = await _userManager.UpdateAsync(userModel);
+                        //Kiểm tra cập nhật thông tin thành công không.
+                        if (userEdit.Errors.Count() != 0)
+                        {
+                            //Xảy ra lỗi
+                            foreach (var e in userEdit.Errors)
+                            {
+                                if (e.Code == "DuplicateUserName")
+                                {
+                                    ViewBag.eUserName = "Tên đăng nhập " + userModel.UserName + " đã tồn tại";
+                                }
+                            }
+                            return View(editUserModel);
+                        }
+                    ViewBag.Message = "Cập nhật thông tin thành công.";
+                    return View(editUserModel);
+
+                }
+                    catch (DbUpdateConcurrencyException)
                     {
-                        editUserModel.URLImg = "noimage.jpg";
-                        string t = editUserModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
-                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", editUserModel.URLImg);
-                        if (System.IO.File.Exists(path))
-                        {
-                            System.IO.File.Delete(path);
-                        }
-                        path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", t);
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await ful.CopyToAsync(stream);
-                        }
-                        userModel.URLImg = t;
-                    }
-                    await _userManager.UpdateAsync(userModel);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    //if (!UserExists(userModel.Id))
-                    //{
-                    //    return NotFound();
-                    //}
-                    //else
-                    //{
-                    //    throw;
-                    //}
-                }
-                return RedirectToAction(nameof(Index));
+
+                    }        
             }
             return View(editUserModel);
         }
@@ -425,10 +428,9 @@ namespace DDMusic.Controllers
                                                select a).ToListAsync();
             return View( listAlbum);
         }
-        public async Task<IActionResult> UploadSong()
+        public IActionResult UploadSong()
         {
-            //Lấy danh sách Singer
-            ViewBag.listSinger = await _context.Singer.ToListAsync();
+            GetListSingerAndAlbum();
             return View();
         }
         [HttpPost]
@@ -474,9 +476,15 @@ namespace DDMusic.Controllers
                     _context.Update(model);
                     await _context.SaveChangesAsync();
                 }
+                ViewBag.Message = "Upload bài hát thành công.";
             }
-            return RedirectToAction(nameof(UploadSong));
+            GetListSingerAndAlbum();
+            return View();
             
+        }
+        public void GetListSingerAndAlbum(){
+            ViewData["ListGenre"] = new SelectList(SongModel.GetAllGerne());
+            ViewData["IdSinger"] = new SelectList(_context.Singer, "Id", "Name");
         }
         [Route("album")]
         public IActionResult Album()

@@ -20,86 +20,97 @@
         -moz-border-radius: 10%;
         -webkit-border-radius: 10%;
     }
+    .input-name {
+        border-radius: .25rem;
+        border: 1px solid #ced4da;
+        width: 100%;
+        height: 28px;
+        padding-left: 8px;
+    }
+    label{
+        color:gray;
+    }
+    .pt-img{
+        padding-top:50px;
+    }
+    .pt-cont{
+        padding-top:125px;
+        padding-bottom:80px;
+    }
+    .btnSave{
+        width:30%;
+    }
+    .div-btn{
+        padding-top:15px;
+    }
 </style>
-<div class="container" style="padding-top:100px;">
+<div class="container pt-cont">
     <form asp-action="UploadSong" enctype="multipart/form-data">
         <div class="row">
-
-            <div class="col-lg-4 col-sm-12" @*style=" background-color: aqua"*@>
+            <div class="col-lg-4 col-sm-12">
                 <center>
-                    <div class="image-upload" style="padding-top:50px;">
+                    <div class="image-upload pt-img">
                         <label for="ful">
-                        <img id="Img" class="avatarSong" src="~/img/bg-img/noimage.jpg" alt="" /></label>
+                            <img id="Img" class="avatarSong" src="~/img/bg-img/noimage.jpg" alt="" />
+                        </label>
                         <input type="file" class="custom-file-input" accept=".jpeg,.gif,.png,.tiff,.bmp,.jpg" id="ful" name="ful">
                     </div>
                 </center>
             </div>
-            <div class="col-lg-8 col-sm-12" @*style=" background-color:red"*@>
+            @*<partial name="_StatusMessage" for="StatusMessage" />*@
+            <div class="col-lg-8 col-sm-12">
                 <div class="contact-form-area">
                     <div class="row">
                         <div class="col-12">
-                            <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                            <div class="form-group" data-wow-delay="100ms">
                                 <label for="fulMusic" class="custom-file-upload" id="fulMusic-label">
-                                    Chọn File
+                                    Chọn File Nhạc
                                 </label>
                                 <input name="fulMusic" type="file" id="fulMusic"
-                                       accept=".mp3,.wma,.mp2,.asf,.wav,.wmv,.mp4,.flv,.mpg,.mpe,.avi,.3gp,.dat,.flac" style="display: none;" />
+                                       accept=".mp3" style="display: none;" />
                             </div>
                         </div>
 
                         <div class="col-12">
-                            <div class="form-group wow fadeInUp" data-wow-delay="100ms">
+                            <div class="form-group" data-wow-delay="100ms">
                                 <label style="color:gray">Tên bài hát</label>
-                                <input asp-for="Name" type="text" class="form-control" id="name" value="">
+                                <input asp-for="Name" class="input-name" id="name" value="">
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                <label style="color:gray">Ca sĩ</label>
-                                <select asp-for="IdSinger" class="form-control">
-                                    @*<option value="1">Đen Vâu</option>
-                                    <option value="Đạt G">Đạt G</option>
-                                    <option value="Sơn Tùng MTP">Sơn Tùng MTP</option>*@
-                                    @foreach(var item in ViewBag.listSinger)
-            {
-                <option value="@item.Id">@item.Name</option>
-            }
-
+                            <div class="form-group" data-wow-delay="200ms">
+                                <label>Ca sĩ</label>
+                                <select class="form-control select2" asp-for="IdSinger" asp-items="ViewBag.IdSinger" id="Singer">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group" data-wow-delay="200ms">
+                                <label>Thể loại</label>
+                                <select class="form-control select2" asp-for="Genre" asp-items="ViewBag.ListGenre" id="Genre">
                                 </select>
 
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                <label style="color:gray">Thể loại</label>
-                                <select asp-for="Lyric" class="form-control" name="cars" id="cars">
-                                    <option value="1">Nhạc trẻ</option>
-                                    <option value="">Trữ tình</option>
-
-                                </select>
-
-                            </div>
+                        <div class="col-12 text-center div-btn" data-wow-delay="500ms">
+                            <button class="btn btn-outline-dark btnSave" type="submit">Lưu</button>
                         </div>
-                        <div class="col-12 text-center wow fadeInUp" data-wow-delay="500ms">
-                            <button class="btn oneMusic-btn mt-30" type="submit">Lưu</button>
-                            <button class="btn oneMusic-btn mt-30">Hủy</button>
-                        </div>
-
                     </div>
-
-
-
-
                 </div>
             </div>
         </div>
-        </form>
-    <br /><br /><br /><br />
+    </form>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        $(window).load(function () {
+            var message = '@ViewBag.Message';
+            if (message.length>0) {
+                $('#myModal').modal('show');
+            }
+        });
         function readURL(input, img) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -120,5 +131,13 @@
                 $(this).prev('label').text(file);
             });
         });
+        $('.select2').select2()
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     </script>
 }

@@ -65,7 +65,6 @@ namespace DDMusic.Areas.Admin.Controllers
                 {
                     //Không cần xác nhận qua Email
                     userModel.EmailConfirmed = true;
-                    userModel.URLImg = "noimage.jpg";
                     //Tạo mới User
                     await _userManager.CreateAsync(userModel,userModel.PasswordHash);
                     if(ful!=null){

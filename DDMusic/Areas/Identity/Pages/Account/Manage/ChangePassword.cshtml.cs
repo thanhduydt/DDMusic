@@ -92,7 +92,7 @@ namespace DDMusic.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            _logger.LogInformation("Bạn đã thay đổi mật khẩu của họ thành công.");
+            _logger.LogInformation("Bạn đã thay đổi mật khẩu thành công.");
             StatusMessage = "Mật khẩu của bạn đã được thay đổi.";
 
             return RedirectToPage();

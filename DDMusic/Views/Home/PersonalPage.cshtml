@@ -15,6 +15,7 @@
   option,label {
         color: gray
     }
+
 </style>
 <section class="contact-area section-padding-100 bg-img bg-overlay bg-fixed has-bg-img" style="background-image: url(../img/bg-img/bg-2.jpg);">
     <div class="container">
@@ -97,7 +98,7 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="form-group wow fadeInUp" data-wow-delay="200ms">
                                     <label>Sinh nhật</label>
-                                    <input asp-for="Birthday" class="form-control" id="">
+                                    <input type="date" asp-for="Birthday" class="form-control" min="1900-01-01" max="2080-01-01">
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -120,21 +121,26 @@
         </div>
     </div>
 </section>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        function readURL(input, img) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById("Img").src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
+<script>
+    $(window).load(function () {
+        var message = '@ViewBag.Message';
+        if (message.length > 0) {
+            $("#myModal").modal('show');
         }
-        $("#ful").change(function () {
-            readURL(this, '#img');
-        })
+    });
+    function readURL(input, img) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("Img").src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#ful").change(function () {
+        readURL(this, '#img');
+    })
     </script>
 }

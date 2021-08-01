@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="/resources/demos/style.css">
     <!-- Stylesheet -->
     <link rel="stylesheet" href="~/style.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 </head>
 <body>
     @await Html.PartialAsync("_Header.cshtml")
@@ -23,6 +26,7 @@
     @RenderBody()
     @await Html.PartialAsync("_Footer.cshtml")
     @RenderSection("Scripts", required: false)
+    <partial name="_MessagePartial" />
 </body>
 </html>
 <script>
