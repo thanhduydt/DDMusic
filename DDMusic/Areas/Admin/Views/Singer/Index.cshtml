@@ -1,10 +1,15 @@
-﻿@model  IEnumerable<DDMusic.Areas.Admin.Models.SingerModel>;
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SingerModel>;
 <style>
     img {
-        width: 10%
+        width: 50%;
     }
-    a{
-        color:#000;
+
+    a {
+        color: #000;
+    }
+
+    .c {
+        width: 150px;
     }
 </style>
 <div class="content-wrapper">
@@ -33,25 +38,29 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a asp-action="CreateSinger" asp-controller="Singer"><i class="nav-icon fas fa-plus"></i></a>
+                            <a class="btn btn-success btn-xs" asp-action="CreateSinger" asp-controller="Singer">Thêm <i class="nav-icon fas fa-plus"></i></a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Tên Ca Sĩ</th>
                                         <th>Ngày Sinh</th>
-                                        <th>Hình Ảnh</th>
+                                        <th class="c">Hình Ảnh</th>
                                         <th>Quốc Gia</th>
-                                        <th>Thao tác</th>
+                                        <th class="c">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
-                                    {<tr>
+                                    {
+                                        <tr>
                                             <td>@item.Name</td>
-                                            <td>@String.Format("{0:dd/MM/yyyy}",item.BirthDay)</td>
+                                            <td>@String.Format("{0:dd/MM/yyyy}", item.BirthDay)</td>
                                             <td><img src="~/img/Singer/@item.Image" /></td>
                                             <td>@item.Country</td>
-                                            <td><a asp-action="EditSinger" asp-controller="Singer" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a><a asp-controller="Singer" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');"><i class="fas fa-trash-alt"></i></a></td>
+                                            <td>
+                                                <a class="btn btn-info btn-xs" asp-action="EditSinger" asp-controller="Singer" asp-route-id="@item.Id">Cập nhật <i class="nav-icon fas fa-edit"></i></a>
+                                                <a class="btn btn-danger btn-xs" asp-controller="Singer" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i class="fas fa-trash-alt"></i></a>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>

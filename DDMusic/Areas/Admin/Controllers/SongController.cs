@@ -68,6 +68,7 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 //Admin tạo bài hát thì luôn được cho phép hiển thị lên frontend
                 song.Accept = true;
+                song.CountLike = 0;
                 if(song.IdAlbum == 0)
                 {
                     song.IdAlbum = null;
@@ -122,7 +123,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView")] SongModel song, IFormFile ful)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView,CountLike")] SongModel song, IFormFile ful)
         {
             if (id != song.Id)
             {

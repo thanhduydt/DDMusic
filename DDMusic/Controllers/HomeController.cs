@@ -47,15 +47,15 @@ namespace DDMusic.Controllers
             var Albums = _context.Album.Include(m => m.Singer).OrderByDescending(m => m.Id).ToList();
             List<AlbumModel> NewAlbum = new List<AlbumModel>();
             int point = 0;
-            foreach(var item in Albums)
+            foreach (var item in Albums)
             {
                 //Lấy 12 album mới nhất
-                if(point == 12)
+                if (point == 12)
                 {
                     break;
                 }
                 var song = _context.Song.Where(m => m.IdAlbum == item.Id);
-                if(song.Count()!= 0)
+                if (song.Count() != 0)
                 {
                     NewAlbum.Add(item);
                     point++;
@@ -69,7 +69,7 @@ namespace DDMusic.Controllers
             foreach (var item in Playlists)
             {
                 //Lấy 12 playlist 
-                if(point == 12)
+                if (point == 12)
                 {
                     break;
                 }
@@ -79,7 +79,7 @@ namespace DDMusic.Controllers
                     NewPlaylist.Add(item);
                     point++;
                 }
-                
+
             }
             ViewBag.NewPlaylist = NewPlaylist;
             return View();
@@ -178,12 +178,76 @@ namespace DDMusic.Controllers
                 relatedSong = item;
                 SingerModel singer1 = await _context.Singer.FindAsync(relatedSong.IdSinger);
                 RelatedSongs.Add(relatedSong);
-            }          
+            }
             ViewBag.listSong = JsonConvert.SerializeObject(RelatedSongs);
             ViewBag.Title = "Những bài hát liên quan";
-      
+
             return View(song);
         }
+        [HttpPost]
+        public IActionResult ReactSong(int IdSong)
+        {
+            bool result = false;
+            //Thông tin User đăng nhập
+            string IdUser = _userManager.GetUserId(User);
+
+            var reactSongs = _context.ReactSong.ToList().Where(m => m.IdSong == IdSong && m.IdUser == IdUser);
+            var Song = _context.Song.Find(IdSong);
+            //Kiểm tra tồn tại
+            if (reactSongs.ToList().Count != 0)
+            {
+                var reactSong = reactSongs.First();
+                if (reactSong.React == false)
+                {
+                    reactSong.React = true;
+                    Song.CountLike++;
+                    result = true;
+                }
+                else
+                {
+                    reactSong.React = false;
+                    result = false;
+                    Song.CountLike--;
+
+                }
+
+                _context.Update(reactSong);
+                _context.Update(Song);
+
+            }
+            //Chưa có thì tạo mới
+            else
+            {
+                ReactSong react = new ReactSong();
+                react.IdSong = IdSong;
+                react.IdUser = IdUser;
+                react.React = true;
+                result = true;
+                Song.CountLike++;
+                _context.Add(react);
+                _context.Update(Song);
+            }
+            _context.SaveChanges();
+            return Content(result.ToString(), "application/json");
+        }
+        [HttpGet]
+        public IActionResult GetReactSong(int IdSong)
+        {
+            bool result = false;
+            //Thông tin User đăng nhập
+            string IdUser = _userManager.GetUserId(User);
+            if (IdUser != null)
+            {
+                var reactSongs = _context.ReactSong.ToList().Where(m => m.IdSong == IdSong && m.IdUser == IdUser);               
+                if (reactSongs.ToList().Count != 0)
+                {
+                    if (reactSongs.ToList().First().React == true)
+                        result = true;       
+                }
+            }
+            return Content(result.ToString(), "application/json");
+        }
+
         [HttpGet]
         public JsonResult GetTimeSongAsync(int idSong)
         {
@@ -274,17 +338,17 @@ namespace DDMusic.Controllers
             var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
             var AllAlbumOfSinger = _context.Album.Where(m => m.IdSinger == id).ToList();
             List<AlbumModel> AlbumOfSinger = new List<AlbumModel>();
-            foreach(var item in AllAlbumOfSinger)
+            foreach (var item in AllAlbumOfSinger)
             {
                 var song = _context.Song.Where(m => m.IdAlbum == item.Id);
-                if(song.Count() != 0)
+                if (song.Count() != 0)
                 {
                     AlbumOfSinger.Add(item);
                 }
             }
             ViewBag.AlbumOfSinger = AlbumOfSinger;
             ViewBag.SongOfSinger = SongOfSinger;
-           
+
             return View(Singer);
         }
         //[Route("thong-tin-tai-khoan")]
@@ -307,58 +371,59 @@ namespace DDMusic.Controllers
         [HttpPost]
         public async Task<IActionResult> PersonalPage([Bind("Id,Name,Birthday,UserName,URLImg,Address,PhoneNumber,Email,Gender")] EditUserModel editUserModel, IFormFile ful)
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    try
+                    UserModel userModel = await _userManager.FindByIdAsync(editUserModel.Id);
+                    userModel.Name = editUserModel.Name;
+                    userModel.UserName = editUserModel.UserName;
+                    userModel.PhoneNumber = editUserModel.PhoneNumber;
+                    userModel.Gender = editUserModel.Gender;
+                    userModel.Birthday = editUserModel.Birthday;
+                    userModel.Address = editUserModel.Address;
+                    userModel.URLImg = editUserModel.URLImg;
+                    if (ful != null)
                     {
-                        UserModel userModel = await _userManager.FindByIdAsync(editUserModel.Id);
-                        userModel.Name = editUserModel.Name;
-                        userModel.UserName = editUserModel.UserName;
-                        userModel.PhoneNumber = editUserModel.PhoneNumber;
-                        userModel.Gender = editUserModel.Gender;
-                        userModel.Birthday = editUserModel.Birthday;
-                        userModel.Address = editUserModel.Address;
-                        userModel.URLImg = editUserModel.URLImg;
-                        if (ful != null)
+                        //Cập nhật Hình ảnh
+                        editUserModel.URLImg = "noimage.jpg";
+                        string t = editUserModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", editUserModel.URLImg);
+                        if (System.IO.File.Exists(path))
                         {
-                            //Cập nhật Hình ảnh
-                            editUserModel.URLImg = "noimage.jpg";
-                            string t = editUserModel.Id + "." + ful.FileName.Split(".")[ful.FileName.Split(".").Length - 1];
-                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", editUserModel.URLImg);
-                            if (System.IO.File.Exists(path))
-                            {
-                                System.IO.File.Delete(path);
-                            }
-                            path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", t);
-                            using (var stream = new FileStream(path, FileMode.Create))
-                            {
-                                await ful.CopyToAsync(stream);
-                            }
-                            userModel.URLImg = t;
+                            System.IO.File.Delete(path);
                         }
-                        //Cập nhật thông tin User vào csdl
-                        var userEdit = await _userManager.UpdateAsync(userModel);
-                        //Kiểm tra cập nhật thông tin thành công không.
-                        if (userEdit.Errors.Count() != 0)
+                        path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/user-img", t);
+                        using (var stream = new FileStream(path, FileMode.Create))
                         {
-                            //Xảy ra lỗi
-                            foreach (var e in userEdit.Errors)
-                            {
-                                if (e.Code == "DuplicateUserName")
-                                {
-                                    ViewBag.eUserName = "Tên đăng nhập " + userModel.UserName + " đã tồn tại";
-                                }
-                            }
-                            return View(editUserModel);
+                            await ful.CopyToAsync(stream);
                         }
+                        userModel.URLImg = t;
+                    }
+                    //Cập nhật thông tin User vào csdl
+                    var userEdit = await _userManager.UpdateAsync(userModel);
+                    //Kiểm tra cập nhật thông tin thành công không.
+                    if (userEdit.Errors.Count() != 0)
+                    {
+                        //Xảy ra lỗi
+                        foreach (var e in userEdit.Errors)
+                        {
+                            if (e.Code == "DuplicateUserName")
+                            {
+                                ViewBag.eUserName = "Tên đăng nhập " + userModel.UserName + " đã tồn tại";
+                            }
+                        }
+                        return View(editUserModel);
+                    }
                     ViewBag.Message = "Cập nhật thông tin thành công.";
+                    editUserModel.URLImg = userModel.URLImg;
                     return View(editUserModel);
 
                 }
-                    catch (DbUpdateConcurrencyException)
-                    {
+                catch (DbUpdateConcurrencyException)
+                {
 
-                    }        
+                }
             }
             return View(editUserModel);
         }
@@ -398,7 +463,7 @@ namespace DDMusic.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult>Search(string txtSearch)
+        public async Task<IActionResult> Search(string txtSearch)
         {
             txtSearch = RemoveUnicode(txtSearch);
             //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
@@ -407,26 +472,26 @@ namespace DDMusic.Controllers
                                       select s).Take(5).ToListAsync();
             //   Tìm kiếm album theo tên bài và tên ca sĩ
             ViewBag.listAlbum = await (from a in _context.Album.Include(m => m.Singer)
-                                      where a.NameUnsigned.Contains(txtSearch) || a.Singer.NameUnsigned.Contains(txtSearch)
-                                      select a).Take(10).ToListAsync();
+                                       where a.NameUnsigned.Contains(txtSearch) || a.Singer.NameUnsigned.Contains(txtSearch)
+                                       select a).Take(10).ToListAsync();
             ViewBag.txtSearch = txtSearch.ToString();
             return View();
         }
-        public async Task<IActionResult>AllSong(string txtSearch)
+        public async Task<IActionResult> AllSong(string txtSearch)
         {
             //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
             List<SongModel> listSong = await (from s in _context.Song.Include(m => m.Singer)
-                                      where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
-                                      select s).ToListAsync();
+                                              where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
+                                              select s).ToListAsync();
             return View(listSong);
         }
-        public async Task<IActionResult>AllAlbum(string txtSearch)
+        public async Task<IActionResult> AllAlbum(string txtSearch)
         {
             //   Tìm kiếm album theo tên album và tên ca sĩ
-               List<AlbumModel> listAlbum =await (from a in _context.Album.Include(m => m.Singer)
+            List<AlbumModel> listAlbum = await (from a in _context.Album.Include(m => m.Singer)
                                                 where a.NameUnsigned.Contains(txtSearch) || a.Singer.NameUnsigned.Contains(txtSearch)
-                                               select a).ToListAsync();
-            return View( listAlbum);
+                                                select a).ToListAsync();
+            return View(listAlbum);
         }
         public IActionResult UploadSong()
         {
@@ -463,7 +528,7 @@ namespace DDMusic.Controllers
                 if (fulMusic != null)
                 {
                     //Bỏ dấu
-                      string NameMusic = RemoveUnicode(model.Name);
+                    string NameMusic = RemoveUnicode(model.Name);
                     //Bỏ khoảng cách
                     NameMusic = NameMusic.Replace(" ", String.Empty);
                     var path = Path.Combine(
@@ -480,9 +545,10 @@ namespace DDMusic.Controllers
             }
             GetListSingerAndAlbum();
             return View();
-            
+
         }
-        public void GetListSingerAndAlbum(){
+        public void GetListSingerAndAlbum()
+        {
             ViewData["ListGenre"] = new SelectList(SongModel.GetAllGerne());
             ViewData["IdSinger"] = new SelectList(_context.Singer, "Id", "Name");
         }
@@ -491,10 +557,10 @@ namespace DDMusic.Controllers
         {
             var AllAlbum = _context.Album.Include(m => m.Singer).ToList();
             List<AlbumModel> Albums = new List<AlbumModel>();
-            foreach(var item in AllAlbum)
+            foreach (var item in AllAlbum)
             {
                 var song = _context.Song.Where(m => m.IdAlbum == item.Id);
-                if(song.Count() != 0)
+                if (song.Count() != 0)
                 {
                     Albums.Add(item);
                 }
@@ -514,14 +580,14 @@ namespace DDMusic.Controllers
         public IActionResult AlbumDetail(int id)
         {
             //Lấy album
-            var Album =  _context.Album.Find(id);
+            var Album = _context.Album.Find(id);
             //Lấy tất cả bài hát trong album
             var SongOfAlbum = _context.Song.Where(m => m.IdAlbum == id).Include(m => m.Singer).ToList();
             var Song = SongOfAlbum[0];
             ViewBag.listSong = JsonConvert.SerializeObject(SongOfAlbum);
             ViewBag.Title = "Những bài hát thuộc album: " + Album.Name;
 
-            return View("SongDetail",Song);
+            return View("SongDetail", Song);
         }
         [Route("playlist")]
         public IActionResult Playlist()
@@ -534,10 +600,10 @@ namespace DDMusic.Controllers
             var AllPlaylists = _context.Playlist.ToList();
             //Kiểm tra Playlist rỗng 
             List<Playlist> Playlists = new List<Playlist>();
-            foreach(var item in AllPlaylists)
+            foreach (var item in AllPlaylists)
             {
                 var PlaylistDetail = _context.PlaylistDetail.Where(m => m.IdPlaylist == item.Id);
-                if(PlaylistDetail.Count() != 0)
+                if (PlaylistDetail.Count() != 0)
                 {
                     Playlists.Add(item);
                 }
@@ -559,7 +625,7 @@ namespace DDMusic.Controllers
             //Lấy PlaylistDetail 
             var PlaylistDetail = _context.PlaylistDetail.Include(m => m.Song).Where(m => m.IdPlaylist == id).ToList();
             List<SongModel> ListSong = new List<SongModel>();
-            foreach(var item in PlaylistDetail)
+            foreach (var item in PlaylistDetail)
             {
                 SongModel song = new SongModel();
                 song = item.Song;
@@ -569,7 +635,7 @@ namespace DDMusic.Controllers
             var Playlist = _context.Playlist.Find(id);
             ViewBag.listSong = JsonConvert.SerializeObject(ListSong);
             ViewBag.Title = "Những bài hát thuộc Playlist: " + Playlist.Name;
-            return View("SongDetail",ListSong[0]);
+            return View("SongDetail", ListSong[0]);
         }
         [Route("lien-he")]
         public IActionResult Contact()

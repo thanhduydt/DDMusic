@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
 <style>
     img {
-        width: 100%
+        width: 50%;
     }
 
     a {
         color: #000;
+    }
+    .c {
+        width: 150px;
     }
 </style>
 <div class="content-wrapper">
@@ -34,16 +37,16 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a asp-action="CreateSong" asp-controller="Song"><i class="nav-icon fas fa-plus"></i></a>
+                            <a class="btn btn-success btn-xs" asp-action="CreateSong" asp-controller="Song">Thêm <i class="nav-icon fas fa-plus"></i></a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Tên bài hát</th>
                                         <th>Ca sĩ</th>
                                         <th>Ngày phát hành</th>
-                                        <th style="width:10%">Hình ảnh</th>
+                                        <th class="c">Hình ảnh</th>
                                         <th>Thể Loại</th>
-                                        <th>Thao tác</th>
+                                        <th class="c">Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,7 +58,8 @@
                                             <td>@String.Format("{0:dd/MM/yyyy}", item.ReleaseDate)</td>
                                             <td><img src="~/img/song/@item.URLImg" /></td>
                                             <td>@item.Genre</td>
-                                            <td><a asp-action="EditSong" asp-controller="Song" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a> <a asp-controller="Song" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');"><i class="fas fa-trash-alt"></i></a></td>
+                                            <td><a class="btn btn-info btn-xs" asp-action="EditSong" asp-controller="Song" asp-route-id="@item.Id">Cập nhật <i class="nav-icon fas fa-edit"></i></a>
+                                            <a class="btn btn-danger btn-xs" asp-controller="Song" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i class="fas fa-trash-alt"></i></a></td>
                                         </tr>
                                     }
                                 </tbody>

@@ -20,6 +20,7 @@ namespace DDMusic.Areas.Admin.Models
         public string URLImg { get; set; }
         public string URLMusic { get; set; }
         public int CountView { get; set; }
+        public int CountLike { get; set; }
         public bool Accept { get; set; }
         [ForeignKey("IdSinger")]
         public virtual SingerModel Singer { get; set; }

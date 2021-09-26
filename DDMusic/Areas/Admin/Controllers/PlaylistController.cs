@@ -154,7 +154,7 @@ namespace DDMusic.Areas.Admin.Controllers
             foreach (var item in IdSong)
             {
                 var PlaylistDetailExist = _context.PlaylistDetail.Where(m => m.IdSong == item).ToList();
-                if (PlaylistDetailExist.Count == 0)
+                  if (PlaylistDetailExist.Count == 0)
                 {
                     PlaylistDetail playlistDetail = new PlaylistDetail();
                     playlistDetail.IdPlaylist = IdPlaylist;

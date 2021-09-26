@@ -95,10 +95,16 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-6">
+                                        <label>Số lượng người thích bài hát: <span>@Model.CountLike</span></label>
+                                        <div class="input-group">
+                                            <input type="text" asp-for="CountLike" class="form-control" hidden>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
                                         <label>Kích Hoạt: <input type="checkbox" asp-for="Accept" disabled /></label>
                                         @*<div class="input-group">
-                                            <input type="checkbox" asp-for="Accept" class="form-control" disabled />
-                                        </div>*@
+                <input type="checkbox" asp-for="Accept" class="form-control" disabled />
+            </div>*@
                                     </div>
                                     <div class="col-md-12 col-lg-12">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">

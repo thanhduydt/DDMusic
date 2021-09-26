@@ -1,10 +1,14 @@
 ﻿@model IEnumerable<DDMusic.Areas.Admin.Models.AlbumModel>
 <style>
     img {
-        width: 100%
+        width: 50%
     }
     a {
         color: #000;
+    }
+
+    .c {
+        width: 150px;
     }
 </style>
 <div class="content-wrapper">
@@ -13,7 +17,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Ca sĩ</h1>
+                    <h1>Album</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -33,15 +37,15 @@
 
                         <!-- /.card-header -->
                         <div class="card-body">
-                            <a asp-action="CreateAlbum" asp-controller="Album"><i class="nav-icon fas fa-plus"></i></a>
+                            <a class="btn btn-success btn-xs" asp-action="CreateAlbum" asp-controller="Album"><i class="nav-icon fas fa-plus"></i></a>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Tên Album</th>
                                         <th>Ca sĩ</th>
-                                        <th style="width:10%">Hình ảnh</th>
-                                        <th>Thao tác</th>
-                                        <th>Chi Tiết</th>
+                                        <th class="c">Hình ảnh</th>
+                                        <th class="c">Thao tác</th>
+                                        <th class="c">Chi Tiết</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,8 +55,8 @@
                                             <td>@item.Name</td>
                                             <td>@item.Singer.Name</td>
                                             <td><img src="~/img/Album/@item.Image" /></td>
-                                            <td><a asp-action="EditAlbum" asp-controller="Album" asp-route-id="@item.Id"><i class="nav-icon fas fa-edit"></i></a> <a asp-controller="Album" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa album này không?');"><i class="fas fa-trash-alt"></i></a></td>
-                                            <td><a asp-action="DetailAlbum" asp-controller="Album" asp-route-id="@item.Id">Chi Tiết</a></td>
+                                            <td><a class="btn btn-info btn-xs" asp-action="EditAlbum" asp-controller="Album" asp-route-id="@item.Id">Cập nhật <i class="nav-icon fas fa-edit"></i></a> <a class="btn btn-danger btn-xs" asp-controller="Album" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa album này không?');">Xóa <i class="fas fa-trash-alt"></i></a></td>
+                                            <td><a class="btn btn-success btn-xs" asp-action="DetailAlbum" asp-controller="Album" asp-route-id="@item.Id">Chi Tiết <i class="nav-icon fas fa-info-circle"></i></a></td>
                                         </tr>
                                     }
                                 </tbody>

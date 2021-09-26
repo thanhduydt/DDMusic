@@ -73,6 +73,7 @@
     .cmt {
         display: none;
     }
+
     .css-icon {
         padding-top: 20px;
         float: right;
@@ -85,6 +86,15 @@
 
     .like {
         color: blue;
+    }
+
+    input:focus-visible {
+        border: none !important;
+        outline: none !important;
+    }
+
+    button:focus {
+        outline: none !important;
     }
 </style>
 <div class="container section-padding-100-0">
@@ -111,7 +121,6 @@
                         <span class="max-duration k">0:00</span>
                     </div>
                     <div class="controls">
-
                         <i id="repeat-plist" class="material-icons t" title="Playlist looped">repeat</i>
                         <i id="prev" class="material-icons">skip_previous</i>
                         <div class="play-pause">
@@ -121,50 +130,59 @@
                     </div>
                 </div>
                 <div class="css-icon">
-                    <i id="checkLike" class="fa fa-thumbs-up"></i>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <button id="checkLike" style="background-color:transparent;border:none"><i id="like-song" class="fa fa-thumbs-up"></i></button>
+                    }
+                    else
+                    {
+                        <button id="checkLikeUnsign" style="background-color:transparent;border:none"><i class="fa fa-thumbs-up"></i></button>
+                    }
                     <t id="countLike"></t>
-                    &ensp; <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
-                    &ensp; <i class="fa fa-share-alt"></i> Chia sẻ &ensp;
+                    &ensp; <button id="downloadMusic" style="background-color:transparent;border:none">
+                        <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                    </button>
+                    @*&ensp; <i class="fa fa-share-alt"></i> Chia sẻ &ensp;*@
                 </div>
                 <div class="lyr">
                     <h3>Lời bài hát</h3>
 
                     <p class="lyrics" id="lyrics"></p>
-                    </div>
-                    <div class="more_add" id="divMoreAddLyric">
-                        <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
-                        <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
-
-                    </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="music-list">
-                        <div class="header">
-                            <div class="row">
-                                <i class="list material-icons">queue_music</i>
-                                <span>@ViewBag.Title</span>
-                            </div>
-                            <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
-                        </div>
-                        <ul>
-                            <!-- here li list are coming from js -->
-                        </ul>
-                    </div>
+                <div class="more_add" id="divMoreAddLyric">
+                    <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
+                    <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
+
                 </div>
             </div>
-
-    <div class="row">
-        <div class="col-12">
-            @*<div class="section-heading white wow fadeInUp" data-wow-delay="100ms">*@
-            @*<p>See what’s new</p>*@
-            <h2>Bình luận</h2>
-            @*</div>*@
+            <div class="col-lg-4">
+                <div class="music-list">
+                    <div class="header">
+                        <div class="row">
+                            <i class="list material-icons">queue_music</i>
+                            <span>@ViewBag.Title</span>
+                        </div>
+                        <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
+                    </div>
+                    <ul>
+                        <!-- here li list are coming from js -->
+                    </ul>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <!-- Contact Form Area -->
-            <div class="login-form">
+
+        <div class="row">
+            <div class="col-12">
+                @*<div class="section-heading white wow fadeInUp" data-wow-delay="100ms">*@
+                @*<p>See what’s new</p>*@
+                <h2>Bình luận</h2>
+                @*</div>*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!-- Contact Form Area -->
+                <div class="login-form">
 
                     <div class="row">
                         <div class="col-md-6 col-lg-4">
@@ -178,26 +196,74 @@
                                 {
                                     <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
                                 }
-            else
-            {
-                            <button class="btn btn-primary w-25"onclick="window.location.href='/Identity/Account/Register'">Gửi</button>
-            }
-                                </div>
+                                else
+                                {
+                                    <button class="btn btn-primary w-25" onclick="window.location.href='/Identity/Account/Register'">Gửi</button>
+                                }
+                            </div>
                         </div>
                     </div>
-                <br />
-                <p id="timeSong" value="0"></p>
-                <div id="commentlist">
-                </div>
+                    <br />
+                    <p id="timeSong" value="0"></p>
+                    <div id="commentlist">
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        window.onload = function () {
+            var idSong = allMusic[musicIndex - 1].Id;
+            $.ajax({
+                type: 'get',
+                url: '/Home/GetReactSong',
+                dataType: 'html',
+                data: {
+                    "IdSong": idSong
+                },
+                success: function (data) {
+                    if (data === "True") {
+                        $("#like-song").addClass("like");
+                    }
+                    else {
+                        $("#like-song").removeClass("like");
+                    }
+                }
+            });
+        }
+        $("#downloadMusic").click(function () {
+            var link = document.createElement('a');
+            link.href = `../audio/${allMusic[musicIndex - 1].URLMusic}`;      
+            link.download = allMusic[musicIndex - 1].URLMusic;
+            link.dispatchEvent(new MouseEvent('click'));
+        })
+        $("#checkLike").click(function () {
+            var idSong = allMusic[musicIndex - 1].Id;
+            $.ajax({
+                type: 'post',
+                url: '/Home/ReactSong',
+                dataType: 'html',
+                data: {
+                    "IdSong": idSong
+                },
+                success: function (data) {
+                    if (data === "True") {
+                        $("#like-song").addClass("like");
+                    }
+                    else {
+                        $("#like-song").removeClass("like");
+                    }
+                }
+            });
+        })
+        $("#checkLikeUnsign").click(function () {
+            alert("Vui lòng đăng nhập để thích bài hát!");
+        })
+
         const wrapper = document.querySelector(".wrapper"),
             musicImg = wrapper.querySelector(".img-area img"),
             musicName = wrapper.querySelector(".song-details .name"),
@@ -214,6 +280,7 @@
             musicList = wrapper.querySelector(".music-list"),
             moreMusicBtn = wrapper.querySelector("#more-music"),
             closemoreMusic = musicList.querySelector("#close");
+            countLike = 
 
         isMusicPaused = true;
         var allMusic = @Html.Raw(ViewBag.listSong);
@@ -238,7 +305,7 @@
                         });
                     },data.timeSong);
                 }
-            });  
+            });
         }
         function loadComment(idSong) {
             $.ajax({
@@ -269,6 +336,8 @@
             musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
             musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
             mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
+            //Load Like
+            $('.countLike').text(allMusic[indexNumb - 1].CountLike);;
             //Load comment
             let idSong = allMusic[indexNumb - 1].Id;
             loadComment(idSong);
