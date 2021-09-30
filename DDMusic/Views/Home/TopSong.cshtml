@@ -22,13 +22,13 @@
                                         <img src="~/img/song/@item.Song.URLImg" alt="">
                                     </div>
                                     <div class="content-">
-                                        <h6>@item.Song.Name</h6>
+                                        <h6><a href="~/img/song/@item.Song.Id">@item.Song.Name</a></h6>
                                         <p>@item.Song.Singer.Name</p>
                                     </div>
                                 </div>
-                                <audio preload="auto" controls>
+                                @*<audio preload="auto" controls>
                                     <source src="~/audio/@item.Song.URLMusic">
-                                </audio>
+                                </audio>*@
                             </div>
                         }
                     }
@@ -51,7 +51,7 @@
                                         <img src="~/img/song/@item.Song.URLImg" alt="">
                                     </div>
                                     <div class="content-">
-                                        <h6>@item.Song.Name</h6>
+                                        <h6><a href="~/img/song/@item.Song.Id">@item.Song.Name</a></h6>
                                         <p>@item.Song.Singer.Name</p>
                                     </div>
                                 </div>

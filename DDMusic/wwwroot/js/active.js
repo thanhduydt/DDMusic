@@ -24,7 +24,7 @@
         welcomeSlide.owlCarousel({
             items: 1,
             margin: 0,
-            loop: true,
+            loop: false,
             nav: false,
             dots: false,
             autoplay: true,

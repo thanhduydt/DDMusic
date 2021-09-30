@@ -68,7 +68,7 @@
                                         <td>@item.Singer.Name</td>
                                         <td><img src="~/img/song/@item.URLImg" /></td>
                                         <td>@item.Genre</td>
-                                        <td><button style="border:none" onclick="RemoveSongFromPlaylist(@item.Id)"><i class="fas fa-trash-alt"></i></button></td>
+                                        <td><button style="border:none" class="btn btn-danger btn-xs" onclick="RemoveSongFromPlaylist(@item.Id)">Xóa <i class="fas fa-trash-alt"></i></button></td>
                                     </tr>
                                 }
                             </tbody>

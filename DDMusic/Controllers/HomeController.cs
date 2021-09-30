@@ -238,11 +238,11 @@ namespace DDMusic.Controllers
             string IdUser = _userManager.GetUserId(User);
             if (IdUser != null)
             {
-                var reactSongs = _context.ReactSong.ToList().Where(m => m.IdSong == IdSong && m.IdUser == IdUser);               
+                var reactSongs = _context.ReactSong.ToList().Where(m => m.IdSong == IdSong && m.IdUser == IdUser);
                 if (reactSongs.ToList().Count != 0)
                 {
                     if (reactSongs.ToList().First().React == true)
-                        result = true;       
+                        result = true;
                 }
             }
             return Content(result.ToString(), "application/json");
@@ -340,14 +340,16 @@ namespace DDMusic.Controllers
             List<AlbumModel> AlbumOfSinger = new List<AlbumModel>();
             foreach (var item in AllAlbumOfSinger)
             {
-                var song = _context.Song.Where(m => m.IdAlbum == item.Id);
+                var song = _context.Song.Where(m => m.IdAlbum == item.Id && m.Accept == true);
                 if (song.Count() != 0)
                 {
                     AlbumOfSinger.Add(item);
                 }
             }
-            ViewBag.AlbumOfSinger = AlbumOfSinger;
-            ViewBag.SongOfSinger = SongOfSinger;
+            if (AlbumOfSinger.ToList().Count != 0)
+                ViewBag.AlbumOfSinger = AlbumOfSinger;
+            if (SongOfSinger.ToList().Count != 0)
+                ViewBag.SongOfSinger = SongOfSinger;
 
             return View(Singer);
         }
