@@ -146,11 +146,12 @@
                                             {
                                                 @if (provider.Name == "Google")
                                                 {
-                                                    <button type="submit" class="btn btn-danger" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>}
+                                                    <button type="submit" class="btn btn-danger" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fa fa-google"></i> @provider.DisplayName</button>}
                                                 else
                                                 {
-                                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                                }}
+                                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fa fa-facebook"></i> @provider.DisplayName</button>
+                                                }
+                                            }
                                         </p>
                                     </div>
                                 </form>
