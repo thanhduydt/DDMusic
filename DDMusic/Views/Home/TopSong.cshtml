@@ -16,20 +16,20 @@
                         foreach (var item in ViewBag.TopSongOnWeek)
                         {
                             <!-- Single Top Item -->
-                            <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
-                                <div class="first-part d-flex align-items-center">
-                                    <div class="thumbnail">
-                                        <img src="~/img/song/@item.Song.URLImg" alt="">
-                                    </div>
-                                    <div class="content-">
-                                        <h6><a href="~/img/song/@item.Song.Id">@item.Song.Name</a></h6>
-                                        <p>@item.Song.Singer.Name</p>
-                                    </div>
-                                </div>
-                                @*<audio preload="auto" controls>
-                                    <source src="~/audio/@item.Song.URLMusic">
-                                </audio>*@
+                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
+                        <div class="first-part d-flex align-items-center">
+                            <div class="thumbnail">
+                                <a href="~/img/song/@item.Song.Id"><img src="~/img/song/@item.Song.URLImg" alt=""></a>
                             </div>
+                            <div class="content-">
+                                <h6><a href="~/img/song/@item.Song.Id">@item.Song.Name</a></h6>
+                                <p>@item.Song.Singer.Name</p>
+                            </div>
+                        </div>
+                        @*<audio preload="auto" controls>
+                                <source src="~/audio/@item.Song.URLMusic">
+                            </audio>*@
+                    </div>
                         }
                     }
                 </div>
@@ -45,23 +45,23 @@
                         foreach (var item in ViewBag.TopSongOnMonth)
                         {
                             <!-- Single Top Item -->
-                            <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
-                                <div class="first-part d-flex align-items-center">
-                                    <div class="thumbnail">
-                                        <img src="~/img/song/@item.Song.URLImg" alt="">
-                                    </div>
-                                    <div class="content-">
-                                        <h6><a href="~/img/song/@item.Song.Id">@item.Song.Name</a></h6>
-                                        <p>@item.Song.Singer.Name</p>
-                                    </div>
-                                </div>
-                                @*<audio preload="auto" controls>
-                                    <source src="~/audio/@item.Song.URLMusic">
-                                </audio>*@
+                    <div class="single-new-item d-flex align-items-center justify-content-between wow fadeInUp" data-wow-delay="100ms">
+                        <div class="first-part d-flex align-items-center">
+                            <div class="thumbnail">
+                                <a href="~/img/song/@item.Song.Id"><img src="~/img/song/@item.Song.URLImg" alt=""></a>
                             </div>
+                            <div class="content-">
+                                <h6><a href="~/img/song/@item.Song.Id">@item.Song.Name</a></h6>
+                                <p>@item.Song.Singer.Name</p>
+                            </div>
+                        </div>
+                        @*<audio preload="auto" controls>
+                                <source src="~/audio/@item.Song.URLMusic">
+                            </audio>*@
+                    </div>
                         }
                     }
-                    
+
                 </div>
             </div>
 
@@ -72,69 +72,62 @@
                         <p>See what’s new</p>
                         <h2>Các ca sĩ nổi bật</h2>
                     </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="100ms">
-                        <div class="thumbnail">
-                            <img src="~/img/bg-img/pa1.jpg" alt="">
-                        </div>
-                        <div class="content-">
-                            <p>Sam Smith</p>
-                        </div>
-                    </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="150ms">
-                        <div class="thumbnail">
-                            <img src="~/img/bg-img/pa2.jpg" alt="">
-                        </div>
-                        <div class="content-">
-                            <p>William Parker</p>
-                        </div>
-                    </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="200ms">
-                        <div class="thumbnail">
-                            <img src="~/img/bg-img/pa3.jpg" alt="">
-                        </div>
-                        <div class="content-">
-                            <p>Jessica Walsh</p>
-                        </div>
-                    </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="250ms">
-                        <div class="thumbnail">
-                            <img src="~/img/bg-img/pa4.jpg" alt="">
-                        </div>
-                        <div class="content-">
-                            <p>Tha Stoves</p>
-                        </div>
-                    </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="300ms">
-                        <div class="thumbnail">
-                            <img src="~/img/bg-img/pa5.jpg" alt="">
-                        </div>
-                        <div class="content-">
-                            <p>DJ Ajay</p>
-                        </div>
-                    </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="350ms">
-                        <div class="thumbnail">
-                            <img src="~/img/bg-img/pa6.jpg" alt="">
-                        </div>
-                        <div class="content-">
-                            <p>Radio Vibez</p>
-                        </div>
-                    </div>-->
-
-                    <!-- Single Artist -->
-                    <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="400ms">
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="100ms">
+                <div class="thumbnail">
+                    <img src="~/img/bg-img/pa1.jpg" alt="">
+                </div>
+                <div class="content-">
+                    <p>Sam Smith</p>
+                </div>
+            </div>-->
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="150ms">
+                <div class="thumbnail">
+                    <img src="~/img/bg-img/pa2.jpg" alt="">
+                </div>
+                <div class="content-">
+                    <p>William Parker</p>
+                </div>
+            </div>-->
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="200ms">
+                <div class="thumbnail">
+                    <img src="~/img/bg-img/pa3.jpg" alt="">
+                </div>
+                <div class="content-">
+                    <p>Jessica Walsh</p>
+                </div>
+            </div>-->
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="250ms">
+                <div class="thumbnail">
+                    <img src="~/img/bg-img/pa4.jpg" alt="">
+                </div>
+                <div class="content-">
+                    <p>Tha Stoves</p>
+                </div>
+            </div>-->
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="300ms">
+                <div class="thumbnail">
+                    <img src="~/img/bg-img/pa5.jpg" alt="">
+                </div>
+                <div class="content-">
+                    <p>DJ Ajay</p>
+                </div>
+            </div>-->
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="350ms">
+                <div class="thumbnail">
+                    <img src="~/img/bg-img/pa6.jpg" alt="">
+                </div>
+                <div class="content-">
+                    <p>Radio Vibez</p>
+                </div>
+            </div>-->
+            <!-- Single Artist -->
+            <!--<div class="single-artists d-flex align-items-center wow fadeInUp" data-wow-delay="400ms">
                         <div class="thumbnail">
                             <img src="~/img/bg-img/pa7.jpg" alt="">
                         </div>
