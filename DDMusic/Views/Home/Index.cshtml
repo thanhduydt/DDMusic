@@ -8,123 +8,123 @@
 <!--Danh sach bai hat-->
 @if (ViewBag.NewSong.Count != 0)
 {
-    <section class="oneMusic-buy-now-area has-fluid bg-gray main-title">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="section-heading style-2">
-                        <h2>Các bài hát mới</h2>
+<section class="oneMusic-buy-now-area has-fluid bg-gray main-title">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading style-2">
+                    <h2>Các bài hát mới</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var item in ViewBag.NewSong)
+                {
+                    <!-- Single Album Area -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
+                    <div class="album-thumb">
+                        <a href="~/bai-hat/@item.Id"><img src="~/img/song/@item.URLImg" alt=""></a>
+                    </div>
+                    <div class="album-info">
+                        <a href="~/bai-hat/@item.Id">
+                            <h5>@item.Name</h5>
+                        </a>
+                        <p>@item.Singer.Name</p>
                     </div>
                 </div>
             </div>
-
-            <div class="row">
-                @foreach (var item in ViewBag.NewSong)
-                {
-                    <!-- Single Album Area -->
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                        <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                            <div class="album-thumb">
-                                <img src="~/img/song/@item.URLImg" alt="">
-                            </div>
-                            <div class="album-info">
-                                <a href="~/bai-hat/@item.Id">
-                                    <h5>@item.Name</h5>
-                                </a>
-                                <p>@item.Singer.Name</p>
-                            </div>
-                        </div>
-                    </div>
                 }
-            </div>
         </div>
-    </section>
+    </div>
+</section>
 }
 @if (ViewBag.NewAlbum.Count != 0)
 {
     <!--Danh sach album noi bat-->
-    <section class="oneMusic-buy-now-area has-fluid bg-gray">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="section-heading style-2">
+<section class="oneMusic-buy-now-area has-fluid bg-gray">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading style-2">
 
-                        <h2>Các Album mới được phát hành</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                @foreach (var item in ViewBag.NewAlbum)
-                {
-                    <!-- Single Album Area -->
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                        <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                            <div class="album-thumb">
-                                <img src="~/img/album/@item.Image" alt="">
-                            </div>
-                            <div class="album-info">
-                                <a href="~/album/@item.Id">
-                                    <h5>@item.Name</h5>
-                                </a>
-                                <p>@item.Singer.Name</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="row">
-                <div class="col-12" style="padding-bottom:20px;">
-                    <div class="load-more-btn text-center wow fadeInUp" data-wow-delay="300ms">
-                        <a asp-action="Album" asp-controller="Home" class="btn oneMusic-btn">Xem thêm <i class="fa fa-angle-double-right"></i></a>
-                    </div>
+                    <h2>Các Album mới được phát hành</h2>
                 </div>
             </div>
         </div>
-    </section>
+
+        <div class="row">
+            @foreach (var item in ViewBag.NewAlbum)
+                {
+                    <!-- Single Album Area -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
+                    <div class="album-thumb">
+                        <a href="~/album/@item.Id"><img src="~/img/album/@item.Image" alt=""></a>
+                    </div>
+                    <div class="album-info">
+                        <a href="~/album/@item.Id">
+                            <h5>@item.Name</h5>
+                        </a>
+                        <p>@item.Singer.Name</p>
+                    </div>
+                </div>
+            </div>
+                }
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding-bottom:20px;">
+                <div class="load-more-btn text-center wow fadeInUp" data-wow-delay="300ms">
+                    <a asp-action="Album" asp-controller="Home" class="btn oneMusic-btn">Xem thêm <i class="fa fa-angle-double-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 }
 @if (ViewBag.NewPlaylist.Count != 0)
 {
     <!--Danh sach cac playlist duoc nhieu nguoi nghe-->
-    <section class="oneMusic-buy-now-area has-fluid bg-gray">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="section-heading style-2">
+<section class="oneMusic-buy-now-area has-fluid bg-gray">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-heading style-2">
 
-                        <h2>Các Playlist được nghe nhiều nhất</h2>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                @foreach (var item in ViewBag.NewPlaylist)
-                {
-                    <!-- Single Album Area -->
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
-                        <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
-                            <div class="album-thumb">
-                                <img src="~/img/playlist/@item.Image" alt="">
-
-                            </div>
-                            <div class="album-info">
-                                <a href="~/playlist/@item.Id">
-                                    <h5>@item.Name</h5>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-            <div class="row">
-                <div class="col-12" style="padding-bottom:20px;">
-                    <div class="load-more-btn text-center wow fadeInUp" data-wow-delay="300ms">
-                        <a asp-action="Playlist" asp-controller="Home" class="btn oneMusic-btn">Xem thêm<i class="fa fa-angle-double-right"></i></a>
-                    </div>
+                    <h2>Các Playlist được nghe nhiều nhất</h2>
                 </div>
             </div>
         </div>
-    </section>
+
+        <div class="row">
+            @foreach (var item in ViewBag.NewPlaylist)
+                {
+                    <!-- Single Album Area -->
+            <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                <div class="single-album-area wow fadeInUp" data-wow-delay="100ms">
+                    <div class="album-thumb">
+                        <a href="~/playlist/@item.Id"><img src="~/img/playlist/@item.Image" alt=""></a>
+
+                    </div>
+                    <div class="album-info">
+                        <a href="~/playlist/@item.Id">
+                            <h5>@item.Name</h5>
+                        </a>
+                    </div>
+                </div>
+            </div>
+                }
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding-bottom:20px;">
+                <div class="load-more-btn text-center wow fadeInUp" data-wow-delay="300ms">
+                    <a asp-action="Playlist" asp-controller="Home" class="btn oneMusic-btn">Xem thêm<i class="fa fa-angle-double-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 }
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 <script>
