@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class InitialCrate : Migration
+    public partial class intitalcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

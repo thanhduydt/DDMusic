@@ -1,0 +1,57 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
+@using Newtonsoft.Json 
+    <table id="" class="table tb2">
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td class="img"><img src="~/img/song/@item.URLImg" /></td>
+                    <td>
+          <div class="name">
+                            <div class="name-song">@item.Name</div>
+                        <div class="name-singer">@item.Singer.Name</div>
+              </div>
+                    </td>
+
+                    <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
+                    <td><i onclick="addSongToPlayListUser(@item.Id,'@item.Name')" class="fa fa-plus" aria-hidden="true" title="Thêm vào playlist này"></i></td>
+                </tr>
+            }
+    </table>
+<script>
+    function addSongToPlayListUser(idSong,nameSong) {
+        var listSuggestedSong = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+        $.post('@Url.Action("AddSongFromPlayListUser","Home")', { listSuggestedSong: listSuggestedSong,idSong:idSong },
+   function (data) {
+       $('#suggestedSongList').html(data);
+          $.get('@Url.Action("LoadListSongFromPlayListUser", "Home")', function (result) {
+              $('#listSong').html(result);
+              toastr.options = {
+                  "closeButton": true,
+                  "debug": false,
+                  "newestOnTop": false,
+                  "progressBar": false,
+                  "positionClass": "toast-bottom-left",
+                  "preventDuplicates": false,
+                  "onclick": null,
+                  "showDuration": "300",
+                  "hideDuration": "1000",
+                  "timeOut": "5000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut"
+              }
+              Command: toastr["success"]("Đã thêm bài hát " + nameSong + " vào playlist thành công.")
+            
+          });
+     
+            });
+    
+        }
+</script>
+<style>
+    .toast-success {
+        background-color: blue;
+    }
+</style>

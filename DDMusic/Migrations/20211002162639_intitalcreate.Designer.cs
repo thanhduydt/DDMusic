@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDMusic.Migrations
 {
     [DbContext(typeof(DPContext))]
-    [Migration("20210926062334_Initial-Crate")]
-    partial class InitialCrate
+    [Migration("20211002162639_intitalcreate")]
+    partial class intitalcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.PlaylistDetail>
+@if(Model.Count()>0)
+{
+<table class="table tb1">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr >
+                <td class="img">
+                    <img src="~/img/song/@item.Song.URLImg" />
+                </td>
+                <td>
+                    <div class="name" onclick="location.href ='/playlistUsers/@item.IdSong'">
+                            <div class="name-song">@item.Song.Name</div>                   
+                        <div class="name-singer">@item.Song.Singer.Name</div>
+                    </div>
+                </td>
+
+                <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.Song.CountView</i></td>
+                <td>
+                    @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
+                    <div class="dropdown">
+                        <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" id="dr">
+
+                            <div class="dropdown-header">
+                                <div class="song">
+                                    <img src="~/img/song/@item.Song.URLImg" />
+                                    <div class="name-song">@item.Song.Name</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div onclick="dowloadMusic('@item.Song.URLMusic')">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                </div>
+                            </div>
+                            <div class="dropdown-item share">
+
+                                <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                <ul class="dropdown selection-share">
+                                    <li>
+                                        <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Song.Id" data-oaid="579745863508352884" data-layout="1"
+                                             data-color="blue" data-customize="false"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-item" onclick="removeSongFromPlayListUser(@item.Id)">
+                                <i class="fa fa-trash" aria-hidden="true"> Xóa khỏi playlist này</i>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+
+
+
+    </tbody>
+</table>
+            }
+            else
+            {
+                <h6 class="styl">Không có bài hát trong playlist</h6>
+            }
+<style>
+    .styl {
+        text-align: center;
+        padding-top: 80px;
+    }
+</style>
+<script src="https://sp.zalo.me/plugins/sdk.js"></script>
+

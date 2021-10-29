@@ -639,6 +639,231 @@ namespace DDMusic.Controllers
             ViewBag.Title = "Những bài hát thuộc Playlist: " + Playlist.Name;
             return View("SongDetail", ListSong[0]);
         }
+        [Route("playlistUser")]
+        public IActionResult PlayListUser()
+        {
+            List<Playlist> playlists = new List<Playlist>();
+            var allPlayList = _context.Playlist.ToList();
+            var user = _userManager.GetUserAsync(User);
+            foreach (var item in allPlayList)
+            {
+                if (item.IdUser == user.Result.Id)
+                {
+                    var playlistDetail = _context.PlaylistDetail.Where(m => m.IdPlaylist == item.Id).ToList();
+                    if (playlistDetail.Count > 0)
+                    {
+                        var img = _context.Song.Find(playlistDetail[0].IdSong);
+                        item.Image = img.URLImg;
+                    }
+                    playlists.Add(item);
+                }
+            }
+            return View(playlists);
+        }
+        [Route("playlistUser/{idPlayList}")]
+        public IActionResult PagePlayListDetail(int idPlayList)
+        {
+            var allPlayListDetail =_context.PlaylistDetail.Include(m=>m.Song).Include(m=>m.Song.Singer)
+                .Where(m=>m.IdPlaylist==idPlayList).ToList();          
+            if (allPlayListDetail.Count != 0)
+            {
+                List<SongModel> listSong = new List<SongModel>();
+                foreach (var item in allPlayListDetail)
+                {
+                    listSong.Add(item.Song);
+                }
+                ViewBag.listSong = JsonConvert.SerializeObject(listSong);
+                ViewBag.Title = "Những bài hát thuộc Playlist: ";
+                return View("SongDetail", listSong[0]);
+            }
+            else
+            {
+                return RedirectToAction("PlayListUser");
+            }
+        }
+        [Route("infoPlayList/{idPlayList}")]
+        public IActionResult InfoPlayList(int idPlayList)
+        {
+            var playList = _context.Playlist.Find(idPlayList);
+            var playListDetail = _context.PlaylistDetail.Where(m => m.IdPlaylist == idPlayList).ToList();
+            if (playListDetail.Count > 0)
+            {
+                var song = _context.Song.Find(playListDetail[0].IdSong);
+                playList.Image = song.URLImg;
+            }
+            //Xóa cookie idPlayList
+                Response.Cookies.Delete("idPlayList");
+            //Tạo cookie idPlayList
+                CookieOptions option = new CookieOptions();
+                option.Expires = DateTime.Now.AddMilliseconds(10000000);
+                Response.Cookies.Append("idPlayList",idPlayList.ToString(), option);
+            return View(playList);
+        }
+        [Route("playListUsers/{idSong}")]
+        public IActionResult PagePlayListDetail1(int idSong)
+        {
+            var song = _context.Song.Find(idSong) ;
+            var singer = _context.Singer.Find(song.IdSinger);
+            song.Singer = singer;
+            //Get cookie idPlayList
+            int idPlayList = int.Parse(Request.Cookies["idPlayList"]);
+            var allPlayListDetail = _context.PlaylistDetail.Include(m => m.Song).Include(m => m.Song.Singer).Where(m => m.IdPlaylist == idPlayList).ToList();
+            List<SongModel> listSong = new List<SongModel>();
+            listSong.Add(song);
+            foreach (var item in allPlayListDetail)
+            {
+                if (item.IdSong != song.Id)
+                {
+                    listSong.Add(item.Song);
+                }
+            }
+            ViewBag.listSong = JsonConvert.SerializeObject(listSong);
+            ViewBag.Title = "Những bài hát thuộc Playlist: ";
+                return View("SongDetail", listSong[0]);
+        }
+        public async Task<IActionResult> CreatePlayListUser(string txtName)
+        {
+            //Get thông tin user
+            var user = _userManager.GetUserAsync(User);
+            //Tạo PlayList mới
+            Playlist model = new Playlist();
+            model.Name = txtName;
+            model.IdUser = user.Result.Id;
+            _context.Add(model);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute(new
+            {
+                controller="Home",
+                action="infoPlayList",
+                idPlayList=model.Id
+            });
+        }
+        public async Task<IActionResult> EditPlayListUser(int idPlayList,string txtName)
+        {
+            Playlist playList = new Playlist();
+            playList = _context.Playlist.Find(idPlayList);
+            playList.Name = txtName;
+            _context.Update(playList);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "InfoPlayList",
+                idPlayList=idPlayList
+            });
+        }
+        public async Task<IActionResult> RemovePlayListUser(int idPlayList)
+        {
+            var playPlist = _context.Playlist.Find(idPlayList);
+            _context.Playlist.Remove(playPlist);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("PlayListUser");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddSongFromPlayListUser(List<SongModel> listSuggestedSong,int idSong)
+        {
+            //Get cookie idPlayList
+            int idPlayList = idPlayList = int.Parse(Request.Cookies["idPlayList"]); ;
+            //Thêm Song vào PlayList
+            PlaylistDetail model = new PlaylistDetail();
+            model.IdPlaylist = idPlayList;
+            model.IdSong = idSong;
+            _context.Add(model);
+            await _context.SaveChangesAsync();
+            //Xóa Song đã thêm vào PlayList khỏi listSuggestedSong
+            foreach(SongModel item in listSuggestedSong)
+            {
+                if (item.Id == idSong)
+                {
+                    listSuggestedSong.Remove(item);
+                    break;
+                }
+            }
+            //Thêm 1 Song vào listSuggestedSong
+            //Get danh sách bài hát có trong PlayList
+            var detailPlayList = _context.PlaylistDetail.Include(m => m.Song)
+                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song.Singer).ToList();
+           //Tạo danh sách bài hát có các bài hát trong PlayList và SuggestedSongList
+            List<SongModel> list=new List<SongModel>();
+            foreach(var item in listSuggestedSong)
+            {
+                list.Add(item);
+            }    
+            foreach(var item in detailPlayList)
+            {
+                list.Add(item.Song);
+            }
+            //Get tất cả Song từ database
+            var listSong = _context.Song.Include(m=>m.Singer).ToList();
+            //Thêm Song vào SuggestedSongList
+            foreach(var item in listSong)
+            {
+                int count = list.Count;
+                foreach(var i in list)
+                {
+                    if (item.Id != i.Id)
+                    {
+                        count--;
+                    }
+                }
+                if (count == 0)
+                {
+                    listSuggestedSong.Add(item);
+                }
+                if(listSuggestedSong.Count==5)
+                {
+                    break;
+                }    
+            }
+            return PartialView("_SuggestedSongListPartial",listSuggestedSong);
+        }
+        [HttpGet]
+        public async Task<IActionResult> RemoveSongFromPlayListUser(int idPlayListDetail)
+        {
+            var detailPlayList = _context.PlaylistDetail.Find(idPlayListDetail);
+            _context.PlaylistDetail.Remove(detailPlayList);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("LoadListSongFromPlayListUser", detailPlayList.IdPlaylist);
+        }
+        [HttpGet]
+        public IActionResult LoadListSongFromPlayListUser()
+        {
+         int idPlayList =int.Parse(Request.Cookies["idPlayList"]);
+            List<PlaylistDetail> listSong = _context.PlaylistDetail
+                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song).Include(m=>m.Song.Singer).ToList();
+            return PartialView("_ListSongPartial",listSong);
+        }
+        [HttpGet]
+        public IActionResult LoadSuggestedSongList()
+        {
+            int idPlayList = int.Parse(Request.Cookies["idPlayList"]);
+            //Get danh sách bài hát trong PlayList
+            var listSong = _context.PlaylistDetail.Where(m => m.IdPlaylist == idPlayList).ToList();
+            //Get tất cả các bài hát trong database
+            var allSong = _context.Song.Include(m=>m.Singer).ToList();
+            //Tạo list gợi ý
+            List<SongModel> listSuggestedSong = new List<SongModel>();
+            foreach(var item in allSong)
+            {
+                int count = listSong.Count;
+                foreach (var i in listSong)
+                {                   
+                    if (item.Id != i.IdSong)
+                    {
+                        count--;
+                    }
+                }
+                if (count == 0)
+                {
+                    listSuggestedSong.Add(item);
+                }
+                if (listSuggestedSong.Count > 4)
+                {
+                    break;
+                }
+            }
+            return PartialView("_SuggestedSongListPartial",listSuggestedSong);
+        }
         [Route("lien-he")]
         public IActionResult Contact()
         {

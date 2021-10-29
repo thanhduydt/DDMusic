@@ -50,8 +50,8 @@
     overflow: hidden;
     position: relative;
     border-radius: 15px;
-    background: var(--white);
-    /*  box-shadow: 0px 6px 15px var(--lightbshadow);*/
+    /*background: var(--white);
+      box-shadow: 0px 6px 15px var(--lightbshadow);*/
 }
 
     .wrapper i {

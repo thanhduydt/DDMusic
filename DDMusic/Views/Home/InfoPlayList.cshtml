@@ -1,0 +1,317 @@
+﻿@model DDMusic.Areas.Admin.Models.Playlist
+<div class="container main">
+    <div class="row">
+        <div class="col-md-4 col-sm-6 col-12 info-playlist">
+            <div class="img-playlist" >
+                <div class="icon-play"><i onclick="location.href ='/playlistUser/@Model.Id'" class="fa fa-play-circle-o" aria-hidden="true"></i></div>
+                @if (Model.Image != null)
+                {
+                    <img src="~/img/song/@Model.Image" />
+                }
+                else
+                {
+                    <img src="~/img/logoMusic.jpg" />
+                }
+
+            </div>
+            <div class="name-playlist">@Model.Name <i onclick="editPlayList(@Model.Id,'@Model.Name')" class="fa fa-pencil" aria-hidden="true"></i></div>
+            @*<div class="name-user">@Model.User.Name</div>*@
+            @*<div class="btn-play"><button class="sub-btn-play" onclick="load()">phát nhạc</button></div>*@
+        </div>
+        <div class="col-md-8 col-sm-6 col-12 playlist">
+            <div class="row">
+                <div class="col-12 sub-playlist-1">
+                    <h5>Bài hát trong playlist</h5>
+                    <div class="scroll">
+                        <div id="listSong">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 sub-playlist-2">
+                        <h5>Bài hát gởi ý</h5>
+                        <div id="suggestedSongList"></div>            
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalEdit">
+    <div class="modal-dialog dialog">
+        <div class="modal-body">
+            <div class="modal-content content">
+                <div class="title-add">Chỉnh sửa playlist</div>
+                <form asp-controller="Home" asp-action="EditPlayListUser">
+                    <div class="name-add">
+                        <input class="idPlayList" id="idPlayList" name="idPlayList" hidden />
+                        <input class="txt-addname" id="txtName" name="txtName" type="text" placeholder="Nhập tên playlist" />
+                    </div>
+                    <div class="add"><button type="submit" class="btn-add">Lưu</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    button:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+    .btn-ellipsis {
+        border: none;
+        background: none;
+        outline-style: none;
+    }
+
+    .main {
+        padding-top: 95px;
+        min-height:535px;
+
+    }
+    .info-playlist {
+    }
+
+    .img-playlist {
+        width: 350px;
+        height: 350px;
+        overflow: hidden;
+        border-radius: 16px;
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+    }
+        .img-playlist img {
+            width: 100%;
+            height: 100%;
+            transition-duration: 0.3s;
+        }
+        .img-playlist .icon-play {
+            position: absolute;
+            color: #fff;
+            bottom: 42%;
+            left: 42%;
+            font-size: 65px;
+            z-index: 1;
+            display: none;
+        }
+        .img-playlist:hover img {
+            transform: scale(1.2);
+            opacity: 0.8;
+        }
+
+        .img-playlist:hover .icon-play {
+            display: block;
+        }
+
+    .name-playlist {
+        font-size: 25px;
+        text-align: center;
+        padding-top: 15px;
+    }
+
+    .name-user {
+        text-align: center;
+        font-size: 20px;
+    }
+
+    .btn-play {
+        padding-left: 30%;
+        padding-top: 10px;
+    }
+
+    .sub-btn-play {
+        border-radius: 25px;
+        width: 150px;
+        height: 40px;
+    }
+
+    .table th, .table td {
+        padding: unset;
+        padding-top:5px;
+        padding-bottom:5px;
+        vertical-align: inherit;
+        border-top:unset;
+        border-bottom: 1px solid #dee2e6;
+    }
+    tr .img{
+        width:65px;
+    }
+    .table tr:hover{
+        background-color:darkgray;
+    }
+    td img {
+        margin-left:10px;
+        width: 45px;
+        height: 45px;
+        -webkit-border-radius: 10%;
+    }
+    .t-icon {
+        font-size: 15px;
+        color: gainsboro;
+    }
+        td .name .name-song {
+            font-weight: bold;
+        }
+    .name-singer{
+        font-size:13px;
+    }
+    .selection {
+        display: none;
+    }
+
+    .scroll {
+   max-height:240px;
+   min-height:200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+        .scroll::-webkit-scrollbar {
+            display: none;
+        }
+    .song {
+        padding-bottom: 40px;
+    }
+    .dropdown-menu {
+        min-width: 240px;
+    }
+
+    .dropdown-header {
+        padding: 0.5rem 0.5rem;
+    }
+    .dropdown-header .song img {
+        float: left;
+        width: 40px;
+        height: 40px;
+        border-radius: 10%;
+    }
+
+    .dropdown-header .song .name-song {
+        float: left;
+        padding-top: 10px;
+        padding-left: 6px;
+        font-size: 16px;
+  
+    }
+   .dropdown-menu .share {
+        position: relative;
+    }
+
+  .dropdown-menu .selection-share {
+        position: absolute;
+        right: 225px;
+        bottom: 10px;
+        display: none;
+    }
+
+    .dropdown-menu .share:hover .selection-share {
+        display: block;
+    }
+    .modal .dialog {
+        top: 25%;
+    }
+
+    .modal .content {
+        width: 300px;
+        height: 150px;
+        left: 20%;
+        background-color: #141b70;
+    }
+
+    .modal .title-add {
+        text-align: center;
+        font-size: 20px;
+        color: white;
+    }
+
+    .modal .add, .name-add {
+        padding-top: 10px;
+    }
+
+    .modal .txt-addname, .btn-add {
+        width: 266px;
+        border-radius: 25px;
+        height: 40px;
+        padding-left: 16px;
+        margin-left: 16px;
+        border-style: none;
+        border-color: #1c1cbf;
+    }
+
+    .modal .btn-add {
+        color: honeydew;
+        background-color: #3636ef;
+    }
+
+    .modal .txt-addname {
+        background-color: gainsboro;
+        outline-color: #719ECE;
+    }
+</style>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script>
+        function load() {
+
+        }
+        function displaySelection(i) {
+            $(".selection" + i).css('display', 'block');
+        }
+        function editPlayList(idPlayList,txtName) {
+            $('#idPlayList').val(idPlayList);
+            $('#txtName').val(txtName);
+            $('#modalEdit').modal('show');
+        }
+        function showSelection(id) {
+            $('#' + id).modal('show');
+        }
+        function dowloadMusic(urlMusic) {
+            var link = document.createElement('a');
+            link.href = '../audio/' + urlMusic;
+            link.download = urlMusic;
+            link.dispatchEvent(new MouseEvent('click'));
+        }
+        function data() {
+            alert("fasfc")
+            $.ajax({
+                url: '/Home/SuggestionsSong',
+                dataType: 'json',
+                data: {},
+                success: function (data) {
+                    console.log(data.data);
+                    return data.data;
+                }
+            })
+        }
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Home/LoadListSongFromPlayListUser',
+                dataType: 'html',
+                data: {},
+                success: function (data) {
+                    $('#listSong').html(data);
+                }
+            })
+            $.ajax({
+                url: '/Home/LoadSuggestedSongList',
+                dataType: 'html',
+                data: {},
+                success: function (data) {
+                    $('#suggestedSongList').html(data);
+                }
+            })
+        });
+        function removeSongFromPlayListUser(idPlayListDetail) {
+            $.ajax({
+                url: '/Home/RemoveSongFromPlayListUser',
+                dataType: 'html',
+                data: { 'idPlayListDetail': idPlayListDetail },
+                success: function (data) {
+                    $('#listSong').html(data);
+
+                }
+            })
+        }
+
+</script>
+
+}
