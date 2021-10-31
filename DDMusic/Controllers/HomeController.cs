@@ -294,6 +294,9 @@ namespace DDMusic.Controllers
                 song.CountView++;
                 _context.Song.Update(song);
                 await _context.SaveChangesAsync();
+
+                //Tạo mới hoặc cập nhật thống kê
+                await UpdateViewSongOfDay(idSong);
                 HttpContext.Session.Remove("idSong");
             }
             return "";
@@ -663,8 +666,8 @@ namespace DDMusic.Controllers
         [Route("playlistUser/{idPlayList}")]
         public IActionResult PagePlayListDetail(int idPlayList)
         {
-            var allPlayListDetail =_context.PlaylistDetail.Include(m=>m.Song).Include(m=>m.Song.Singer)
-                .Where(m=>m.IdPlaylist==idPlayList).ToList();          
+            var allPlayListDetail = _context.PlaylistDetail.Include(m => m.Song).Include(m => m.Song.Singer)
+                .Where(m => m.IdPlaylist == idPlayList).ToList();
             if (allPlayListDetail.Count != 0)
             {
                 List<SongModel> listSong = new List<SongModel>();
@@ -692,17 +695,17 @@ namespace DDMusic.Controllers
                 playList.Image = song.URLImg;
             }
             //Xóa cookie idPlayList
-                Response.Cookies.Delete("idPlayList");
+            Response.Cookies.Delete("idPlayList");
             //Tạo cookie idPlayList
-                CookieOptions option = new CookieOptions();
-                option.Expires = DateTime.Now.AddMilliseconds(10000000);
-                Response.Cookies.Append("idPlayList",idPlayList.ToString(), option);
+            CookieOptions option = new CookieOptions();
+            option.Expires = DateTime.Now.AddMilliseconds(10000000);
+            Response.Cookies.Append("idPlayList", idPlayList.ToString(), option);
             return View(playList);
         }
         [Route("playListUsers/{idSong}")]
         public IActionResult PagePlayListDetail1(int idSong)
         {
-            var song = _context.Song.Find(idSong) ;
+            var song = _context.Song.Find(idSong);
             var singer = _context.Singer.Find(song.IdSinger);
             song.Singer = singer;
             //Get cookie idPlayList
@@ -719,7 +722,7 @@ namespace DDMusic.Controllers
             }
             ViewBag.listSong = JsonConvert.SerializeObject(listSong);
             ViewBag.Title = "Những bài hát thuộc Playlist: ";
-                return View("SongDetail", listSong[0]);
+            return View("SongDetail", listSong[0]);
         }
         public async Task<IActionResult> CreatePlayListUser(string txtName)
         {
@@ -733,12 +736,12 @@ namespace DDMusic.Controllers
             await _context.SaveChangesAsync();
             return RedirectToRoute(new
             {
-                controller="Home",
-                action="infoPlayList",
-                idPlayList=model.Id
+                controller = "Home",
+                action = "infoPlayList",
+                idPlayList = model.Id
             });
         }
-        public async Task<IActionResult> EditPlayListUser(int idPlayList,string txtName)
+        public async Task<IActionResult> EditPlayListUser(int idPlayList, string txtName)
         {
             Playlist playList = new Playlist();
             playList = _context.Playlist.Find(idPlayList);
@@ -749,7 +752,7 @@ namespace DDMusic.Controllers
             {
                 controller = "Home",
                 action = "InfoPlayList",
-                idPlayList=idPlayList
+                idPlayList = idPlayList
             });
         }
         public async Task<IActionResult> RemovePlayListUser(int idPlayList)
@@ -760,7 +763,7 @@ namespace DDMusic.Controllers
             return RedirectToAction("PlayListUser");
         }
         [HttpPost]
-        public async Task<IActionResult> AddSongFromPlayListUser(List<SongModel> listSuggestedSong,int idSong)
+        public async Task<IActionResult> AddSongFromPlayListUser(List<SongModel> listSuggestedSong, int idSong)
         {
             //Get cookie idPlayList
             int idPlayList = idPlayList = int.Parse(Request.Cookies["idPlayList"]); ;
@@ -771,7 +774,7 @@ namespace DDMusic.Controllers
             _context.Add(model);
             await _context.SaveChangesAsync();
             //Xóa Song đã thêm vào PlayList khỏi listSuggestedSong
-            foreach(SongModel item in listSuggestedSong)
+            foreach (SongModel item in listSuggestedSong)
             {
                 if (item.Id == idSong)
                 {
@@ -783,23 +786,23 @@ namespace DDMusic.Controllers
             //Get danh sách bài hát có trong PlayList
             var detailPlayList = _context.PlaylistDetail.Include(m => m.Song)
                 .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song.Singer).ToList();
-           //Tạo danh sách bài hát có các bài hát trong PlayList và SuggestedSongList
-            List<SongModel> list=new List<SongModel>();
-            foreach(var item in listSuggestedSong)
+            //Tạo danh sách bài hát có các bài hát trong PlayList và SuggestedSongList
+            List<SongModel> list = new List<SongModel>();
+            foreach (var item in listSuggestedSong)
             {
                 list.Add(item);
-            }    
-            foreach(var item in detailPlayList)
+            }
+            foreach (var item in detailPlayList)
             {
                 list.Add(item.Song);
             }
             //Get tất cả Song từ database
-            var listSong = _context.Song.Include(m=>m.Singer).ToList();
+            var listSong = _context.Song.Include(m => m.Singer).ToList();
             //Thêm Song vào SuggestedSongList
-            foreach(var item in listSong)
+            foreach (var item in listSong)
             {
                 int count = list.Count;
-                foreach(var i in list)
+                foreach (var i in list)
                 {
                     if (item.Id != i.Id)
                     {
@@ -810,12 +813,12 @@ namespace DDMusic.Controllers
                 {
                     listSuggestedSong.Add(item);
                 }
-                if(listSuggestedSong.Count==5)
+                if (listSuggestedSong.Count == 5)
                 {
                     break;
-                }    
+                }
             }
-            return PartialView("_SuggestedSongListPartial",listSuggestedSong);
+            return PartialView("_SuggestedSongListPartial", listSuggestedSong);
         }
         [HttpGet]
         public async Task<IActionResult> RemoveSongFromPlayListUser(int idPlayListDetail)
@@ -828,10 +831,10 @@ namespace DDMusic.Controllers
         [HttpGet]
         public IActionResult LoadListSongFromPlayListUser()
         {
-         int idPlayList =int.Parse(Request.Cookies["idPlayList"]);
+            int idPlayList = int.Parse(Request.Cookies["idPlayList"]);
             List<PlaylistDetail> listSong = _context.PlaylistDetail
-                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song).Include(m=>m.Song.Singer).ToList();
-            return PartialView("_ListSongPartial",listSong);
+                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song).Include(m => m.Song.Singer).ToList();
+            return PartialView("_ListSongPartial", listSong);
         }
         [HttpGet]
         public IActionResult LoadSuggestedSongList()
@@ -840,14 +843,14 @@ namespace DDMusic.Controllers
             //Get danh sách bài hát trong PlayList
             var listSong = _context.PlaylistDetail.Where(m => m.IdPlaylist == idPlayList).ToList();
             //Get tất cả các bài hát trong database
-            var allSong = _context.Song.Include(m=>m.Singer).ToList();
+            var allSong = _context.Song.Include(m => m.Singer).ToList();
             //Tạo list gợi ý
             List<SongModel> listSuggestedSong = new List<SongModel>();
-            foreach(var item in allSong)
+            foreach (var item in allSong)
             {
                 int count = listSong.Count;
                 foreach (var i in listSong)
-                {                   
+                {
                     if (item.Id != i.IdSong)
                     {
                         count--;
@@ -862,7 +865,7 @@ namespace DDMusic.Controllers
                     break;
                 }
             }
-            return PartialView("_SuggestedSongListPartial",listSuggestedSong);
+            return PartialView("_SuggestedSongListPartial", listSuggestedSong);
         }
         [Route("lien-he")]
         public IActionResult Contact()
@@ -896,6 +899,68 @@ namespace DDMusic.Controllers
                 text = text.Replace(arr1[i].ToUpper(), arr2[i].ToUpper());
             }
             return text;
+        }
+
+        public async Task<bool> UpdateViewSongOfDay(int IdSong)
+        {
+            bool result = false;
+            if (IdSong != 0)
+            {
+                //Lấy thống kê bài hát theo ngày hiện có
+                var existViewSongOfDay = _context.ViewSongOfDay.Where(m => m.Date == DateTime.Now.Date).ToList();
+                if (existViewSongOfDay.Count == 0 || existViewSongOfDay == null)
+                {
+                    //Tạo mới Thống kê bài hát theo ngày
+                    ViewSongOfDay viewSongOfDay = new ViewSongOfDay();
+                    //Chỉ lưu ngày không lưu thời gian
+                    viewSongOfDay.Date = DateTime.Now.Date;
+                    _context.Add(viewSongOfDay);
+                    await _context.SaveChangesAsync();
+                    //Tạo chi tiết thống kê bài hát
+                    if (viewSongOfDay.Id != 0)
+                    {
+                        ViewSongOfDayDetail viewSongOfDayDetail = new ViewSongOfDayDetail();
+                        viewSongOfDayDetail.IdSong = IdSong;
+                        viewSongOfDayDetail.IdViewSongOfDay = viewSongOfDay.Id;
+                        //Tạo mới số lượt nghe
+                        viewSongOfDayDetail.CountView = 1;
+                        _context.Add(viewSongOfDayDetail);
+                        await _context.SaveChangesAsync();
+                        result = true;
+                    }
+                }
+                else
+                {
+                    //Tìm kiếm chi tiết thống kê bài hát
+                    var existViewSongOfDayDetails = _context.ViewSongOfDayDetail.Where(m => m.IdSong == IdSong && m.IdViewSongOfDay == existViewSongOfDay.FirstOrDefault().Id).ToList();
+                    if(existViewSongOfDayDetails.Count == 0 || existViewSongOfDayDetails == null)
+                    {
+                        ViewSongOfDayDetail viewSongOfDayDetail = new ViewSongOfDayDetail();
+                        viewSongOfDayDetail.IdSong = IdSong;
+                        viewSongOfDayDetail.IdViewSongOfDay = existViewSongOfDay.FirstOrDefault().Id;
+                        //Tạo mới số lượt nghe
+                        viewSongOfDayDetail.CountView = 1;
+                        _context.Add(viewSongOfDayDetail);
+                        await _context.SaveChangesAsync();
+                        result = true;
+                    }
+                    else
+                    {
+                        var existViewSongOfDayDetail = existViewSongOfDayDetails.FirstOrDefault();
+                        if (existViewSongOfDayDetail.CountView != 0)
+                            existViewSongOfDayDetail.CountView++;
+                        else
+                            existViewSongOfDayDetail.CountView = 1;
+
+                        _context.Update(existViewSongOfDayDetail);
+                        await _context.SaveChangesAsync();
+
+                        result = true;
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

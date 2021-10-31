@@ -32,6 +32,7 @@ namespace DDMusic.Areas.Admin.API.Controllers
                     return new ApiTokenResponse(ApiCode.NOT_FOUND);
 
                 var validToken = JWT.sign();
+                var dateTest = DateTime.Now.Date;
                 return String.IsNullOrWhiteSpace(validToken) ? new ApiTokenResponse() : new ApiTokenResponse(ApiCode.SUCCESS, validToken);
                 //return new ApiTokenResponse();
             }

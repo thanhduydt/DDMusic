@@ -33,5 +33,25 @@ namespace DDMusic.Areas.Admin.API.Controllers
                 return new List<SongModel>();
             }
         }
+        [HttpGet, ProducesResponseType(200)]
+        public async Task<List<ViewSongOfDayDetail>> GetViewSongOfDay(string date)
+        {
+            try
+            {
+                DateTime dateTime = Convert.ToDateTime(date);
+                List<ViewSongOfDayDetail> viewSongOfDayDetails = new List<ViewSongOfDayDetail>();
+                 var viewSongOfDays = _context.ViewSongOfDay.Where(m => m.Date == dateTime.Date).ToList();
+                if(viewSongOfDays.Count != 0 || viewSongOfDays != null)
+                {
+                    viewSongOfDayDetails = _context.ViewSongOfDayDetail.Where(m => m.IdViewSongOfDay == viewSongOfDays.FirstOrDefault().Id).Include(s => s.Song).ToList();
+                }
+                return viewSongOfDayDetails == null ? new List<ViewSongOfDayDetail>() : viewSongOfDayDetails;
+            }
+            catch
+            {
+                return new List<ViewSongOfDayDetail>();
+            }
+        }
+
     }
 }

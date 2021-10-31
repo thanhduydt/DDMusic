@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DDMusic.Migrations
 {
     [DbContext(typeof(DPContext))]
-    [Migration("20211002162639_intitalcreate")]
-    partial class intitalcreate
+    [Migration("20211031104934_Initial-Create")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -73,6 +73,24 @@ namespace DDMusic.Migrations
                     b.HasIndex("IdUser");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.CountNewAccountModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CountNewAccount");
                 });
 
             modelBuilder.Entity("DDMusic.Areas.Admin.Models.Playlist", b =>
@@ -392,6 +410,46 @@ namespace DDMusic.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.ViewSongOfDay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ViewSongOfDay");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.ViewSongOfDayDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CountView")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdSong")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdViewSongOfDay")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdSong");
+
+                    b.HasIndex("IdViewSongOfDay");
+
+                    b.ToTable("ViewSongOfDayDetail");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -651,6 +709,23 @@ namespace DDMusic.Migrations
                     b.Navigation("Song");
 
                     b.Navigation("TopSongOnWeek");
+                });
+
+            modelBuilder.Entity("DDMusic.Areas.Admin.Models.ViewSongOfDayDetail", b =>
+                {
+                    b.HasOne("DDMusic.Areas.Admin.Models.SongModel", "Song")
+                        .WithMany()
+                        .HasForeignKey("IdSong");
+
+                    b.HasOne("DDMusic.Areas.Admin.Models.ViewSongOfDay", "ViewSongOfDay")
+                        .WithMany()
+                        .HasForeignKey("IdViewSongOfDay")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Song");
+
+                    b.Navigation("ViewSongOfDay");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

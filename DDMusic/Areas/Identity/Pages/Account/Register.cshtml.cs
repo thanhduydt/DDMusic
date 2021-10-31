@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using DDMusic.Areas.Admin.Data;
 
 namespace DDMusic.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,20 @@ namespace DDMusic.Areas.Identity.Pages.Account
         private readonly UserManager<UserModel> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly DPContext _context;
 
         public RegisterModel(
             UserManager<UserModel> userManager,
             SignInManager<UserModel> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            DPContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         // InputModel được binding khi Form Post tới
@@ -92,6 +96,8 @@ namespace DDMusic.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    await UpdateCountNewAccount();
+
                     _logger.LogInformation("Vừa tạo mới tài khoản thành công.");
 
                     // phát sinh token theo thông tin user để xác nhận email
@@ -142,6 +148,29 @@ namespace DDMusic.Areas.Identity.Pages.Account
             }
 
             return Page();
+        }
+        public async Task<bool> UpdateCountNewAccount()
+        {
+            bool result = false;
+            var existCountNewAccounts = _context.CountNewAccount.Where(m => m.Date == DateTime.Now.Date).ToList();
+            if(existCountNewAccounts.Count == 0 || existCountNewAccounts == null)
+            {
+                CountNewAccountModel countNewAccountModel = new CountNewAccountModel();
+                countNewAccountModel.Date = DateTime.Now.Date;
+                countNewAccountModel.Count = 1;
+                _context.Add(countNewAccountModel);
+                await _context.SaveChangesAsync();
+                result = true;
+            }
+            else
+            {
+                var existCountNewAccount = existCountNewAccounts.FirstOrDefault();
+                existCountNewAccount.Count++;
+                _context.Update(existCountNewAccount);
+                await _context.SaveChangesAsync();
+                result = true;
+            }
+            return result;
         }
     }
 }

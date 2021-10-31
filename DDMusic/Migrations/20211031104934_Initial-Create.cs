@@ -3,10 +3,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class intitalcreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "CountNewAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CountNewAccount", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -93,6 +107,19 @@ namespace DDMusic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ViewSongOfDay",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViewSongOfDay", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -422,6 +449,33 @@ namespace DDMusic.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ViewSongOfDayDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdSong = table.Column<int>(type: "int", nullable: true),
+                    IdViewSongOfDay = table.Column<int>(type: "int", nullable: false),
+                    CountView = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViewSongOfDayDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ViewSongOfDayDetail_Song_IdSong",
+                        column: x => x.IdSong,
+                        principalTable: "Song",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ViewSongOfDayDetail_ViewSongOfDay_IdViewSongOfDay",
+                        column: x => x.IdViewSongOfDay,
+                        principalTable: "ViewSongOfDay",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Album_IdSinger",
                 table: "Album",
@@ -535,12 +589,25 @@ namespace DDMusic.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViewSongOfDayDetail_IdSong",
+                table: "ViewSongOfDayDetail",
+                column: "IdSong");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViewSongOfDayDetail_IdViewSongOfDay",
+                table: "ViewSongOfDayDetail",
+                column: "IdViewSongOfDay");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Comment");
+
+            migrationBuilder.DropTable(
+                name: "CountNewAccount");
 
             migrationBuilder.DropTable(
                 name: "PlaylistDetail");
@@ -570,19 +637,25 @@ namespace DDMusic.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
+                name: "ViewSongOfDayDetail");
+
+            migrationBuilder.DropTable(
                 name: "Playlist");
 
             migrationBuilder.DropTable(
                 name: "TopSongOnMonth");
 
             migrationBuilder.DropTable(
-                name: "Song");
-
-            migrationBuilder.DropTable(
                 name: "TopSongOnWeek");
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Song");
+
+            migrationBuilder.DropTable(
+                name: "ViewSongOfDay");
 
             migrationBuilder.DropTable(
                 name: "Album");
