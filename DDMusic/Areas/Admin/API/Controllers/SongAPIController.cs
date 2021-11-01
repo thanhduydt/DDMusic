@@ -53,5 +53,26 @@ namespace DDMusic.Areas.Admin.API.Controllers
             }
         }
 
+        //[HttpGet, ProducesResponseType(200)]
+        //public async Task<List<ViewSongOfDayDetail>> GetViewSongOfDay(string min_date, string max_date)
+        //{
+        //    try
+        //    {
+        //        DateTime min_Date = Convert.ToDateTime(min_date);
+        //        DateTime max_Date = Convert.ToDateTime(max_date);
+        //        List<ViewSongOfDayDetail> viewSongOfDayDetails = new List<ViewSongOfDayDetail>();
+        //        var viewSongOfDays = _context.ViewSongOfDay.Where(m => m.Date >= min_Date.Date && m.Date <= max_Date.Date).ToList();
+        //        if (viewSongOfDays.Count != 0 || viewSongOfDays != null)
+        //        {
+        //            viewSongOfDayDetails = _context.ViewSongOfDayDetail.Where(m => m.IdViewSongOfDay == viewSongOfDays.FirstOrDefault().Id).Include(s => s.Song).ToList();
+        //        }
+        //        return viewSongOfDayDetails == null ? new List<ViewSongOfDayDetail>() : viewSongOfDayDetails;
+        //    }
+        //    catch
+        //    {
+        //        return new List<ViewSongOfDayDetail>();
+        //    }
+        //}
+
     }
 }
