@@ -125,7 +125,7 @@ namespace DDMusic
                 endpoints.MapAreaControllerRoute(
                             name: "default",
                             areaName: "Admin",
-                            pattern: "Admin/{controller=Users}/{action=Users}/{id?}");
+                            pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

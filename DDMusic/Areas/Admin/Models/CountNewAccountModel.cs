@@ -10,24 +10,9 @@ namespace DDMusic.Areas.Admin.Models
         public int Id { get; set; }
         public int Count { get; set; }
         public DateTime Date { get; set; }
-        public string Name { get; set; }
+        //public string Name { get; set; }
 
-        public string GetName(int i)
-        {
-            if (i == 0)
-            {
-                switch (i)
-                {
-                    case 1:
-                        return "Website";
-                    case 2:
-                        return "Facebook";
-                    case 3:
-                        return "Google";
-                }
-            }
-            return String.Empty;
-        }
+       
     }
 
 }

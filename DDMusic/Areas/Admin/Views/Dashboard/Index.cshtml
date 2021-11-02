@@ -40,7 +40,7 @@
 
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Top 10 bài hát có số lượng view cao nhất ngày: @String.Format("{0:dd-MM-yyyy}",DateTime.Now)</h3>
+                            <h3 class="card-title">Top 10 bài hát có số lượng view cao nhất ngày: @String.Format("{0:dd-MM-yyyy}", DateTime.Now)</h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -62,7 +62,7 @@
                 <div class="col-md-6">
                     <div class="card card-success">
                         <div class="card-header">
-                            <h3 class="card-title">Số lượng người đăng ký từ: @String.Format("{0:dd-MM-yyyy}",DateTime.Now.AddDays(-7)) đến @String.Format("{0:dd-MM-yyyy}",DateTime.Now)</h3>
+                            <h3 class="card-title">Số lượng người đăng ký từ: @String.Format("{0:dd-MM-yyyy}", DateTime.Now.AddDays(-7)) đến @String.Format("{0:dd-MM-yyyy}", DateTime.Now)</h3>
 
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -111,6 +111,12 @@
             }]
         }
     }
+
+     var barChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        datasetFill: false
+    }
     window.onload = function () {
 
         $.ajax({
@@ -152,7 +158,20 @@
                 })
             }
         });
-
+        $.ajax({
+            url: '@Url.Action("GetCountNewAccountModels", "Dashboard", new { Area = "Admin" })',
+            type: 'GET',
+            data: { },
+            success: function (data) {
+                var barChartCanvas = $('#barChart').get(0).getContext('2d')
+                data.datasets[0].label = "Website";
+                new Chart(barChartCanvas, {
+                    type: 'bar',
+                    data: data,
+                    options: barChartOptions
+                })
+            }
+        });
 
 
 
@@ -257,11 +276,7 @@
     //var temp0 = areaChartData.datasets[0]
     //barChartData.datasets[0] = temp1
 
-    //var barChartOptions = {
-    //    responsive: true,
-    //    maintainAspectRatio: false,
-    //    datasetFill: false
-    //}
+
 
     //new Chart(barChartCanvas, {
     //    type: 'bar',

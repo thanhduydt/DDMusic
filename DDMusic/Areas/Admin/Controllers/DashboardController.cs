@@ -136,24 +136,37 @@ namespace DDMusic.Areas.Admin.Controllers
 
         #endregion
 
-        //public async Task<List<CountNewAccountModel>> GetCountNewAccountModels(DateTime min_date, DateTime max_date)
-        //{
-        //    string accessToken = await GetToken();
-        //    List<CountNewAccountModel> countNewAccountModels = new List<CountNewAccountModel>();
+        public async Task<IActionResult> GetCountNewAccountModels()
+        {
+            string accessToken = await GetToken();
+            List<CountNewAccountModel> countNewAccountModels = new List<CountNewAccountModel>();
 
-        //    string urlPath = "api/user/GetCountNewAccount";
-        //    var client = new RestClient(endPoint);
-        //    var request = new RestRequest(urlPath, Method.GET);
-        //    request.AddHeader("AccessToken", accessToken);
-        //    request.AddParameter("min_date", min_date.Date.ToString());
-        //    request.AddParameter("max_date", max_date.Date.ToString());
-        //    IRestResponse response = client.Execute(request);
+            string urlPath = "api/user/GetCountNewAccount";
+            var client = new RestClient(endPoint);
+            var request = new RestRequest(urlPath, Method.GET);
+            request.AddHeader("AccessToken", accessToken);
+            request.AddParameter("min_date", DateTime.Now.AddDays(-7).Date.ToString());
+            request.AddParameter("max_date", DateTime.Now.Date.ToString());
+            IRestResponse response = client.Execute(request);
 
-        //    countNewAccountModels = JsonConvert.DeserializeObject<List<CountNewAccountModel>>(response.Content);
+            countNewAccountModels = JsonConvert.DeserializeObject<List<CountNewAccountModel>>(response.Content);
 
-        //    return countNewAccountModels;
+            #region Mapping List<CountNewAccountModel> to DashboardModel
+            DashboardModel dashboard = new DashboardModel();
+            DataSet dataSet = new DataSet();
+            foreach (var item in countNewAccountModels.OrderBy(m => m.Date))
+            {
+                dashboard.labels.Add(String.Format("{0:dd/MM}",item.Date));
+                dataSet.data.Add(item.Count);
+            }
+            dashboard.datasets.Add(dataSet);
 
-        //}
+            #endregion
+
+            var resultjson = JsonConvert.SerializeObject(dashboard);
+            return Content(resultjson, "application/json");
+
+        }
 
         public async Task<string> GetToken()
         {

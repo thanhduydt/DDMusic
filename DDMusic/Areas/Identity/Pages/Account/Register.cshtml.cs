@@ -158,6 +158,7 @@ namespace DDMusic.Areas.Identity.Pages.Account
                 CountNewAccountModel countNewAccountModel = new CountNewAccountModel();
                 countNewAccountModel.Date = DateTime.Now.Date;
                 countNewAccountModel.Count = 1;
+                //countNewAccountModel.Name = countNewAccountModel.GetName(1);
                 _context.Add(countNewAccountModel);
                 await _context.SaveChangesAsync();
                 result = true;

@@ -288,7 +288,7 @@ namespace DDMusic.Controllers
         [HttpPost]
         public async Task<string> AddView(int idSong)
         {
-            if (idSong >= 0)
+                if (idSong >= 0)
             {
                 var song = await _context.Song.FindAsync(idSong);
                 song.CountView++;

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using DDMusic.Areas.Admin.Data;
 
 namespace DDMusic.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,20 @@ namespace DDMusic.Areas.Identity.Pages.Account
         private readonly UserManager<UserModel> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly DPContext _context;
 
         public ExternalLoginModel(
             SignInManager<UserModel> signInManager,
             UserManager<UserModel> userManager,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            DPContext context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         [BindProperty]
@@ -140,6 +144,9 @@ namespace DDMusic.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
+
+                        await UpdateCountNewAccount();
+
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -180,6 +187,30 @@ namespace DDMusic.Areas.Identity.Pages.Account
             ProviderDisplayName = info.ProviderDisplayName;
             ReturnUrl = returnUrl;
             return Page();
+        }
+        public async Task<bool> UpdateCountNewAccount()
+        {
+            bool result = false;
+            var existCountNewAccounts = _context.CountNewAccount.Where(m => m.Date == DateTime.Now.Date).ToList();
+            if (existCountNewAccounts.Count == 0 || existCountNewAccounts == null)
+            {
+                CountNewAccountModel countNewAccountModel = new CountNewAccountModel();
+                countNewAccountModel.Date = DateTime.Now.Date;
+                countNewAccountModel.Count = 1;
+                //countNewAccountModel.Name = countNewAccountModel.GetName(i);
+                _context.Add(countNewAccountModel);
+                await _context.SaveChangesAsync();
+                result = true;
+            }
+            else
+            {
+                var existCountNewAccount = existCountNewAccounts.FirstOrDefault();
+                existCountNewAccount.Count++;
+                _context.Update(existCountNewAccount);
+                await _context.SaveChangesAsync();
+                result = true;
+            }
+            return result;
         }
     }
 }
