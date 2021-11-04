@@ -301,16 +301,16 @@ namespace DDMusic.Controllers
             }
             return "";
         }
-        [Route("dang-nhap")]
-        public IActionResult Login()
-        {
-            return View();
-        }
-        [Route("dang-ky")]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        //[Route("dang-nhap")]
+        //public IActionResult Login()
+        //{
+        //    return View();
+        //}
+        //[Route("dang-ky")]
+        //public IActionResult Register()
+        //{
+        //    return View();
+        //}
         [Route("ca-si/{routingDetail}")]
         public async Task<IActionResult> Singer(string routingDetail)
         {
