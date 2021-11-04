@@ -76,7 +76,7 @@ namespace DDMusic.Areas.Identity.Pages.Account
             [Display(Name = "Tên đăng nhập")]
             public string UserName { set; get; }
         }
-
+        [Route("dang-ky")]
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;

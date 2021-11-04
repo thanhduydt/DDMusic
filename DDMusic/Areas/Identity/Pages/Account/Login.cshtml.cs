@@ -57,7 +57,7 @@ namespace DDMusic.Areas.Identity.Pages.Account
             [Display(Name = "Ghi nhớ.")]
             public bool RememberMe { get; set; }
         }
-
+        [Route("dang-nhap")]
         public async Task OnGetAsync(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
