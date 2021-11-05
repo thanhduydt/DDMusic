@@ -165,6 +165,8 @@ namespace DDMusic.Controllers
         {
             var song = await _context.Song.FindAsync(id);
             var singer = await _context.Singer.FindAsync(song.IdSinger);
+            var user = await _context.User.FindAsync(song.IdUser);
+            song.User = user;
             song.Singer = singer;
             var AllSong = await _context.Song.ToListAsync();
             var AllSongOfGenre = AllSong.Where(m => m.Id != song.Id && m.Genre == song.Genre);
@@ -247,7 +249,12 @@ namespace DDMusic.Controllers
             }
             return Content(result.ToString(), "application/json");
         }
-
+        [HttpGet]
+        public int LikeCount(int idSong)
+        {
+            var song = _context.Song.Find(idSong);
+            return song.CountLike;
+        }
         [HttpGet]
         public JsonResult GetTimeSongAsync(int idSong)
         {

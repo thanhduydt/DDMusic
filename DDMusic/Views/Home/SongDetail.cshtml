@@ -6,6 +6,7 @@
 @inject UserManager<UserModel> UserManager
 <style>
     .lyrics {
+        padding-left:16px;
         height: auto;
         max-height: 255px;
         overflow: hidden;
@@ -23,9 +24,9 @@
     }
 
     .img-comment {
-        width: 60px;
-        height: 60px;
-        border-radius: 12%;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
     }
 
     .user-name {
@@ -45,7 +46,7 @@
     }
 
     .comment {
-        margin-left: -30px;
+        margin-left: -44px;
     }
 
     h4 {
@@ -63,11 +64,15 @@
         text-transform: uppercase;
         font-size: 20px !important;
     }
-
+    hr {
+        border-top: 1px solid #f8f9fa40;
+    }
     .m {
         max-height: 250px;
-        border-radius: 15px;
-        box-shadow: 0px 6px 15px var(--lightbshadow);
+        border-radius: 5px;
+        /*box-shadow: 0px 6px 15px var(--lightbshadow);*/
+        background:unset;
+        border: 1px solid #f8f9fa40;
     }
 
     .cmt {
@@ -75,17 +80,17 @@
     }
 
     .css-icon {
-        padding-top: 20px;
-        float: right;
         font-size: 17px;
+        float: right;
+        padding-top:10px;
     }
 
     .lyr {
-        padding-top: 20px;
+        margin-top: 3px;
     }
 
     .like {
-        color: blue;
+        color: #2e89ff !important;
     }
 
     input:focus-visible {
@@ -96,8 +101,88 @@
     button:focus {
         outline: none !important;
     }
+    .u{
+        float:left;
+    }
+    .input-comment {
+        margin-left: 8px;
+        border: none;
+        border-bottom: 1px solid #f8f9fa40;
+        background:unset;
+    }
+    .input-cmt {
+        width: 100%;
+        height: 28px;
+        margin-left: -12px;
+        border: none;
+        background:unset;
+        color:white;
+    }
+        
+        .selection-comment{
+            margin-top:-10px;
+            float:right;
+            display:none;
+            position:relative;
+        }
+    .btn-close, .btn-comment {
+        width: 85px;
+        height: 35px;
+        border-radius: 6px;
+        color:white;
+        border:none;
+    }
+    .btn-close {
+        background-color: #5252dbc7;
+    }
+    .btn-comment {
+        background-color: #1c1cbf;
+    }
+    .song-user {
+        padding-top: 7px;
+        padding-bottom: 28px;
+    }
+        .song-user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 25px;
+            float: left;
+        }
+        .song-user .name-user {
+            float: left;
+            padding-left: 6px;
+            color:white;
+        }
+    .user {
+        color: #2e89ff;
+    }
+    .container {
+        background-color: #000000bf;
+    }
+    h3,a,.c-white,t{
+        color:white
+    }
+    .l {
+        padding-left: 16px;
+    }
+    li .row{
+        margin-left:unset;
+    }
+    .icon-lyric {
+        color: #ffffffb5;
+    }
+    .background {
+        background-image: url(../img/back3.jpg);
+        background-attachment: fixed;
+        padding-top: 80px;
+        background-position:center;
+    }
+    .more_add{
+        padding-left:10px;
+    }
 </style>
-<div class="container section-padding-100-0">
+<div class="background">
+<div class="container">
     <div class="wrapper">
         <div class="row">
             <div class="col-lg-8">
@@ -121,7 +206,7 @@
                         <span class="max-duration k">0:00</span>
                     </div>
                     <div class="controls">
-                        <i id="repeat-plist" class="material-icons t" title="Playlist looped">repeat</i>
+                        <i id="repeat-plist" class="material-icons t" title="Phát lại tất cả">repeat</i>
                         <i id="prev" class="material-icons">skip_previous</i>
                         <div class="play-pause">
                             <i class="material-icons play">play_arrow</i>
@@ -129,29 +214,45 @@
                         <i id="next" class="material-icons d">skip_next</i>
                     </div>
                 </div>
-                <div class="css-icon">
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <button id="checkLike" style="background-color:transparent;border:none"><i id="like-song" style="font-size:126%" class="fa fa-thumbs-up"></i></button>
-                    }
-                    else
-                    {
-                        <button id="checkLikeUnsign" style="background-color:transparent;border:none"><i style="font-size:126%" class="fa fa-thumbs-up"></i></button>
-                    }
-                    <t id="countLike"></t>
-                    &ensp; <button id="downloadMusic" style="background-color:transparent;border:none">
-                        <i class="fa fa-download" style="font-size:126%" aria-hidden="true"></i>
-                    </button>
-                    @*&ensp; <i class="fa fa-share-alt"></i> Chia sẻ &ensp;*@
+                <div class="song-user">
+                    <div ><img src="~/img/logoMusic.jpg"/>
+                    <div class="name-user">Cung cấp bởi<br /><div class="user" id="user"></div></div>
+                    </div>
+                    <div class="css-icon">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <button id="checkLike" style="background-color:transparent;border:none"><i id="like-song" class="fa fa-thumbs-up c-white"></i></button>
+                        }
+                        else
+                        {
+                            <button id="checkLikeUnsign" style="background-color:transparent;border:none"><i class="fa fa-thumbs-up c-white"></i></button>
+                        }
+                        <t id="likeCount"></t>
+                        &ensp;
+                        <button id="downloadMusic" style="background-color:transparent;border:none">
+                            <i class="fa fa-download c-white" aria-hidden="true"> Tải nhạc</i>
+                        </button>
+                        &ensp;
+                        <div class="dropdown" style="float:right">
+                            <button style="background-color:transparent;border:none" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-share c-white" aria-hidden="true"> Chia sẻ</i>
+                            </button>
+                            <div class="dropdown-menu" style="background-color:unset" aria-labelledby="dropdownMenuButton">
+                                <div class="shared-zalo"></div>
+                            </div>
+                        </div>
+                        @*&ensp; <i class="fa fa-share-alt"></i> Chia sẻ &ensp;*@
+                    </div>
                 </div>
+                <hr />
                 <div class="lyr">
                     <h3>Lời bài hát</h3>
 
                     <p class="lyrics" id="lyrics"></p>
                 </div>
                 <div class="more_add" id="divMoreAddLyric">
-                    <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down"></i> Xem toàn bộ<span class="down"></span></a>
-                    <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up"></i> Thu gọn<span class="up"></span></a>
+                    <a href="javascript:;" id="seeMoreLyric" onclick="seeMoreLyric()" title="Xem toàn bộ" class="btn_view_more"><i class="fa fa-chevron-down" style="color: #ffffffb5"> Xem toàn bộ</i> <span class="down"></span></a>
+                    <a href="javascript:;" id="hideMoreLyric" onclick="hideMoreLyric()" title="Thu gọn" style="display:none" class="btn_view_hide hide"><i class="fa fa-chevron-up" style="color: #ffffffb5"> Thu gọn</i> <span class="up"></span></a>
 
                 </div>
             </div>
@@ -159,8 +260,8 @@
                 <div class="music-list">
                     <div class="header">
                         <div class="row">
-                            <i class="list material-icons">queue_music</i>
-                            <span>@ViewBag.Title</span>
+                            <i class="list material-icons c-white">queue_music</i>
+                            <span class="c-white">@ViewBag.Title</span>
                         </div>
                         <!-- <i id="close" class="material-icons" hidden="true">close</i> -->
                     </div>
@@ -175,7 +276,7 @@
             <div class="col-12">
                 @*<div class="section-heading white wow fadeInUp" data-wow-delay="100ms">*@
                 @*<p>See what’s new</p>*@
-                <h2>Bình luận</h2>
+                <h3>Bình luận</h3>
                 @*</div>*@
             </div>
         </div>
@@ -185,25 +286,52 @@
                 <div class="login-form">
 
                     <div class="row">
-                        <div class="col-md-6 col-lg-4">
-                            <div class="form-group">
-                                <input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
+                        @*<div class="col-md-6 col-lg-4">*@
+
+                        @*<div class="col-12">*@
+                            @*<div class="u"><img class="img-comment" src="~/img/user-img/1.jpg" alt="" /></div>*@
+
+                            @*<input type="text" class="form-control" style="width:110%;" id="txtComment" placeholder="Bình luận">
+            </div>*@
+                            @*</div>*@
+                            @*<div class="col-md-6 col-lg-4">
+            <div class="form-group wow fadeInUp" data-wow-delay="200ms">*@
+                            @*<div class="input-comment u"> <img class="img-comment" src="~/img/user-img/1.jpg" alt="" /><input/></div>
+
+                        </div>*@
+                        <div class="col-8">
+                            <label class="sr-only" for="inlineFormInputGroup">Username</label> <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <div>
+                                        @if (SignInManager.IsSignedIn(User)&&UserManager.GetUserAsync(User).Result.URLImg!=null)
+                                        {
+                                            <img class="img-comment" src="~/img/user-img/@UserManager.GetUserAsync(User).Result.URLImg" alt="" />
+                                        }
+                                        else
+                                        {
+                                            <img class="img-comment" src="~/img/iconComment.jpg" alt="" />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-control input-comment" id="inlineFormInputGroup">
+                                    @if (SignInManager.IsSignedIn(User))
+            {
+                                    <input type="text" placeholder="Bình luận" onclick="checkLogin(1)" id="txtComment" class="input-cmt" />
+            }
+            else
+            {
+                                    <input type="text" placeholder="Bình luận" onclick="checkLogin(0)" id="txtComment" class="input-cmt" />
+            }
+                                        
+                                </div>
                             </div>
+                            <div id="selection" class="selection-comment">
+                            <button id="btnClose" class="btn-close">Hủy</button>
+                            <button id="btnComment" name="btnComment" class="btn-comment">Bình luận</button>
+                               </div>
+                        </div>    
                         </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="form-group wow fadeInUp" data-wow-delay="200ms">
-                                @if (SignInManager.IsSignedIn(User))
-                                {
-                                    <button class="btn btn-primary w-25" name="btnComment">Gửi</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-primary w-25" onclick="window.location.href='/Identity/Account/Register'">Gửi</button>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <br />
+                
                     <p id="timeSong" value="0"></p>
                     <div id="commentlist">
                     </div>
@@ -213,31 +341,36 @@
         </div>
     </div>
 </div>
+    </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        window.onload = function () {
-            var idSong = allMusic[musicIndex - 1].Id;
-            $.ajax({
-                type: 'get',
-                url: '/Home/GetReactSong',
-                dataType: 'html',
-                data: {
-                    "IdSong": idSong
-                },
-                success: function (data) {
-                    if (data === "True") {
-                        $("#like-song").addClass("like");
-                    }
-                    else {
-                        $("#like-song").removeClass("like");
-                    }
+<script>
+    function GetReactSong(idSong) {
+        $.ajax({
+            type: 'get',
+            url: '/Home/GetReactSong',
+            dataType: 'html',
+            data: {
+                "IdSong": idSong
+            },
+            success: function (data) {
+                if (data === "True") {
+                    $("#like-song").addClass("like");
                 }
-            });
-        }
+                else {
+                    $("#like-song").removeClass("like");
+                }
+            }
+        });
+    }
+    function likeCount(idSong) {
+                 $.get('@Url.Action("LikeCount","Home")', { idSong: idSong }, function (data) {
+                            $("#likeCount").html(data);
+                        });
+    }
         $("#downloadMusic").click(function () {
             var link = document.createElement('a');
-            link.href = `../audio/${allMusic[musicIndex - 1].URLMusic}`;      
+            link.href = `../audio/${allMusic[musicIndex - 1].URLMusic}`;
             link.download = allMusic[musicIndex - 1].URLMusic;
             link.dispatchEvent(new MouseEvent('click'));
         })
@@ -257,8 +390,10 @@
                     else {
                         $("#like-song").removeClass("like");
                     }
+                    likeCount(idSong);
                 }
             });
+
         })
         $("#checkLikeUnsign").click(function () {
             alert("Vui lòng đăng nhập để thích bài hát!");
@@ -268,6 +403,7 @@
             musicImg = wrapper.querySelector(".img-area img"),
             musicName = wrapper.querySelector(".song-details .name"),
             musicLyrics = wrapper.querySelector(".lyrics"),
+            musicUser = wrapper.querySelector(".user"),
             musicView = wrapper.querySelector(".view"),
             musicId = wrapper.querySelector(".idSong"),
             musicArtist = wrapper.querySelector(".song-details .artist"),
@@ -279,8 +415,7 @@
             progressBar = progressArea.querySelector(".progress-bar"),
             musicList = wrapper.querySelector(".music-list"),
             moreMusicBtn = wrapper.querySelector("#more-music"),
-            closemoreMusic = musicList.querySelector("#close");
-            countLike = 
+        closemoreMusic = musicList.querySelector("#close");
 
         isMusicPaused = true;
         var allMusic = @Html.Raw(ViewBag.listSong);
@@ -332,14 +467,21 @@
         }
         function loadMusic(indexNumb) {
             musicName.innerText = allMusic[indexNumb - 1].Name;
-            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
+            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;          
             musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
             musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
             mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
-            //Load Like
-            $('.countLike').text(allMusic[indexNumb - 1].CountLike);;
-            //Load comment
+            if (allMusic[indexNumb - 1].User!=null&&allMusic[indexNumb - 1].User.UserName != null) {
+                musicUser.innerHTML = allMusic[indexNumb - 1].User.UserName;
+            } else {
+                musicUser.innerHTML = "DDMusic";
+            }
+            wrapper.querySelector(".shared-zalo").innerHTML = "<div class='zalo-share-button' data-href="+"https://localhost:44305/bai-hat/" + allMusic[indexNumb - 1].Id+" data-oaid='579745863508352884' data-layout='1' data-color='blue' data-customize='false' ></div >"
             let idSong = allMusic[indexNumb - 1].Id;
+            //Load Like
+            likeCount(idSong);
+            GetReactSong(idSong);
+            //Load comment
             loadComment(idSong);
             //Add views song
             addViewsSong(idSong);
@@ -443,15 +585,15 @@
             switch (getText) {
                 case "repeat":
                     repeatBtn.innerText = "repeat_one";
-                    repeatBtn.setAttribute("title", "Song looped");
+                    repeatBtn.setAttribute("title", "Phát lại một bài");
                     break;
                 case "repeat_one":
                     repeatBtn.innerText = "shuffle";
-                    repeatBtn.setAttribute("title", "Playback shuffled");
+                    repeatBtn.setAttribute("title", "Phát ngẫu nhiên");
                     break;
                 case "shuffle":
                     repeatBtn.innerText = "repeat";
-                    repeatBtn.setAttribute("title", "Playlist looped");
+                    repeatBtn.setAttribute("title", "Phát lại tất cả");
                     break;
             }
         });
@@ -498,9 +640,7 @@
             let liTag = `<li li-index="${i + 1}">
                             <div class="row">
                             <img class="im" src="../img/song/${allMusic[i].URLImg}">
-                              <span>${allMusic[i].Name}  <p> ${allMusic[i].Singer.Name}</p></span>
-
-
+                              <span>${allMusic[i].Name}<p> ${allMusic[i].Singer.Name}</p></span>
                             </div>
                             <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
                             <audio class="${allMusic[i].URLMusic}" src="../audio/${allMusic[i].URLMusic}"></audio>
@@ -554,7 +694,7 @@
         }
 
         function seeMoreLyric() {
-            document.getElementById("lyrics").className = "";
+            document.getElementById("lyrics").className = "l";
             document.getElementById("seeMoreLyric").style.display = 'none';
             document.getElementById("hideMoreLyric").style.display = 'block';
         }
@@ -579,6 +719,19 @@
                     $("#commentlist").html(data);
                 }
             });
+            $('#selection').css("display", "none");
+            $('#txtComment').val("");
         });
-    </script>
+    $('#btnClose').click(function () {
+        $('#selection').css("display","none");
+    });
+    function checkLogin(t) {
+    if (t == 1) {
+        $('#selection').css("display", "block");
+    }
+    else {
+        alert("Vui lòng đăng nhập!")
+    }
+    }
+</script>
 }

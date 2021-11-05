@@ -139,6 +139,48 @@ img {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+.btn-ellipsis {
+    border: none;
+    background: none;
+    outline-style: none;
+    position:relative;
+}
+.dropdown-menu {
+    min-width: 240px;
+}
+
+.dropdown-header {
+    padding: 0.5rem 0.5rem;
+}
+
+    .dropdown-header .song img {
+        float: left;
+        width: 40px;
+        height: 40px;
+        border-radius: 10%;
+    }
+
+    .dropdown-header .song .name-song {
+        float: left;
+        padding-top: 10px;
+        padding-left: 6px;
+        font-size: 16px;
+    }
+
+.dropdown-menu .share {
+    position: relative;
+}
+
+.dropdown-menu .selection-share {
+    position: absolute;
+    right: 225px;
+    bottom: 10px;
+    display: none;
+}
+
+.dropdown-menu .share:hover .selection-share {
+    display: block;
+}
 .section-padding-200
 {
     padding-top:215px;
