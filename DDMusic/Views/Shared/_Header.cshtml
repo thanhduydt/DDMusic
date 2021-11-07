@@ -57,6 +57,14 @@
             outline: none;
             background: #ffffff;
         }
+        .btn-search{
+            background:unset;
+            border:unset;
+        }
+            .btn-search:focus {
+                border: unset;
+                outline: unset;
+            }
 
 </style>
 
@@ -135,9 +143,9 @@
         <button class="btn-search"><i class="fa fa-search"></i></button>*@
                                     
                                             <div class="container-1">
-                                                <span class="icon"><i class="fa fa-search"></i></span>
+                                                <span class="icon"><button class="btn-search"><i class="fa fa-search"></i></button></span>
                                                 <input type="search" id="search" name="txtSearch" placeholder="Tìm kiếm ..." />
-                                                <input type="button" hidden />
+                                                
                                             </div>
 
                                         </form>

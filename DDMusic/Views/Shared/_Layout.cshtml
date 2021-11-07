@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="~/Admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 </head>
-<body>
+<body style="background-color:#03030c !important;color:white !important; ">
     @await Html.PartialAsync("_Header.cshtml")
     @*@await Html.PartialAsync("_Banner.cshtml")*@
     @RenderBody()
@@ -43,7 +43,7 @@
                 $.each(items, function (index, item) {
                     var li;
                     if (item.category != currentCategory) {
-                        ul.append("<li class='ui-autocomplete-category m'>" + item.category + "</li>");
+                        ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
                         currentCategory = item.category;
                     }
                     li = that._renderItemData(ul, item);

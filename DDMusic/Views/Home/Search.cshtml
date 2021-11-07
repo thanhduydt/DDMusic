@@ -16,7 +16,6 @@
 <h2 class="e">TÌM KIẾM</h2>
 <div class="container s">
 
-    <br />
     @if (ViewBag.listSong.Count == 0 && ViewBag.listAlbum.Count == 0)
     {
         <center><h5> Không tìm thấy</h5></center>
@@ -25,25 +24,55 @@
     @if (ViewBag.listSong.Count != 0)
     {
         <a asp-action="AllSong" asp-route-txtSearch="@ViewBag.txtSearch"><h5>BÀI HÁT <i class="fa fa-angle-right" aria-hidden="true"></i></h5></a>
-        <br />
         <table class="table">
             <tbody>
-                @foreach (var song in ViewBag.listSong)
+                @foreach (var item in ViewBag.listSong)
                 {
-                <tr>
-                   
-                        <th width="100px" scope="row"><img src="~/img/song/@song.URLImg" /></th>
-                        <td>
-                            <a href="~/bai-hat/@song.Id">
-                                <b style="font-size:18px;">@song.Name</b>
-                                </a>
-                                <br />
-                                <p>@song.Singer.Name</p>
+                    <tr>
+                        <td class="img">
+                            <img src="~/img/song/@item.URLImg" />
                         </td>
-                        @*<td style="font-size:18px; color:gainsboro; padding-top:30px;"><i class="fa fa-user" aria-hidden="true">&nbsp;thanh duy</i></td>*@
-                        <td style="font-size:18px; color:gainsboro; padding-top:30px;"><i class="fa fa-headphones" aria-hidden="true">@song.CountView</i></td>
-             
-                        </tr>
+                        <td>
+                            <div class="name" onclick="location.href ='/playlistUsers/@item.Id'">
+                                <div class="name-song">@item.Name</div>
+                                <div class="name-singer">@item.Singer.Name</div>
+                            </div>
+                        </td>
+
+                        <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
+                        <td>
+                            @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
+                            <div class="dropdown">
+                                <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" id="dr">
+
+                                    <div class="dropdown-header">
+                                        <div class="song">
+                                            <img src="~/img/song/@item.URLImg" />
+                                            <div class="name-song">@item.Name</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div onclick="dowloadMusic('@item.URLMusic')">
+                                            <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item share">
+
+                                        <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                        <ul class="dropdown selection-share">
+                                            <li>
+                                                <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
+                                                     data-color="blue" data-customize="false"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -55,7 +84,7 @@
                 @*<div class="section-heading style-2">*@
 
                 <a asp-action="AllAlbum" asp-route-txtSearch="@ViewBag.txtSearch"><h5>ALBUM <i class="fa fa-angle-right" aria-hidden="true"></i></h5></a>
-                <br /><br />
+              
                 @*</div>*@
             </div>
         </div>

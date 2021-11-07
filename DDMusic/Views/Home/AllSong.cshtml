@@ -16,27 +16,56 @@
         }
     </style>
     <h2 class="e">TÌM KIẾM</h2>
-<br />
     <div class="container s">
         <h5>BÀI HÁT</h5>
-        <br />
         <table class="table">
             <tbody>
-                @foreach (var song in Model)
+                @foreach (var item in Model)
                 {
                     <tr>
-
-                        <th width="100px" scope="row"><img src="~/img/song/@song.URLImg" /></th>
-                        <td>
-                            <a href="~/bai-hat/@song.Id">
-                                <b style="font-size:18px;">@song.Name</b>
-                            </a>
-                            <br />
-                            <p>@song.Singer.Name</p>
+                        <td class="img">
+                            <img src="~/img/song/@item.URLImg" />
                         </td>
-                        <td style="font-size:18px; color:gainsboro; padding-top:30px;"><i class="fa fa-user" aria-hidden="true">&nbsp;thanh duy</i></td>
-                        <td style="font-size:18px; color:gainsboro; padding-top:30px;"><i class="fa fa-headphones" aria-hidden="true">&nbsp;1000</i></td>
+                        <td>
+                            <div class="name" onclick="location.href ='/playlistUsers/@item.Id'">
+                                <div class="name-song">@item.Name</div>
+                                <div class="name-singer">@item.Singer.Name</div>
+                            </div>
+                        </td>
 
+                        <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
+                        <td>
+                            @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
+                            <div class="dropdown">
+                                <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right" id="dr">
+
+                                    <div class="dropdown-header">
+                                        <div class="song">
+                                            <img src="~/img/song/@item.URLImg" />
+                                            <div class="name-song">@item.Name</div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div onclick="dowloadMusic('@item.URLMusic')">
+                                            <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item share">
+
+                                        <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                        <ul class="dropdown selection-share">
+                                            <li>
+                                                <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
+                                                     data-color="blue" data-customize="false"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 }
             </tbody>
