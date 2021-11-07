@@ -43,7 +43,7 @@ namespace DDMusic.Areas.Admin.API.Controllers
                  var viewSongOfDays = _context.ViewSongOfDay.Where(m => m.Date == dateTime.Date).ToList();
                 if(viewSongOfDays.Count != 0 || viewSongOfDays != null)
                 {
-                    viewSongOfDayDetails = _context.ViewSongOfDayDetail.Where(m => m.IdViewSongOfDay == viewSongOfDays.FirstOrDefault().Id).Include(s => s.Song).ToList();
+                    viewSongOfDayDetails = _context.ViewSongOfDayDetail.Where(m => m.IdViewSongOfDay == viewSongOfDays.FirstOrDefault().Id).Include(s => s.Song).OrderByDescending(m => m.CountView).Take(10).ToList();
                 }
                 return viewSongOfDayDetails == null ? new List<ViewSongOfDayDetail>() : viewSongOfDayDetails;
             }

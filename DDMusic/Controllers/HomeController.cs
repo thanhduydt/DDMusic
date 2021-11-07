@@ -63,7 +63,7 @@ namespace DDMusic.Controllers
             }
             ViewBag.NewAlbum = NewAlbum;
             //12 Playlist mới nhất
-            var Playlists = _context.Playlist.OrderByDescending(m => m.Id).ToList();
+            var Playlists = _context.Playlist.Where(m=>m.IdUser == null).OrderByDescending(m => m.Id).ToList();
             List<Playlist> NewPlaylist = new List<Playlist>();
             point = 0;
             foreach (var item in Playlists)
@@ -363,7 +363,7 @@ namespace DDMusic.Controllers
 
             return View(Singer);
         }
-        //[Route("thong-tin-tai-khoan")]
+        [Route("thong-tin-tai-khoan")]
         public IActionResult PersonalPage()
         {
             //Lấy thông tin User đang đăng nhập gán vào Model
@@ -609,7 +609,7 @@ namespace DDMusic.Controllers
             ////Lấy tất cả playlist
             //var Playlists = _context.Playlist.OrderByDescending(m => m.Id).Skip(8).ToList();
             //Lấy tất cả playlist
-            var AllPlaylists = _context.Playlist.ToList();
+            var AllPlaylists = _context.Playlist.Where(m => m.IdUser == null).ToList();
             //Kiểm tra Playlist rỗng 
             List<Playlist> Playlists = new List<Playlist>();
             foreach (var item in AllPlaylists)

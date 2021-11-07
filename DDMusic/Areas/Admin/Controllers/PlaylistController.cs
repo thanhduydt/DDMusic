@@ -21,7 +21,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            var AllPlaylist = _context.Playlist.ToList();
+            var AllPlaylist = _context.Playlist.Where(m => m.IdUser == null).ToList();
             return View(AllPlaylist);
         }
         public IActionResult CreatePlaylist()
