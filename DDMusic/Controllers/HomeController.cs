@@ -511,7 +511,7 @@ namespace DDMusic.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> UploadSong([Bind("Name,IdSinger,URLImg,URLMusic,Lyric")] SongModel model, IFormFile ful, IFormFile fulMusic)
+        public async Task<IActionResult> UploadSong([Bind("Name,IdSinger,URLImg,URLMusic,Lyric,Genre")] SongModel model, IFormFile ful, IFormFile fulMusic)
         {
             if (ModelState.IsValid)
             {
@@ -522,6 +522,7 @@ namespace DDMusic.Controllers
                 model.Accept = false;
                 //Khởi tạo số view cho bài hát mới là 0
                 model.CountView = 0;
+                model.ReleaseDate = DateTime.Now.Date;
                 _context.Add(model);
                 await _context.SaveChangesAsync();
                 if (ful != null)
