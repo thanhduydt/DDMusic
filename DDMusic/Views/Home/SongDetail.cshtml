@@ -181,6 +181,22 @@
     .more_add{
         padding-left:10px;
     }
+    .playing {
+       color:blue;
+    }
+    .dropdown-menu .playlist:hover .selection-playlist{
+        position:unset;
+    }
+    .scroll{
+        min-height:90px;
+        max-height:90px;
+    }
+    .dropdown-menu .selection-playlist{
+        height:100px;
+    }
+    .toast-success {
+        background-color: blue;
+    }
 </style>
 <div class="background">
 <div class="container">
@@ -238,7 +254,7 @@
                             <button style="background-color:transparent;border:none" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-share c-white" aria-hidden="true"> Chia sẻ</i>
                             </button>
-                            <div class="dropdown-menu" style="background-color:unset" aria-labelledby="dropdownMenuButton">
+                            <div class="dropdown-menu" style="background-color:unset;border:unset;" aria-labelledby="dropdownMenuButton">
                                 <div class="shared-zalo"></div>
                             </div>
                         </div>
@@ -468,7 +484,7 @@
         }
         function loadMusic(indexNumb) {
             musicName.innerText = allMusic[indexNumb - 1].Name;
-            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;          
+            musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
             musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
             musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
             mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
@@ -638,12 +654,63 @@
         // let create li tags according to array length for list
         for (let i = 0; i < allMusic.length; i++) {
             //let's pass the song name, artist from the array
-            let liTag = `<li li-index="${i + 1}">
-                            <div class="row">
+            let liTag = `<li >
+                            <div class="row" li-index="${i + 1}">
                             <img class="im" src="../img/song/${allMusic[i].URLImg}">
                               <span>${allMusic[i].Name}<p> ${allMusic[i].Singer.Name}</p></span>
+                        <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
                             </div>
-                            <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
+@if (ViewBag.checkPlayList != true)
+{
+                    <div class="dropdown">
+                                    <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" id="dr">
+
+                                        <div class="dropdown-header">
+                                            <div class="song">
+                                                <img src="../img/song/${allMusic[i].URLImg}" />
+                                                <div class="name-song">${allMusic[i].Name}</div>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <div onclick="dowloadMusic('${allMusic[i].URLMusic}')">
+                                                <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                            </div>
+                                        </div>
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                        <div class="dropdown-item playlist">
+
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Thêm vào playlist
+                                            <ul class="dropdown selection-playlist scroll">
+                                                <li style="padding-left:5px" onclick="createPlayList(${allMusic[i].Id})"><i class="fa fa-plus-circle" aria-hidden="true"> Tạo playlist mới</i></li>
+                                                @if (ViewBag.PlayList != null)
+                                                {
+                                                    @foreach (var i in ViewBag.PlayList)
+                                                    {
+                                                        <li style="padding-left:5px" onclick="addSongToPlayList(@i.Id,${allMusic[i].Id},'${allMusic[i].Name}')">
+                                                            @i.Name
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                        }
+                                        <div class="dropdown-item share">
+
+                                            <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                            <ul class="dropdown selection-share">
+                                                <li>
+                                                    <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/${allMusic[i].Id}" data-oaid="579745863508352884" data-layout="1"
+                                                         data-color="blue" data-customize="false"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+        }
                             <audio class="${allMusic[i].URLMusic}" src="../audio/${allMusic[i].URLMusic}"></audio>
                           </li>`;
             ulTag.insertAdjacentHTML("beforeend", liTag); //inserting the li inside ul tag
@@ -664,7 +731,7 @@
 
         //play particular song from the list onclick of li tag
         function playingSong() {
-            const allLiTag = ulTag.querySelectorAll("li");
+            const allLiTag = ulTag.querySelectorAll(".row");
 
             for (let j = 0; j < allLiTag.length; j++) {
                 let audioTag = allLiTag[j].querySelector(".audio-duration");
@@ -734,5 +801,28 @@
         alert("Vui lòng đăng nhập!")
     }
     }
+    function addSongToPlayList(idPlayList, idSong, nameSong) {
+    $.post('@Url.Action("AddSongToPlayList","Home")', { idPlayList: idPlayList, idSong: idSong },
+        function () {
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            Command: toastr["success"]("Đã thêm bài hát " + nameSong + " vào playlist thành công.")
+        });
+}
 </script>
 }

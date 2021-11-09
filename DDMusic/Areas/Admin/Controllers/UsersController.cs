@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
-   //[Authorize(Roles="Admin")]
+   [Authorize(Roles="Admin")]
     [Area("Admin")]
     public class UsersController : Controller
     {

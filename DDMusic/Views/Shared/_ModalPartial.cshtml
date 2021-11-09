@@ -1,0 +1,16 @@
+﻿<div class="modal fade modalAdd" id="modalAdd">
+    <div class="modal-dialog dialog">
+        <div class="modal-body">
+            <div class="modal-content content">
+                <div class="title-add">Tạo playlist mới</div>
+                <form asp-controller="Home" asp-action="CreatePlayList">
+                    <div class="name-add">
+                        <input class="txt-addname" id="txtName" name="txtName" type="text" placeholder="Nhập tên playlist" />
+                    </div>
+                    <input id="idSong" name="idSong" hidden />
+                    <div class="add"><button type="submit" class="btn-add">Tạo mới</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1164,8 +1164,40 @@ h2{
       line-height: 1;
       -webkit-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%); }
-  .single-album-area img {
-    width: 100%; }
+    .single-album-area img {
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+        transition-duration: 0.3s;
+    }
+    .single-album-area .s {
+        width: 176px;
+        height: 176px;
+        overflow: hidden;
+        border-radius:5px;
+    }
+
+        .single-album-area .s:hover img {
+            transform: scale(1.2);
+            opacity: 0.5;
+        }
+
+        .single-album-area .s:hover .selection-s {
+            display: block;
+        }
+.toast-success {
+    background-color: blue;
+}
+.selection-s {
+    padding-top: 77px;
+    padding-left: 77px;
+    position: absolute;
+    display: none;
+}
+
+    .selection-s i {
+        font-size: 35px;
+    }
   .single-album-area .album-info {
     display: block;
     position: relative;

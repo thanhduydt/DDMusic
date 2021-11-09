@@ -16,6 +16,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using NAudio.Wave;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDMusic.Controllers
 {
@@ -182,6 +183,11 @@ namespace DDMusic.Controllers
                 RelatedSongs.Add(relatedSong);
             }
             ViewBag.listSong = JsonConvert.SerializeObject(RelatedSongs);
+            var users = _userManager.GetUserAsync(User);
+            if (users.Result != null)
+            {
+                ViewBag.PlayList = listPlayPlist(users.Result.Id);
+            }
             ViewBag.Title = "Những bài hát liên quan";
 
             return View(song);
@@ -651,7 +657,11 @@ namespace DDMusic.Controllers
             var Song = SongOfAlbum[0];
             ViewBag.listSong = JsonConvert.SerializeObject(SongOfAlbum);
             ViewBag.Title = "Những bài hát thuộc album: " + Album.Name;
-
+            var user = _userManager.GetUserAsync(User);
+            if (user.Result != null)
+            {
+                ViewBag.PlayList = listPlayPlist(user.Result.Id);
+            }
             return View("SongDetail", Song);
         }
         [Route("playlist")]
@@ -700,8 +710,14 @@ namespace DDMusic.Controllers
             var Playlist = _context.Playlist.Find(id);
             ViewBag.listSong = JsonConvert.SerializeObject(ListSong);
             ViewBag.Title = "Những bài hát thuộc Playlist: " + Playlist.Name;
+            var user = _userManager.GetUserAsync(User);
+            if (user.Result != null)
+            {
+                ViewBag.PlayList = listPlayPlist(user.Result.Id);
+            }
             return View("SongDetail", ListSong[0]);
         }
+        [Authorize]
         [Route("playlistUser")]
         public IActionResult PlayListUser()
         {
@@ -737,6 +753,7 @@ namespace DDMusic.Controllers
                 }
                 ViewBag.listSong = JsonConvert.SerializeObject(listSong);
                 ViewBag.Title = "Những bài hát thuộc Playlist: ";
+                ViewBag.checkPlayList = true;
                 return View("SongDetail", listSong[0]);
             }
             else
@@ -782,6 +799,7 @@ namespace DDMusic.Controllers
             }
             ViewBag.listSong = JsonConvert.SerializeObject(listSong);
             ViewBag.Title = "Những bài hát thuộc Playlist: ";
+            ViewBag.checkPlayList = true;
             return View("SongDetail", listSong[0]);
         }
         public async Task<IActionResult> CreatePlayListUser(string txtName)
