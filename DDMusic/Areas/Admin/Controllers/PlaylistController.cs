@@ -151,10 +151,10 @@ namespace DDMusic.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> InsertSongToPlaylist(int IdPlaylist, List<int> IdSong)
         {
-            foreach (var item in IdSong)
+            var playlistExist = _context.Playlist.Find(IdPlaylist);
+            if(playlistExist != null)
             {
-                var PlaylistDetailExist = _context.PlaylistDetail.Where(m => m.IdSong == item).ToList();
-                  if (PlaylistDetailExist.Count == 0)
+                foreach(var item in IdSong)
                 {
                     PlaylistDetail playlistDetail = new PlaylistDetail();
                     playlistDetail.IdPlaylist = IdPlaylist;
@@ -163,13 +163,39 @@ namespace DDMusic.Areas.Admin.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
+            var DetailPlaylist = _context.PlaylistDetail.Where(m => m.IdPlaylist == IdPlaylist).ToList();
+            List<SongModel> SongFromPlaylist = new List<SongModel>();
+            foreach (var item in DetailPlaylist)
+            {
+                SongModel songModel = new SongModel();
+                songModel = _context.Song.Find(item.IdSong);
+                var singer = _context.Singer.Find(songModel.IdSinger);
+                songModel.Singer = singer;
+                SongFromPlaylist.Add(songModel);
+            }
             return RedirectToAction("DetailPlaylist", "Playlist", new { area = "Admin", id = IdPlaylist });
+            //return PartialView("_GetSongFromPlaylist", SongFromPlaylist);
+
+            #region Logic cũ
+            //foreach (var item in IdSong)
+            //{
+            //    var PlaylistDetailExist = _context.PlaylistDetail.Where(m => m.IdSong == item).ToList();
+            //      if (PlaylistDetailExist.Count == 0)
+            //    {
+            //        PlaylistDetail playlistDetail = new PlaylistDetail();
+            //        playlistDetail.IdPlaylist = IdPlaylist;
+            //        playlistDetail.IdSong = item;
+            //        _context.Add(playlistDetail);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //}
+            #endregion
         }
         [HttpPost]
         public async Task<IActionResult> RemoveSongFromPlaylist(int idSong, int idPlaylist)
         {
-            var PlaylistDetail = _context.PlaylistDetail.Where(m => m.IdSong == idSong).ToList();
-            _context.PlaylistDetail.Remove(PlaylistDetail[0]);
+            var PlaylistDetail = _context.PlaylistDetail.Where(m => m.IdSong == idSong && m.IdPlaylist == idPlaylist).FirstOrDefault();
+            _context.PlaylistDetail.Remove(PlaylistDetail);
             await _context.SaveChangesAsync();
 
 
@@ -183,8 +209,9 @@ namespace DDMusic.Areas.Admin.Controllers
                 songModel.Singer = singer;
                 SongFromPlaylist.Add(songModel);
             }
-            // return PartialView("_GetSongFromPlaylist", SongFromPlaylist);
-            return RedirectToAction("DetailPlaylist", "Playlist", new { area = "Admin", id = idPlaylist });
+            return PartialView("_GetSongFromPlaylist", SongFromPlaylist);
+            //return RedirectToAction("DetailPlaylist", "Playlist", new { area = "Admin", id = idPlaylist });
+            //return View();
         }
     }
 }

@@ -47,4 +47,26 @@
 
         });
     }
+    function RemoveSongFromPlaylist(e) {
+        if (confirm("Bạn muốn xóa bài hát ra khỏi playlist?") == true) {
+            var idPlaylist = $("#IdPlaylist").val();
+            $.ajax({
+                type: 'post',
+                url: '/Admin/Playlist/RemoveSongFromPlaylist',
+                dataType: 'html',
+                data: {
+                    "idSong": e,
+                    "idPlaylist": idPlaylist
+                },
+                success: function (data) {
+                    //     alert(data);
+                    $("#GetSongFromAlbum").html(data);
+                }
+
+            });
+        }
+
+    }
+
+
 </script>
