@@ -1,73 +1,155 @@
 ﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
-    <style>
-        th img {
-            width: 70px;
-            height: 70px;
-            -webkit-border-radius: 10%;
-        }
+@using Microsoft.AspNetCore.Identity
+@using DDMusic.Areas.Admin.Models
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
+<style>
+    th img {
+        width: 70px;
+        height: 70px;
+        -webkit-border-radius: 10%;
+    }
 
-        .s {
-            min-height: 500px;
-        }
+    .s {
+        min-height: 500px;
+    }
 
-        .e {
-            padding-top: 100px;
-            padding-left: 50px;
-        }
-    </style>
-    <h2 class="e">TÌM KIẾM</h2>
-    <div class="container s">
-        <h5>BÀI HÁT</h5>
-        <table class="table">
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="img">
-                            <img src="~/img/song/@item.URLImg" />
-                        </td>
-                        <td>
-                            <div class="name" onclick="location.href ='/playlistUsers/@item.Id'">
-                                <div class="name-song">@item.Name</div>
-                                <div class="name-singer">@item.Singer.Name</div>
-                            </div>
-                        </td>
+    .e {
+        padding-top: 100px;
+        padding-left: 50px;
+    }
 
-                        <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
-                        <td>
-                            @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
-                            <div class="dropdown">
-                                <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" id="dr">
+    .scroll {
+        max-height: 120px;
+        min-height: 120px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-                                    <div class="dropdown-header">
-                                        <div class="song">
-                                            <img src="~/img/song/@item.URLImg" />
-                                            <div class="name-song">@item.Name</div>
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item">
-                                        <div onclick="dowloadMusic('@item.URLMusic')">
-                                            <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
-                                        </div>
-                                    </div>
-                                    <div class="dropdown-item share">
+    .toast-success {
+        background-color: blue;
+    }
+</style>
+<h2 class="e">TÌM KIẾM</h2>
+<div class="container s">
+    <h5>BÀI HÁT</h5>
+    <table class="table">
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="img">
+                        <img src="~/img/song/@item.URLImg" />
+                    </td>
+                    <td>
+                        <div class="name" onclick="location.href ='/playlistUsers/@item.Id'">
+                            <div class="name-song">@item.Name</div>
+                            <div class="name-singer">@item.Singer.Name</div>
+                        </div>
+                    </td>
 
-                                        <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
-                                        <ul class="dropdown selection-share">
-                                            <li>
-                                                <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
-                                                     data-color="blue" data-customize="false"></div>
-                                            </li>
-                                        </ul>
+                    <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
+                    <td>
+                        @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
+                        <div class="dropdown">
+                            <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" id="dr">
+
+                                <div class="dropdown-header">
+                                    <div class="song">
+                                        <img src="~/img/song/@item.URLImg" />
+                                        <div class="name-song">@item.Name</div>
                                     </div>
                                 </div>
+                                <div class="dropdown-item">
+                                    <div onclick="dowloadMusic('@item.URLMusic')">
+                                        <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                    </div>
+                                </div>
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <div class="dropdown-item playlist">
+
+                                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Thêm vào playlist
+                                        <ul class="dropdown selection-playlist scroll">
+                                            <li style="padding-left:5px" onclick="createPlayList(@item.Id)"><i class="fa fa-plus-circle" aria-hidden="true"> Tạo playlist mới</i></li>
+                                            @if (ViewBag.PlayList != null)
+                                            {
+                                                @foreach (var i in ViewBag.PlayList)
+                                                {
+                                                    <li style="padding-left:5px" onclick="addSongToPlayList(@i.Id,@item.Id,'@item.Name')">
+                                                        @i.Name
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                                <div class="dropdown-item share">
+
+                                    <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                    <ul class="dropdown selection-share">
+                                        <li>
+                                            <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
+                                                 data-color="blue" data-customize="false"></div>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade modalAdd" id="modalAdd">
+    <div class="modal-dialog dialog">
+        <div class="modal-body">
+            <div class="modal-content content">
+                <div class="title-add">Tạo playlist mới</div>
+                <form asp-controller="Home" asp-action="CreatePlayList">
+                    <div class="name-add">
+                        <input class="txt-addname" id="txtName" name="txtName" type="text" placeholder="Nhập tên playlist" />
+                    </div>
+                    <input id="idSong" name="idSong" hidden />
+                    <div class="add"><button type="submit" class="btn-add">Tạo mới</button></div>
+                </form>
+            </div>
         </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    function addSongToPlayList(idPlayList,idSong,nameSong) {
+        $.post('@Url.Action("AddSongToPlayList","Home")', { idPlayList: idPlayList, idSong: idSong },
+            function () {
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                Command: toastr["success"]("Đã thêm bài hát " + nameSong + " vào playlist thành công.")
+            });
+    }
+    function createPlayList(idSong) {
+        $("#idSong").val(idSong);
+        $("#modalAdd").modal('show');
+    }
+    </script>
+}

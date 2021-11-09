@@ -41,7 +41,7 @@ namespace DDMusic.Controllers
         public IActionResult Index()
         {
             //12 Bài hát mới nhất
-            var NewSong = _context.Song.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).Where(m => m.Accept == true && m.ReleaseDate.Date <= DateTime.Now.Date).ToList();
+            var NewSong = _context.Song.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).Where(m => m.Accept == true).ToList();
             ViewBag.NewSong = NewSong;
             //12 Album mới nhất
             var Albums = _context.Album.Include(m => m.Singer).OrderByDescending(m => m.Id).ToList();
@@ -105,7 +105,7 @@ namespace DDMusic.Controllers
             }
             var SingerOfSong = _context.Song.Include(s => s.Singer);
             var AllSong = await SingerOfSong.ToListAsync();
-            var Song = AllSong.Where(m => m.Genre == Genre && m.Accept == true && m.ReleaseDate.Date <= DateTime.Now.Date).OrderByDescending(m => m.Id);
+            var Song = AllSong.Where(m => m.Genre == Genre && m.Accept == true).OrderByDescending(m => m.Id);
             var NewSong = Song.Take(12);
             var SongOfGenre = Song.Skip(12);
             if (NewSong.Count() > 0)
@@ -169,7 +169,7 @@ namespace DDMusic.Controllers
             song.User = user;
             song.Singer = singer;
             var AllSong = await _context.Song.ToListAsync();
-            var AllSongOfGenre = AllSong.Where(m => m.Id != song.Id && m.Genre == song.Genre && m.ReleaseDate.Date <= DateTime.Now.Date);
+            var AllSongOfGenre = AllSong.Where(m => m.Id != song.Id && m.Genre == song.Genre);
             var random = new Random();
             var GetRelatedSongs = AllSongOfGenre.OrderBy(m => random.Next()).Take(10);
             List<SongModel> RelatedSongs = new List<SongModel>();
@@ -474,9 +474,55 @@ namespace DDMusic.Controllers
             });
 
         }
+        [HttpPost]
+        public async Task<bool> AddSongToPlayListAsync(int idPlayList, int idSong)
+        {
+            PlaylistDetail model = new PlaylistDetail();
+            model.IdPlaylist = idPlayList;
+            model.IdSong = idSong;
+            _context.Add(model);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreatePlayList(string txtName, int idSong)
+        {
+            //Tạo playlist mới
+            var user = _userManager.GetUserAsync(User);
+            Playlist playlist = new Playlist();
+            playlist.IdUser = user.Result.Id;
+            playlist.Name = txtName;
+            _context.Add(playlist);
+            await _context.SaveChangesAsync();
+            //Thêm song vào playlist
+            PlaylistDetail playlistDetail = new PlaylistDetail();
+            playlistDetail.IdPlaylist = playlist.Id;
+            playlistDetail.IdSong = idSong;
+            _context.Add(playlistDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToRoute(new
+            {
+                controller = "Home",
+                action = "InfoPlayList",
+                idPlayList = playlist.Id
+            });
+        }
+        public List<Playlist> listPlayPlist(string idUser)
+        {
+            List<Playlist> list = new List<Playlist>();
+            list = _context.Playlist.Where(m => m.IdUser == idUser).ToList();
+            return list;
+        }
+
         [HttpGet]
         public async Task<IActionResult> Search(string txtSearch)
         {
+            var user = _userManager.GetUserAsync(User);
+            if (user.Result != null)
+            {
+                ViewBag.PlayList = listPlayPlist(user.Result.Id);
+            }
+
             txtSearch = RemoveUnicode(txtSearch);
             //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
             ViewBag.listSong = await (from s in _context.Song.Include(m => m.Singer)
@@ -491,6 +537,12 @@ namespace DDMusic.Controllers
         }
         public async Task<IActionResult> AllSong(string txtSearch)
         {
+            var user = _userManager.GetUserAsync(User);
+            if (user.Result != null)
+            {
+                ViewBag.PlayList = listPlayPlist(user.Result.Id);
+            }
+
             //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
             List<SongModel> listSong = await (from s in _context.Song.Include(m => m.Singer)
                                               where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
@@ -511,7 +563,7 @@ namespace DDMusic.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> UploadSong([Bind("Name,IdSinger,URLImg,URLMusic,Lyric")] SongModel model, IFormFile ful, IFormFile fulMusic)
+        public async Task<IActionResult> UploadSong([Bind("Name,IdSinger,URLImg,URLMusic,Lyric,Genre")] SongModel model, IFormFile ful, IFormFile fulMusic)
         {
             if (ModelState.IsValid)
             {
@@ -522,6 +574,7 @@ namespace DDMusic.Controllers
                 model.Accept = false;
                 //Khởi tạo số view cho bài hát mới là 0
                 model.CountView = 0;
+                model.ReleaseDate = DateTime.Now.Date;
                 _context.Add(model);
                 await _context.SaveChangesAsync();
                 if (ful != null)

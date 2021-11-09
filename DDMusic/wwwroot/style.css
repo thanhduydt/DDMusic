@@ -143,6 +143,85 @@ img {
     outline-style: none;
     position:relative;
 }
+.modalAdd .content-delete {
+    padding: 10px;
+    color: white;
+    background-color: #141b70;
+}
+
+.modalAdd .title-delete {
+    font-size: 20px;
+}
+
+.modalAdd .sub-title-delete {
+    font-size: 16px;
+}
+
+.modalAdd .selection-delete {
+    text-align: right;
+}
+
+.modalAdd .btn-selection-delete {
+    border-radius: 25px;
+    color: white;
+    width: 65px;
+    height: 25px;
+    border-style: none;
+    border-color: deepskyblue;
+}
+
+.modalAdd .btn-yes {
+    background-color: #1c1cbf;
+}
+
+.modalAdd .btn-no {
+    background-color: #5252dbc7;
+}
+
+.modalAdd .dialog {
+    top: 25%;
+}
+
+.modalAdd .content {
+    width: 300px;
+    height: 150px;
+    left: 20%;
+    background-color: #141b70;
+}
+
+.modalAdd .title-add {
+    text-align: center;
+    font-size: 20px;
+    color: white;
+}
+
+.modalAdd .add, .name-add {
+    padding-top: 10px;
+}
+
+.modalAdd .txt-addname, .btn-add {
+    width: 266px;
+    border-radius: 25px;
+    height: 40px;
+    padding-left: 16px;
+    margin-left: 16px;
+    border-style: none;
+    border-color: #1c1cbf;
+}
+
+.modalAdd .btn-add {
+    color: honeydew;
+    background-color: #3636ef;
+}
+
+.modalAdd .txt-addname {
+    background-color: gainsboro;
+    outline-color: #719ECE;
+}
+
+.toast-success {
+    background-color: blue;
+}
 .dropdown-menu {
     min-width: 240px;
     background-color: #161642;
@@ -177,17 +256,26 @@ img {
     bottom: 10px;
     display: none;
 }
-
-.dropdown-menu .share:hover .selection-share {
+.dropdown-menu .selection-playlist {
+    position: absolute;
+    right: 225px;
+    bottom: 52px;
+    background: #161642;
+    border: 1px solid #3535856b;
+    border-radius: 5px;
+    width: 172px;
+    display:none;
+}
+.dropdown-menu .share:hover .selection-share, .dropdown-menu .playlist:hover .selection-playlist {
     display: block;
 }
 .dropdown-item {
     color: #f4f6f8e0;
 }
-.dropdown-item:active,.dropdown-item:hover{
-    background-color: #1a1a50;
-    color: #f4f6f8e0;
-}
+    .dropdown-item:active, .dropdown-item:hover, .selection-playlist li:hover, .selection-playlist li:active {
+        background-color: #1a1a50;
+        color: #f4f6f8e0;
+    }
 .ui-state-active, .ui-widget-content .ui-state-active {
     background-color: #ebebf557;
     border:unset;

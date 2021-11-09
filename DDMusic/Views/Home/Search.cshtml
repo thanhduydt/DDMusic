@@ -1,16 +1,33 @@
-﻿<style>
+﻿@using Microsoft.AspNetCore.Identity
+@using DDMusic.Areas.Admin.Models
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
+<style>
     th img {
         width: 70px;
         height: 70px;
         -webkit-border-radius: 10%;
     }
+
     .s {
         min-height: 500px;
-        padding-bottom:20px;
+        padding-bottom: 20px;
     }
+
     .e {
         padding-top: 100px;
         padding-left: 50px;
+    }
+
+    .scroll {
+        max-height: 120px;
+        min-height: 120px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .toast-success {
+        background-color: blue;
     }
 </style>
 <h2 class="e">TÌM KIẾM</h2>
@@ -21,99 +38,161 @@
         <center><h5> Không tìm thấy</h5></center>
     }
     <div id="all">
-    @if (ViewBag.listSong.Count != 0)
-    {
-        <a asp-action="AllSong" asp-route-txtSearch="@ViewBag.txtSearch"><h5>BÀI HÁT <i class="fa fa-angle-right" aria-hidden="true"></i></h5></a>
-        <table class="table">
-            <tbody>
-                @foreach (var item in ViewBag.listSong)
-                {
-                    <tr>
-                        <td class="img">
-                            <img src="~/img/song/@item.URLImg" />
-                        </td>
-                        <td>
-                            <div class="name" onclick="location.href ='/bai-hat/@item.Id'">
-                                <div class="name-song">@item.Name</div>
-                                <div class="name-singer">@item.Singer.Name</div>
-                            </div>
-                        </td>
+        @if (ViewBag.listSong.Count != 0)
+        {
+            <a asp-action="AllSong" asp-route-txtSearch="@ViewBag.txtSearch"><h5>BÀI HÁT <i class="fa fa-angle-right" aria-hidden="true"></i></h5></a>
+            <table class="table">
+                <tbody>
+                    @foreach (var item in ViewBag.listSong)
+                    {
+                        <tr>
+                            <td class="img">
+                                <img src="~/img/song/@item.URLImg" />
+                            </td>
+                            <td>
+                                <div class="name" onclick="location.href ='/bai-hat/@item.Id'">
+                                    <div class="name-song">@item.Name</div>
+                                    <div class="name-singer">@item.Singer.Name</div>
+                                </div>
+                            </td>
 
-                        <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
-                        <td>
-                            @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
-                            <div class="dropdown">
-                                <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" id="dr">
+                            <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
+                            <td>
+                                @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
+                                <div class="dropdown">
+                                    <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" id="dr">
 
-                                    <div class="dropdown-header">
-                                        <div class="song">
-                                            <img src="~/img/song/@item.URLImg" />
-                                            <div class="name-song">@item.Name</div>
+                                        <div class="dropdown-header">
+                                            <div class="song">
+                                                <img src="~/img/song/@item.URLImg" />
+                                                <div class="name-song">@item.Name</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="dropdown-item">
-                                        <div onclick="dowloadMusic('@item.URLMusic')">
-                                            <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                        <div class="dropdown-item">
+                                            <div onclick="dowloadMusic('@item.URLMusic')">
+                                                <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="dropdown-item share">
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                        <div class="dropdown-item playlist">
 
-                                        <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
-                                        <ul class="dropdown selection-share">
-                                            <li>
-                                                <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
-                                                     data-color="blue" data-customize="false"></div>
-                                            </li>
-                                        </ul>
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Thêm vào playlist
+                                            <ul class="dropdown selection-playlist scroll">
+                                                <li style="padding-left:5px" onclick="createPlayList(@item.Id)"><i class="fa fa-plus-circle" aria-hidden="true"> Tạo playlist mới</i></li>
+                                                @if (ViewBag.PlayList != null)
+                                                {
+                                                    @foreach (var i in ViewBag.PlayList)
+                                                    {
+                                                        <li style="padding-left:5px" onclick="addSongToPlayList(@i.Id,@item.Id,'@item.Name')">
+                                                            @i.Name
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                        }
+                                        <div class="dropdown-item share">
+
+                                            <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                            <ul class="dropdown selection-share">
+                                                <li>
+                                                    <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
+                                                         data-color="blue" data-customize="false"></div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    @if (ViewBag.listAlbum.Count != 0)
-    {
-        <div class="row">
-            <div class="col-12">
-                @*<div class="section-heading style-2">*@
-
-                <a asp-action="AllAlbum" asp-route-txtSearch="@ViewBag.txtSearch"><h5>ALBUM <i class="fa fa-angle-right" aria-hidden="true"></i></h5></a>
-              
-                @*</div>*@
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="albums-slideshow owl-carousel">
-                    <!-- Single Album -->
-                    @foreach (var album in ViewBag.listAlbum)
-                    {
-                        <div class="single-album">
-                            <img src="~/img/album/@album.Image" />
-                            <div class="album-info">
-                                <a href="#">
-                                    <h5>@album.Name</h5>
-                                </a>
-                                <p>@album.Singer.Name</p>
-                            </div>
-                        </div>
+                            </td>
+                        </tr>
                     }
+                </tbody>
+            </table>
+        }
+        @if (ViewBag.listAlbum.Count != 0)
+        {
+            <div class="row">
+                <div class="col-12">
+                    @*<div class="section-heading style-2">*@
 
+                    <a asp-action="AllAlbum" asp-route-txtSearch="@ViewBag.txtSearch"><h5>ALBUM <i class="fa fa-angle-right" aria-hidden="true"></i></h5></a>
+
+                    @*</div>*@
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="albums-slideshow owl-carousel">
+                        <!-- Single Album -->
+                        @foreach (var album in ViewBag.listAlbum)
+                        {
+                            <div class="single-album">
+                                <img src="~/img/album/@album.Image" />
+                                <div class="album-info">
+                                    <a href="#">
+                                        <h5>@album.Name</h5>
+                                    </a>
+                                    <p>@album.Singer.Name</p>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal fade modalAdd" id="modalAdd">
+    <div class="modal-dialog dialog">
+        <div class="modal-body">
+            <div class="modal-content content">
+                <div class="title-add">Tạo playlist mới</div>
+                <form asp-controller="Home" asp-action="CreatePlayList">
+                    <div class="name-add">
+                        <input class="txt-addname" id="txtName" name="txtName" type="text" placeholder="Nhập tên playlist" />
+                    </div>
+                    <input id="idSong" name="idSong" hidden />
+                    <div class="add"><button type="submit" class="btn-add">Tạo mới</button></div>
+                </form>
+            </div>
         </div>
-    }
-        </div>
+    </div>
 </div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-<script>
+    <script>
+    function addSongToPlayList(idPlayList,idSong,nameSong) {
+        $.post('@Url.Action("AddSongToPlayList","Home")', { idPlayList: idPlayList, idSong: idSong },
+            function () {
+                toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                Command: toastr["success"]("Đã thêm bài hát " + nameSong + " vào playlist thành công.")
+            });
+    }
+    function createPlayList(idSong) {
+        $("#idSong").val(idSong);
+        $("#modalAdd").modal('show');
+    }
     //function allSong() {
     //    var txtSearch = document.getElementById('txtSearch').value;
     //    $.ajax({
@@ -138,6 +217,6 @@
     //        }
     //    });
     //}
-</script>
+    </script>
 }
 
