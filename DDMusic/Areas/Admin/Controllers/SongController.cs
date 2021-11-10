@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using DDMusic.Areas.Admin.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class SongController : Controller
     {

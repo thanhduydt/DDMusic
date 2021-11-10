@@ -1,5 +1,6 @@
 ﻿using DDMusic.Areas.Admin.Data;
 using DDMusic.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class AlbumController : Controller
     {

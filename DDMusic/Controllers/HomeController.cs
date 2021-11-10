@@ -369,7 +369,8 @@ namespace DDMusic.Controllers
 
             return View(Singer);
         }
-        [Route("thong-tin-tai-khoan")]
+        [Authorize]
+        //[Route("thong-tin-tai-khoan")]
         public IActionResult PersonalPage()
         {
             //Lấy thông tin User đang đăng nhập gán vào Model
@@ -563,11 +564,13 @@ namespace DDMusic.Controllers
                                                 select a).ToListAsync();
             return View(listAlbum);
         }
+        [Authorize]
         public IActionResult UploadSong()
         {
             GetListSingerAndAlbum();
             return View();
         }
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> UploadSong([Bind("Name,IdSinger,URLImg,URLMusic,Lyric,Genre")] SongModel model, IFormFile ful, IFormFile fulMusic)
         {
@@ -739,6 +742,7 @@ namespace DDMusic.Controllers
             }
             return View(playlists);
         }
+        [Authorize]
         [Route("playlistUser/{idPlayList}")]
         public IActionResult PagePlayListDetail(int idPlayList)
         {
@@ -761,6 +765,7 @@ namespace DDMusic.Controllers
                 return RedirectToAction("PlayListUser");
             }
         }
+        [Authorize]
         [Route("infoPlayList/{idPlayList}")]
         public IActionResult InfoPlayList(int idPlayList)
         {
@@ -779,6 +784,7 @@ namespace DDMusic.Controllers
             Response.Cookies.Append("idPlayList", idPlayList.ToString(), option);
             return View(playList);
         }
+        [Authorize]
         [Route("playListUsers/{idSong}")]
         public IActionResult PagePlayListDetail1(int idSong)
         {
@@ -802,6 +808,7 @@ namespace DDMusic.Controllers
             ViewBag.checkPlayList = true;
             return View("SongDetail", listSong[0]);
         }
+        [Authorize]
         public async Task<IActionResult> CreatePlayListUser(string txtName)
         {
             //Get thông tin user
@@ -819,6 +826,7 @@ namespace DDMusic.Controllers
                 idPlayList = model.Id
             });
         }
+        [Authorize]
         public async Task<IActionResult> EditPlayListUser(int idPlayList, string txtName)
         {
             Playlist playList = new Playlist();
@@ -833,6 +841,7 @@ namespace DDMusic.Controllers
                 idPlayList = idPlayList
             });
         }
+        [Authorize]
         public async Task<IActionResult> RemovePlayListUser(int idPlayList)
         {
             var playPlist = _context.Playlist.Find(idPlayList);
@@ -840,6 +849,7 @@ namespace DDMusic.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("PlayListUser");
         }
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddSongFromPlayListUser(List<SongModel> listSuggestedSong, int idSong)
         {

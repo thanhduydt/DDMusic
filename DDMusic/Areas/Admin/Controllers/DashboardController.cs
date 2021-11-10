@@ -1,5 +1,6 @@
 ﻿using DDMusic.Areas.Admin.API.Model;
 using DDMusic.Areas.Admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class DashboardController : Controller
     {
