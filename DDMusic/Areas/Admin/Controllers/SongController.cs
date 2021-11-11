@@ -71,7 +71,7 @@ namespace DDMusic.Areas.Admin.Controllers
                 //Admin tạo bài hát thì luôn được cho phép hiển thị lên frontend
                 song.Accept = true;
                 song.CountLike = 0;
-                if(song.IdAlbum == 0)
+                if (song.IdAlbum == 0)
                 {
                     song.IdAlbum = null;
                 }
@@ -125,7 +125,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView,CountLike,IdAlbum")] SongModel song, IFormFile ful)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView,CountLike,IdAlbum")] SongModel song, IFormFile ful, IFormFile fulMusic)
         {
             if (id != song.Id)
             {
@@ -136,7 +136,7 @@ namespace DDMusic.Areas.Admin.Controllers
                 try
                 {
                     song.NameUnsigned = RemoveUnicode(song.Name);
-                    if(song.IdAlbum == 0)
+                    if (song.IdAlbum == 0)
                     {
                         song.IdAlbum = null;
                     }
@@ -154,14 +154,30 @@ namespace DDMusic.Areas.Admin.Controllers
                             await ful.CopyToAsync(stream);
                         }
                         song.URLImg = t;
-                        _context.Update(song);
-                        await _context.SaveChangesAsync();
                     }
-                    else
+                    if (fulMusic != null)
                     {
-                        _context.Update(song);
-                        await _context.SaveChangesAsync();
+                        //Bỏ dấu
+                        string NameMusic = RemoveUnicode(song.Name);
+                        //Bỏ khoảng cách
+                        NameMusic = NameMusic.Replace(" ", String.Empty);
+                        string t = NameMusic + "." + fulMusic.FileName.Split(".")[fulMusic.FileName.Split(".").Length - 1];
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/audio", song.URLMusic);
+                        if (System.IO.File.Exists(path))
+                        {
+                            System.IO.File.Delete(path);
+                        }
+                        path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/audio", t);
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await fulMusic.CopyToAsync(stream);
+                        }
+                        song.URLMusic = t;
                     }
+
+                    _context.Update(song);
+                    await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {

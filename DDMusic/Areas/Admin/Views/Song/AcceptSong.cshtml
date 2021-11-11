@@ -46,7 +46,7 @@
                                         <th>Ngày phát hành</th>
                                         <th class="c">Hình ảnh</th>
                                         <th>Thể Loại</th>
-                                        <th class="c">Thao tác</th>
+                                        <th class="c">Thao tác</th>                                    
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,7 +58,8 @@
                                             <td>@String.Format("{0:dd/MM/yyyy}", item.ReleaseDate)</td>
                                             <td><img src="~/img/song/@item.URLImg" /></td>
                                             <td>@item.Genre</td>
-                                            <td><a class="btn btn-info btn-xs" asp-controller="Song" asp-action="Accept" asp-route-id="@item.Id">Duyệt <i class="fas fa-check"></i></a></td>
+                                            <td><a class="btn btn-info btn-xs" asp-controller="Song" asp-action="Accept" asp-route-id="@item.Id">Duyệt <i class="fas fa-check"></i></a>
+                                                <a class="btn btn-danger btn-xs" asp-controller="Song" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i class="fas fa-trash-alt"></i></a></td>
                                         </tr>
                                     }
                                 </tbody>
