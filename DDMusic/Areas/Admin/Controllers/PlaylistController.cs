@@ -141,8 +141,8 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 SongModel songModel = new SongModel();
                 songModel = _context.Song.Find(item.IdSong);
-                var singer = _context.Singer.Find(songModel.IdSinger);
-                songModel.Singer = singer;
+                //var singer = _context.Singer.Find(songModel.IdSinger);
+                //songModel.Singer = singer;
                 SongFromPlaylist.Add(songModel);
             }
 
@@ -171,8 +171,8 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 SongModel songModel = new SongModel();
                 songModel = _context.Song.Find(item.IdSong);
-                var singer = _context.Singer.Find(songModel.IdSinger);
-                songModel.Singer = singer;
+                //var singer = _context.Singer.Find(songModel.IdSinger);
+                //songModel.Singer = singer;
                 SongFromPlaylist.Add(songModel);
             }
             return RedirectToAction("DetailPlaylist", "Playlist", new { area = "Admin", id = IdPlaylist });
@@ -207,8 +207,8 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 SongModel songModel = new SongModel();
                 songModel = _context.Song.Find(item.IdSong);
-                var singer = _context.Singer.Find(songModel.IdSinger);
-                songModel.Singer = singer;
+                //var singer = _context.Singer.Find(songModel.IdSinger);
+                //songModel.Singer = singer;
                 SongFromPlaylist.Add(songModel);
             }
             return PartialView("_GetSongFromPlaylist", SongFromPlaylist);

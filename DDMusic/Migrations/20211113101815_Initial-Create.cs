@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class IntitalCreate : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -120,6 +120,32 @@ namespace DDMusic.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ViewSongOfDay", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ViewSongOfMonth",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViewSongOfMonth", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ViewSongOfWeek",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViewSongOfWeek", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -279,8 +305,9 @@ namespace DDMusic.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NameUnsigned = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameUnsignedSinger = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameSinger = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Genre = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IdSinger = table.Column<int>(type: "int", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdAlbum = table.Column<int>(type: "int", nullable: true),
                     IdUser = table.Column<string>(type: "nvarchar(450)", nullable: true),
@@ -298,12 +325,6 @@ namespace DDMusic.Migrations
                         name: "FK_Song_Album_IdAlbum",
                         column: x => x.IdAlbum,
                         principalTable: "Album",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Song_Singer_IdSinger",
-                        column: x => x.IdSinger,
-                        principalTable: "Singer",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -396,6 +417,32 @@ namespace DDMusic.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SingerOfSong",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdSinger = table.Column<int>(type: "int", nullable: false),
+                    IdSong = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SingerOfSong", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SingerOfSong_Singer_IdSinger",
+                        column: x => x.IdSinger,
+                        principalTable: "Singer",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SingerOfSong_Song_IdSong",
+                        column: x => x.IdSong,
+                        principalTable: "Song",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TopSongOnMonthDetail",
                 columns: table => new
                 {
@@ -455,7 +502,7 @@ namespace DDMusic.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdSong = table.Column<int>(type: "int", nullable: true),
+                    IdSong = table.Column<int>(type: "int", nullable: false),
                     IdViewSongOfDay = table.Column<int>(type: "int", nullable: false),
                     CountView = table.Column<int>(type: "int", nullable: false)
                 },
@@ -467,11 +514,65 @@ namespace DDMusic.Migrations
                         column: x => x.IdSong,
                         principalTable: "Song",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ViewSongOfDayDetail_ViewSongOfDay_IdViewSongOfDay",
                         column: x => x.IdViewSongOfDay,
                         principalTable: "ViewSongOfDay",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ViewSongOfMonthDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdSong = table.Column<int>(type: "int", nullable: false),
+                    IdViewSongOfMonth = table.Column<int>(type: "int", nullable: false),
+                    CountView = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViewSongOfMonthDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ViewSongOfMonthDetail_Song_IdSong",
+                        column: x => x.IdSong,
+                        principalTable: "Song",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ViewSongOfMonthDetail_ViewSongOfMonth_IdViewSongOfMonth",
+                        column: x => x.IdViewSongOfMonth,
+                        principalTable: "ViewSongOfMonth",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ViewSongOfWeekDetail",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdSong = table.Column<int>(type: "int", nullable: false),
+                    IdViewSongOfWeek = table.Column<int>(type: "int", nullable: false),
+                    CountView = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ViewSongOfWeekDetail", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ViewSongOfWeekDetail_Song_IdSong",
+                        column: x => x.IdSong,
+                        principalTable: "Song",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ViewSongOfWeekDetail_ViewSongOfWeek_IdViewSongOfWeek",
+                        column: x => x.IdViewSongOfWeek,
+                        principalTable: "ViewSongOfWeek",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -529,14 +630,19 @@ namespace DDMusic.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SingerOfSong_IdSinger",
+                table: "SingerOfSong",
+                column: "IdSinger");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SingerOfSong_IdSong",
+                table: "SingerOfSong",
+                column: "IdSong");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Song_IdAlbum",
                 table: "Song",
                 column: "IdAlbum");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Song_IdSinger",
-                table: "Song",
-                column: "IdSinger");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Song_IdUser",
@@ -599,6 +705,26 @@ namespace DDMusic.Migrations
                 name: "IX_ViewSongOfDayDetail_IdViewSongOfDay",
                 table: "ViewSongOfDayDetail",
                 column: "IdViewSongOfDay");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViewSongOfMonthDetail_IdSong",
+                table: "ViewSongOfMonthDetail",
+                column: "IdSong");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViewSongOfMonthDetail_IdViewSongOfMonth",
+                table: "ViewSongOfMonthDetail",
+                column: "IdViewSongOfMonth");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViewSongOfWeekDetail_IdSong",
+                table: "ViewSongOfWeekDetail",
+                column: "IdSong");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ViewSongOfWeekDetail_IdViewSongOfWeek",
+                table: "ViewSongOfWeekDetail",
+                column: "IdViewSongOfWeek");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -617,6 +743,9 @@ namespace DDMusic.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "SingerOfSong");
 
             migrationBuilder.DropTable(
                 name: "TopSongOnMonthDetail");
@@ -640,6 +769,12 @@ namespace DDMusic.Migrations
                 name: "ViewSongOfDayDetail");
 
             migrationBuilder.DropTable(
+                name: "ViewSongOfMonthDetail");
+
+            migrationBuilder.DropTable(
+                name: "ViewSongOfWeekDetail");
+
+            migrationBuilder.DropTable(
                 name: "Playlist");
 
             migrationBuilder.DropTable(
@@ -652,10 +787,16 @@ namespace DDMusic.Migrations
                 name: "Roles");
 
             migrationBuilder.DropTable(
+                name: "ViewSongOfDay");
+
+            migrationBuilder.DropTable(
+                name: "ViewSongOfMonth");
+
+            migrationBuilder.DropTable(
                 name: "Song");
 
             migrationBuilder.DropTable(
-                name: "ViewSongOfDay");
+                name: "ViewSongOfWeek");
 
             migrationBuilder.DropTable(
                 name: "Album");

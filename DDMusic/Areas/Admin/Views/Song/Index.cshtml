@@ -47,20 +47,24 @@
                                         <th class="c">Hình ảnh</th>
                                         <th>Thể Loại</th>
                                         <th class="c">Thao tác</th>
+                                        <th class="c">Chi Tiết</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                        <tr>
-                                            <td>@item.Name</td>
-                                            <td>@item.Singer.Name</td>
-                                            <td>@String.Format("{0:dd/MM/yyyy}", item.ReleaseDate)</td>
-                                            <td><img src="~/img/song/@item.URLImg" /></td>
-                                            <td>@item.Genre</td>
-                                            <td><a class="btn btn-info btn-xs" asp-action="EditSong" asp-controller="Song" asp-route-id="@item.Id">Cập nhật <i class="nav-icon fas fa-edit"></i></a>
-                                            <a class="btn btn-danger btn-xs" asp-controller="Song" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i class="fas fa-trash-alt"></i></a></td>
-                                        </tr>
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.NameSinger</td>
+                                        <td>@String.Format("{0:dd/MM/yyyy}", item.ReleaseDate)</td>
+                                        <td><img src="~/img/song/@item.URLImg" /></td>
+                                        <td>@item.Genre</td>
+                                        <td>
+                                            <a class="btn btn-info btn-xs" asp-action="EditSong" asp-controller="Song" asp-route-id="@item.Id">Cập nhật <i class="nav-icon fas fa-edit"></i></a>
+                                            <a class="btn btn-danger btn-xs" asp-controller="Song" asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có muốn xóa không?');">Xóa <i class="fas fa-trash-alt"></i></a>
+                                        </td>
+                                        <td><a class="btn btn-success btn-xs" asp-action="SingerOfSong" asp-controller="Song" asp-route-id="@item.Id">Chi Tiết <i class="nav-icon fas fa-info-circle"></i></a></td>
+                                    </tr>
                                     }
                                 </tbody>
 

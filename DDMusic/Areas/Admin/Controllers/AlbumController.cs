@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class AlbumController : Controller
     {
@@ -45,6 +45,20 @@ namespace DDMusic.Areas.Admin.Controllers
             ViewBag.IdAlbum = id;
             return View();
         }
+        public async Task<IActionResult> AddSong(int idAlbum, List<int> idSong)
+        {
+            foreach(var item in idSong)
+            {
+                var song = await _context.Song.FindAsync(item);
+                if(song != null)
+                {
+                    song.IdAlbum = idAlbum;
+                    _context.Update(song);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("DetailAlbum", "Album", new { area = "Admin", id = idAlbum });
+        }
         [HttpGet]
         public async Task<IActionResult> GetSongFromAlbum(int id)
         {
@@ -54,11 +68,32 @@ namespace DDMusic.Areas.Admin.Controllers
             foreach(var item in SongOfAlbum)
             {
                 SongModel songModel = new SongModel();
-                var singer = _context.Singer.Find(item.IdSinger);
+                //var singer = _context.Singer.Find(item.IdSinger);
                 songModel = item;
-                songModel.Singer = singer;
+                //songModel.Singer = singer;
                 SongFromAlbum.Add(songModel);
             }
+            var album = await _context.Album.FindAsync(id);
+
+            var ListSong = _context.SingerOfSong.Include(m => m.Song).Where(m => m.IdSinger == album.IdSinger).ToList();
+            List<SongModel> songOfAlbums = new List<SongModel>();
+            foreach(var item in ListSong)
+            {
+                songOfAlbums.Add(item.Song);
+            }
+            ViewBag.IdAlbum = id;
+            ViewData["Song"] = new SelectList(songOfAlbums, "Id", "Name");
+            //List<SelectListItem> List = new List<SelectListItem>();
+            //foreach(var item in ListSong)
+            //{
+            //    var songOfAlbum = await _context.Song.FindAsync(item.IdSong);
+            //    if (songOfAlbum != null)
+            //    {
+            //        var item;
+            //        item.Value = songOfAlbum.Id.ToString();
+            //        item.Text = songOfAlbum.Name;
+            //    }
+            //}
             return PartialView("_GetSongFromAlbum", SongFromAlbum);
         }
         [HttpPost]
@@ -77,11 +112,23 @@ namespace DDMusic.Areas.Admin.Controllers
             foreach (var item in SongOfAlbum)
             {
                 SongModel songModel = new SongModel();
-                var singer = _context.Singer.Find(item.IdSinger);
+                //var singer = _context.Singer.Find(item.IdSinger);
                 songModel = item;
-                songModel.Singer = singer;
+                //songModel.Singer = singer;
                 SongFromAlbum.Add(songModel);
             }
+
+
+            var album = await _context.Album.FindAsync(IdAlbum);
+            var ListSong = _context.SingerOfSong.Include(m => m.Song).Where(m => m.IdSinger == album.IdSinger).ToList();
+            List<SongModel> songOfAlbums = new List<SongModel>();
+            foreach (var item in ListSong)
+            {
+                songOfAlbums.Add(item.Song);
+            }
+            ViewBag.IdAlbum = IdAlbum;
+            ViewData["Song"] = new SelectList(songOfAlbums, "Id", "Name");
+
             return PartialView("_GetSongFromAlbum", SongFromAlbum);
             //var AllSong = await _context.Song.ToListAsync();
             //var SongOfAlbum = AllSong.Where(m => m.IdAlbum == IdAlbum);
@@ -177,6 +224,7 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             return View(album);
         }
+       
         public async Task<IActionResult> Delete(int id)
         {
             var AlbumModel = await _context.Album.FindAsync(id);

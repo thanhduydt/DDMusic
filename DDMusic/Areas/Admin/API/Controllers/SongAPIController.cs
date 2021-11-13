@@ -25,7 +25,8 @@ namespace DDMusic.Areas.Admin.API.Controllers
         {
             try
             {
-                List<SongModel> Songs = _context.Song.Include(s => s.Singer).OrderByDescending(m => m.CountView).Take(10).ToList();
+                //List<SongModel> Songs = _context.Song.Include(s => s.Singer).OrderByDescending(m => m.CountView).Take(10).ToList();
+                List<SongModel> Songs = _context.Song.OrderByDescending(m => m.CountView).Take(10).ToList();
                 return Songs == null ? new List<SongModel>() : Songs;
             }
             catch

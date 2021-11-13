@@ -37,6 +37,11 @@ namespace DDMusic.Areas.Admin.Data
         public DbSet<ReactSong> ReactSong { get; set; }
         public DbSet<ViewSongOfDay> ViewSongOfDay { get; set; }
         public DbSet<ViewSongOfDayDetail> ViewSongOfDayDetail { get; set; }
+        public DbSet<ViewSongOfWeek> ViewSongOfWeek { get; set; }
+        public DbSet<ViewSongOfWeekDetail> ViewSongOfWeekDetail { get; set; }
+        public DbSet<ViewSongOfMonth> ViewSongOfMonth { get; set; }
+        public DbSet<ViewSongOfMonthDetail> ViewSongOfMonthDetail { get; set; }
         public DbSet<CountNewAccountModel>CountNewAccount { get; set; }
+        public DbSet<SingerOfSong> SingerOfSong { get; set; }
     }
 }

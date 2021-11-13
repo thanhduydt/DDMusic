@@ -1,0 +1,71 @@
+﻿<style>
+    img {
+        width: 100%
+    }
+
+    a {
+        color: #000;
+    }
+</style>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Bài hát: @ViewBag.NameSong</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Song</a></li>
+                        <li class="breadcrumb-item active">Detail</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <input id="id-song" value="@ViewBag.IdSong" />
+    <div id="SingerOfSong"></div>
+
+</div>
+<script>
+    window.onload = function () {
+        var idSong = $("#id-song").val();
+        $.ajax({
+            type: 'get',
+            url: '/Admin/Song/GetSingerOfSong',
+            dataType: 'html',
+            data: {
+                "id": idSong
+            },
+            success: function (data) {
+                //     alert(data);
+                $("#SingerOfSong").html(data);
+            }
+
+        });
+    }
+    function RemoveSinger(e) {
+        if (confirm("Bạn muốn xóa ca sĩ ?") == true) {
+            var idSong = $("#idSong").val();
+            $.ajax({
+                type: 'post',
+                url: '/Admin/Song/RemoveSinger',
+                dataType: 'html',
+                data: {
+                    "idSinger": e,
+                    "idSong": idSong
+                },
+                success: function (data) {
+                    //     alert(data);
+                    $("#SingerOfSong").html(data);
+                }
+
+            });
+        }
+
+    }
+
+
+</script>

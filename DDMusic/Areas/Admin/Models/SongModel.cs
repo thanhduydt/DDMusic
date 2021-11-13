@@ -11,8 +11,10 @@ namespace DDMusic.Areas.Admin.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string NameUnsigned { get; set; }
+        public string NameUnsignedSinger { get; set; }
+        public string NameSinger { get; set; }
         public string Genre { get; set; }
-        public int? IdSinger { get; set; }
+        //public int? IdSinger { get; set; }
         public DateTime ReleaseDate { get; set; }
         public int? IdAlbum { get; set; }
         public string IdUser { get; set; }
@@ -22,8 +24,8 @@ namespace DDMusic.Areas.Admin.Models
         public int CountView { get; set; }
         public int CountLike { get; set; }
         public bool Accept { get; set; }
-        [ForeignKey("IdSinger")]
-        public virtual SingerModel Singer { get; set; }
+        //[ForeignKey("IdSinger")]
+        //public virtual SingerModel Singer { get; set; }
         [ForeignKey("IdUser")]
         public virtual UserModel User { get; set; }
         [ForeignKey("IdAlbum")]

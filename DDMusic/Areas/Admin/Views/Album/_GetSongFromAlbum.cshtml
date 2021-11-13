@@ -4,9 +4,53 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-
+                        
                         <!-- /.card-header -->
                         <div class="card-body">
+                            <a class="btn btn-success btn-xs" data-toggle="modal" data-target="#exampleModal">
+                                Thêm <span class="av-icon fas fa-plus"></span>
+                            </a>  <br /><br />
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Thêm bài hát vào album</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form asp-area="Admin" asp-controller="Album" asp-action="AddSong" enctype="multipart/form-data">
+                                            <div class="modal-body">
+
+                                                <label>Những bài hát thuộc playlist</label>
+                                                <br />
+                                                <select class="form-control select2" multiple="multiple" name="idSong" asp-items="ViewBag.Song" id="Song">
+                                                </select>
+                                                <input name="idAlbum" id="idAlbum" value="@ViewBag.IdAlbum" hidden />
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                <button type="submit" class="btn btn-primary">Lưu</button>
+                                            </div>
+                                        </form>
+                                        <script src="~/Admin/plugins/select2/js/select2.full.min.js"></script>
+                                        <script>
+                                            $(function () {
+                                                $('.select2').select2()
+
+                                                //Initialize Select2 Elements
+                                                $('.select2bs4').select2({
+                                                    theme: 'bootstrap4'
+                                                })
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
@@ -22,7 +66,7 @@
                                     {
                                         <tr>
                                             <td>@item.Name</td>
-                                            <td>@item.Singer.Name</td>
+                                            <td>@item.NameSinger</td>
                                             <td><img src="~/img/song/@item.URLImg" /></td>
                                             <td>@item.Genre</td>
                                             <td><button class="btn btn-danger btn-xs" onclick="RemoveSongFromAlbum(@item.Id)">Xóa <i class="fas fa-trash-alt"></i></button></td>

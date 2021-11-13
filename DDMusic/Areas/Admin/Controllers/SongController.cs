@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class SongController : Controller
     {
@@ -26,21 +26,22 @@ namespace DDMusic.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var Song = _context.Song.Include(s => s.Singer);
-            var AllSong = Song.Where(m => m.Accept == true);
+            var AllSong = _context.Song.Where(m => m.Accept == true);
             return View(AllSong);
         }
-        [HttpGet]
-        public JsonResult GetAlbumOfSinger(int idSinger)
-        {
-            //List<SingerModel> List = new List<SingerModel>();
-            var List = _context.Album.Where(m => m.IdSinger == idSinger).Select(a => new SelectListItem()
-            {
-                Value = a.Id.ToString(),
-                Text = a.Name
-            }).ToList();
-            return Json(List);
-        }
+        //[HttpGet]
+        //public JsonResult GetAlbumOfSinger(List<int> idSinger)
+        //{
+        //    var List = new SelectListItem();
+            
+        //    //List<SingerModel> List = new List<SingerModel>();
+        //    //var List = _context.Album.Where(m => m.IdSinger == idSinger).Select(a => new SelectListItem()
+        //    //{
+        //    //    Value = a.Id.ToString(),
+        //    //    Text = a.Name
+        //    //}).ToList();
+        //    return Json(List);
+        //}
         public IActionResult CreateSong()
         {
             ViewData["ListGenre"] = new SelectList(SongModel.GetAllGerne());
@@ -49,7 +50,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         public async Task<IActionResult> AcceptSong()
         {
-            var Song = _context.Song.Include(s => s.Singer);
+            var Song = _context.Song;
             var AllSong = await Song.ToListAsync();
             var SongNotAccept = AllSong.Where(m => m.Accept == false);
             return View(SongNotAccept);
@@ -64,7 +65,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,IdAlbum")] SongModel song, IFormFile ful, IFormFile fulMusic)
+        public async Task<IActionResult> Create([Bind("Name,ReleaseDate,URLImg,URLMusic,Genre,Lyric,IdAlbum")] SongModel song, IFormFile ful, IFormFile fulMusic, List<int> IdSinger)
         {
             if (ModelState.IsValid)
             {
@@ -77,9 +78,28 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 //Khởi tạo số view cho bài hát mới là 0
                 song.CountView = 0;
-                song.NameUnsigned = RemoveUnicode(song.Name);
+                song.NameUnsigned = RemoveUnicode(song.Name);              
                 _context.Add(song);
                 await _context.SaveChangesAsync();
+                if (IdSinger != null)
+                {
+                    foreach (var item in IdSinger)
+                    {
+                        var singer = await _context.Singer.FindAsync(item);
+                        if (item != IdSinger.LastOrDefault())
+                        {
+                            song.NameSinger += singer.Name + ", ";
+                        }
+                        else
+                        {
+                            song.NameSinger += singer.Name;
+                        }
+                    }
+                }
+                song.NameUnsignedSinger = RemoveUnicode(song.NameSinger.Trim());
+                _context.Update(song);
+                await _context.SaveChangesAsync();
+
                 if (ful != null)
                 {
                     var path = Path.Combine(
@@ -109,6 +129,20 @@ namespace DDMusic.Areas.Admin.Controllers
                     _context.Update(song);
                     await _context.SaveChangesAsync();
                 }
+
+
+                if(IdSinger != null)
+                {
+                    foreach(var item in IdSinger)
+                    {
+                        SingerOfSong singerOfSong = new SingerOfSong();
+                        singerOfSong.IdSinger = item;
+                        singerOfSong.IdSong = song.Id;
+                        _context.Add(singerOfSong);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdSinger"] = new SelectList(_context.Singer, "Id", "Name");
@@ -125,7 +159,7 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IdSinger,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView,CountLike,IdAlbum")] SongModel song, IFormFile ful, IFormFile fulMusic)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ReleaseDate,URLImg,URLMusic,Genre,Lyric,Accept,CountView,CountLike,IdAlbum")] SongModel song, IFormFile ful, IFormFile fulMusic)
         {
             if (id != song.Id)
             {
@@ -135,6 +169,7 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 try
                 {
+
                     song.NameUnsigned = RemoveUnicode(song.Name);
                     if (song.IdAlbum == 0)
                     {
@@ -194,6 +229,90 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             return View(song);
         }
+        public async Task<IActionResult> SingerOfSong(int id)
+        {
+            var song = await _context.Song.FindAsync(id);
+            ViewBag.NameSong = song.Name;
+            ViewBag.IdSong = id;
+            return View("Detail");
+        }
+        public async Task<IActionResult> GetSingerOfSong(int id)
+        {
+            ViewData["Singers"] = new SelectList(_context.Singer, "Id", "Name"); 
+            ViewBag.IdSong = id;
+            return PartialView("_SingerOfSong", _context.SingerOfSong.Include(m => m.Singer).Where(m => m.IdSong == id));
+           // return View( );
+        }
+
+        public async Task<IActionResult> AddSinger(List<int> idSingers, int idSong)
+        {
+            foreach(var item in idSingers)
+            {
+                var singerOfSong = await _context.SingerOfSong.FindAsync(item);
+                if(singerOfSong == null)
+                {
+                    singerOfSong = new SingerOfSong();
+                    singerOfSong.IdSong = idSong;
+                    singerOfSong.IdSinger = item;
+                    _context.Add(singerOfSong);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            var song = _context.Song.Find(idSong);
+            var ListSinger = _context.SingerOfSong.Include(m => m.Singer).Where(m => m.IdSong == idSong).ToList();
+            if (song != null)
+            {
+                song.NameSinger = String.Empty;
+                foreach (var item in ListSinger)
+                {
+                    if (item != ListSinger.LastOrDefault())
+                    {
+                        song.NameSinger += item.Singer.Name + ", ";
+                    }
+                    else
+                    {
+                        song.NameSinger += item.Singer.Name;
+                    }
+                }
+                song.NameUnsignedSinger = RemoveUnicode(song.NameSinger.Trim());
+                _context.Update(song);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("SingerOfSong", "Song", new { area = "Admin", id = idSong });
+        }
+        public async Task<IActionResult> RemoveSinger(int idSinger, int idSong)
+        {
+            var singerOfSong = _context.SingerOfSong.Where(m => m.IdSinger==idSinger && m.IdSong == idSong).FirstOrDefault();
+            if(singerOfSong != null)
+            {
+                _context.Remove(singerOfSong);
+                await _context.SaveChangesAsync();
+            }
+            var song = _context.Song.Find(idSong);
+            var ListSinger = _context.SingerOfSong.Include(m =>m.Singer).Where(m => m.IdSong == idSong).ToList();
+            if(song != null)
+            {
+                song.NameSinger = String.Empty;
+                foreach(var item in ListSinger)
+                {
+                    if(item != ListSinger.LastOrDefault())
+                    {
+                        song.NameSinger += item.Singer.Name + ", ";
+                    }
+                    else
+                    {
+                        song.NameSinger += item.Singer.Name;
+                    }
+                }
+                song.NameUnsignedSinger = RemoveUnicode(song.NameSinger.Trim());
+                _context.Update(song);
+                await _context.SaveChangesAsync();
+            }
+            ViewBag.IdSong = idSong;
+            ViewData["Singers"] = new SelectList(_context.Singer, "Id", "Name");
+            return PartialView("_SingerOfSong", _context.SingerOfSong.Include(m => m.Singer).Where(m => m.IdSong == idSong));
+        }
+
         public async Task<IActionResult> Delete(int id)
         {
             var SongModel = await _context.Song.FindAsync(id);

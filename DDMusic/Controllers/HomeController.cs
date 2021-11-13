@@ -42,7 +42,7 @@ namespace DDMusic.Controllers
         public IActionResult Index()
         {
             //12 Bài hát mới nhất
-            var NewSong = _context.Song.Include(m => m.Singer).Take(12).OrderByDescending(m => m.Id).Where(m => m.Accept == true).ToList();
+            var NewSong = _context.Song.Take(12).OrderByDescending(m => m.Id).Where(m => m.Accept == true).ToList();
             ViewBag.NewSong = NewSong;
             //12 Album mới nhất
             var Albums = _context.Album.Include(m => m.Singer).OrderByDescending(m => m.Id).ToList();
@@ -64,7 +64,7 @@ namespace DDMusic.Controllers
             }
             ViewBag.NewAlbum = NewAlbum;
             //12 Playlist mới nhất
-            var Playlists = _context.Playlist.Where(m=>m.IdUser == null).OrderByDescending(m => m.Id).ToList();
+            var Playlists = _context.Playlist.Where(m => m.IdUser == null).OrderByDescending(m => m.Id).ToList();
             List<Playlist> NewPlaylist = new List<Playlist>();
             point = 0;
             foreach (var item in Playlists)
@@ -104,7 +104,7 @@ namespace DDMusic.Controllers
                     Genre = "Ballad";
                     break;
             }
-            var SingerOfSong = _context.Song.Include(s => s.Singer);
+            var SingerOfSong = _context.Song;
             var AllSong = await SingerOfSong.ToListAsync();
             var Song = AllSong.Where(m => m.Genre == Genre && m.Accept == true).OrderByDescending(m => m.Id);
             var NewSong = Song.Take(12);
@@ -124,51 +124,57 @@ namespace DDMusic.Controllers
         [Route("bang-xep-hang")]
         public async Task<IActionResult> TopSongAsync()
         {
-            var AllTopSongOnWeek = await _context.TopSongOnWeek.ToListAsync();
-            var TopSongOnWeek = AllTopSongOnWeek.OrderByDescending(m => m.TimeRestart).First();
-            var AllTopSongOnWeekDetail = await _context.TopSongOnWeekDetail.ToListAsync();
-            var TopSongOnWeekDetail = AllTopSongOnWeekDetail.Where(m => m.IdTopSongOnWeek == TopSongOnWeek.Id);
-            //Gán song cho vào TopSongOnWeekDetail
-            List<TopSongOnWeekDetail> topSongOnWeekDetails = new List<TopSongOnWeekDetail>();
-            foreach (var item in TopSongOnWeekDetail)
-            {
-                TopSongOnWeekDetail TopOnWeek = new TopSongOnWeekDetail();
-                TopOnWeek = item;
-                var song = await _context.Song.FindAsync(TopOnWeek.IdSong);
-                var singer = await _context.Singer.FindAsync(song.IdSinger);
-                song.Singer = singer;
-                TopOnWeek.Song = song;
-                topSongOnWeekDetails.Add(TopOnWeek);
-            }
-            ViewBag.TopSongOnWeek = topSongOnWeekDetails;
+            #region Logic cũ
+            //var AllTopSongOnWeek = await _context.TopSongOnWeek.ToListAsync();
+            //var TopSongOnWeek = AllTopSongOnWeek.OrderByDescending(m => m.TimeRestart).First();
+            //var AllTopSongOnWeekDetail = await _context.TopSongOnWeekDetail.ToListAsync();
+            //var TopSongOnWeekDetail = AllTopSongOnWeekDetail.Where(m => m.IdTopSongOnWeek == TopSongOnWeek.Id);
+            ////Gán song cho vào TopSongOnWeekDetail
+            //List<TopSongOnWeekDetail> topSongOnWeekDetails = new List<TopSongOnWeekDetail>();
+            //foreach (var item in TopSongOnWeekDetail)
+            //{
+            //    TopSongOnWeekDetail TopOnWeek = new TopSongOnWeekDetail();
+            //    TopOnWeek = item;
+            //    var song = await _context.Song.FindAsync(TopOnWeek.IdSong);
+            //    var singer = await _context.Singer.FindAsync(song.IdSinger);
+            //    song.Singer = singer;
+            //    TopOnWeek.Song = song;
+            //    topSongOnWeekDetails.Add(TopOnWeek);
+            //}
+            //ViewBag.TopSongOnWeek = topSongOnWeekDetails;
 
-            var AllTopSongOnMonth = await _context.TopSongOnMonth.ToListAsync();
-            var TopSongOnMonth = AllTopSongOnMonth.OrderByDescending(m => m.TimeRestart).First();
-            var AllTopSongOnMonthDetail = await _context.TopSongOnMonthDetail.ToListAsync();
-            var TopSongOnMonthDetail = AllTopSongOnMonthDetail.Where(m => m.IdTopSongOnMonth == TopSongOnMonth.Id);
-            //Gán song cho vào TopSongOnWeekDetail
-            List<TopSongOnMonthDetail> topSongOnMonthDetails = new List<TopSongOnMonthDetail>();
-            foreach (var item in TopSongOnMonthDetail)
-            {
-                TopSongOnMonthDetail TopOnMonth = new TopSongOnMonthDetail();
-                TopOnMonth = item;
-                var song = await _context.Song.FindAsync(TopOnMonth.IdSong);
-                var singer = await _context.Singer.FindAsync(song.IdSinger);
-                song.Singer = singer;
-                TopOnMonth.Song = song;
-                topSongOnMonthDetails.Add(TopOnMonth);
-            }
-            ViewBag.TopSongOnMonth = topSongOnMonthDetails;
+            //var AllTopSongOnMonth = await _context.TopSongOnMonth.ToListAsync();
+            //var TopSongOnMonth = AllTopSongOnMonth.OrderByDescending(m => m.TimeRestart).First();
+            //var AllTopSongOnMonthDetail = await _context.TopSongOnMonthDetail.ToListAsync();
+            //var TopSongOnMonthDetail = AllTopSongOnMonthDetail.Where(m => m.IdTopSongOnMonth == TopSongOnMonth.Id);
+            ////Gán song cho vào TopSongOnWeekDetail
+            //List<TopSongOnMonthDetail> topSongOnMonthDetails = new List<TopSongOnMonthDetail>();
+            //foreach (var item in TopSongOnMonthDetail)
+            //{
+            //    TopSongOnMonthDetail TopOnMonth = new TopSongOnMonthDetail();
+            //    TopOnMonth = item;
+            //    var song = await _context.Song.FindAsync(TopOnMonth.IdSong);
+            //    var singer = await _context.Singer.FindAsync(song.IdSinger);
+            //    song.Singer = singer;
+            //    TopOnMonth.Song = song;
+            //    topSongOnMonthDetails.Add(TopOnMonth);
+            //}
+            //ViewBag.TopSongOnMonth = topSongOnMonthDetails;
+            #endregion
+
+            ViewBag.TopSongOnWeek = await GetTopSongOnWeek();
+            ViewBag.TopSongOnMonth = await GetTopSongOnMonth();
+
             return View();
         }
         [Route("bai-hat/{id}")]
         public async Task<IActionResult> SongDetail(int id)
         {
             var song = await _context.Song.FindAsync(id);
-            var singer = await _context.Singer.FindAsync(song.IdSinger);
+            //var singer = await _context.Singer.FindAsync(song.IdSinger);
             var user = await _context.User.FindAsync(song.IdUser);
             song.User = user;
-            song.Singer = singer;
+            //song.Singer = singer;
             var AllSong = await _context.Song.ToListAsync();
             var AllSongOfGenre = AllSong.Where(m => m.Id != song.Id && m.Genre == song.Genre);
             var random = new Random();
@@ -179,7 +185,7 @@ namespace DDMusic.Controllers
             {
                 SongModel relatedSong = new SongModel();
                 relatedSong = item;
-                SingerModel singer1 = await _context.Singer.FindAsync(relatedSong.IdSinger);
+                //SingerModel singer1 = await _context.Singer.FindAsync(relatedSong.IdSinger);
                 RelatedSongs.Add(relatedSong);
             }
             ViewBag.listSong = JsonConvert.SerializeObject(RelatedSongs);
@@ -301,15 +307,19 @@ namespace DDMusic.Controllers
         [HttpPost]
         public async Task<string> AddView(int idSong)
         {
-                if (idSong >= 0)
+            if (idSong >= 0)
             {
                 var song = await _context.Song.FindAsync(idSong);
                 song.CountView++;
                 _context.Song.Update(song);
                 await _context.SaveChangesAsync();
 
-                //Tạo mới hoặc cập nhật thống kê
+                //Tạo mới hoặc cập nhật Bài hát theo ngày
                 await UpdateViewSongOfDay(idSong);
+                //Tạo mới hoặc cập nhật Bài hát theo tuần
+                await UpdateViewSongOfWeek(idSong);
+                //Tạo mới hoặc cập nhật Bài hát theo tháng
+                await UpdateViewSongOfMonth(idSong);
                 HttpContext.Session.Remove("idSong");
             }
             return "";
@@ -350,8 +360,18 @@ namespace DDMusic.Controllers
         public async Task<IActionResult> SingerDetail(int id)
         {
             var Singer = await _context.Singer.FindAsync(id);
-            var AllSong = await _context.Song.ToListAsync();
-            var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
+            //var AllSong = await _context.Song.ToListAsync();
+            //var SongOfSinger = AllSong.Where(m => m.IdSinger == id);
+            List<SingerOfSong> singerOfSongs = _context.SingerOfSong.Where(m => m.IdSinger == id).ToList();
+            List<SongModel> songOfSinger = new List<SongModel>();
+            if (singerOfSongs != null)
+            {
+                foreach (var item in singerOfSongs)
+                {
+                    var song = await _context.Song.FindAsync(item.IdSong);
+                    songOfSinger.Add(song);
+                }
+            }
             var AllAlbumOfSinger = _context.Album.Where(m => m.IdSinger == id).ToList();
             List<AlbumModel> AlbumOfSinger = new List<AlbumModel>();
             foreach (var item in AllAlbumOfSinger)
@@ -364,8 +384,8 @@ namespace DDMusic.Controllers
             }
             if (AlbumOfSinger.ToList().Count != 0)
                 ViewBag.AlbumOfSinger = AlbumOfSinger;
-            if (SongOfSinger.ToList().Count != 0)
-                ViewBag.SongOfSinger = SongOfSinger;
+            if (songOfSinger.ToList().Count != 0)
+                ViewBag.SongOfSinger = songOfSinger;
 
             return View(Singer);
         }
@@ -532,8 +552,8 @@ namespace DDMusic.Controllers
 
             txtSearch = RemoveUnicode(txtSearch);
             //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
-            ViewBag.listSong = await (from s in _context.Song.Include(m => m.Singer)
-                                      where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
+            ViewBag.listSong = await (from s in _context.Song
+                                      where s.NameUnsigned.Contains(txtSearch) || s.NameUnsignedSinger.Contains(txtSearch)
                                       select s).Take(5).ToListAsync();
             //   Tìm kiếm album theo tên bài và tên ca sĩ
             ViewBag.listAlbum = await (from a in _context.Album.Include(m => m.Singer)
@@ -551,8 +571,8 @@ namespace DDMusic.Controllers
             }
 
             //   Tìm kiếm bài hát theo tên bài và tên ca sĩ
-            List<SongModel> listSong = await (from s in _context.Song.Include(m => m.Singer)
-                                              where s.NameUnsigned.Contains(txtSearch) || s.Singer.NameUnsigned.Contains(txtSearch)
+            List<SongModel> listSong = await (from s in _context.Song
+                                              where s.NameUnsigned.Contains(txtSearch) || s.NameUnsignedSinger.Contains(txtSearch)
                                               select s).ToListAsync();
             return View(listSong);
         }
@@ -656,7 +676,7 @@ namespace DDMusic.Controllers
             //Lấy album
             var Album = _context.Album.Find(id);
             //Lấy tất cả bài hát trong album
-            var SongOfAlbum = _context.Song.Where(m => m.IdAlbum == id).Include(m => m.Singer).ToList();
+            var SongOfAlbum = _context.Song.Where(m => m.IdAlbum == id).ToList();
             var Song = SongOfAlbum[0];
             ViewBag.listSong = JsonConvert.SerializeObject(SongOfAlbum);
             ViewBag.Title = "Những bài hát thuộc album: " + Album.Name;
@@ -707,7 +727,7 @@ namespace DDMusic.Controllers
             {
                 SongModel song = new SongModel();
                 song = item.Song;
-                song.Singer = _context.Singer.Find(song.IdSinger);
+                //song.Singer = _context.Singer.Find(song.IdSinger);
                 ListSong.Add(song);
             }
             var Playlist = _context.Playlist.Find(id);
@@ -746,7 +766,7 @@ namespace DDMusic.Controllers
         [Route("playlistUser/{idPlayList}")]
         public IActionResult PagePlayListDetail(int idPlayList)
         {
-            var allPlayListDetail = _context.PlaylistDetail.Include(m => m.Song).Include(m => m.Song.Singer)
+            var allPlayListDetail = _context.PlaylistDetail.Include(m => m.Song)
                 .Where(m => m.IdPlaylist == idPlayList).ToList();
             if (allPlayListDetail.Count != 0)
             {
@@ -789,11 +809,11 @@ namespace DDMusic.Controllers
         public IActionResult PagePlayListDetail1(int idSong)
         {
             var song = _context.Song.Find(idSong);
-            var singer = _context.Singer.Find(song.IdSinger);
-            song.Singer = singer;
+            //var singer = _context.Singer.Find(song.IdSinger);
+            //song.Singer = singer;
             //Get cookie idPlayList
             int idPlayList = int.Parse(Request.Cookies["idPlayList"]);
-            var allPlayListDetail = _context.PlaylistDetail.Include(m => m.Song).Include(m => m.Song.Singer).Where(m => m.IdPlaylist == idPlayList).ToList();
+            var allPlayListDetail = _context.PlaylistDetail.Include(m => m.Song).Where(m => m.IdPlaylist == idPlayList).ToList();
             List<SongModel> listSong = new List<SongModel>();
             listSong.Add(song);
             foreach (var item in allPlayListDetail)
@@ -873,7 +893,7 @@ namespace DDMusic.Controllers
             //Thêm 1 Song vào listSuggestedSong
             //Get danh sách bài hát có trong PlayList
             var detailPlayList = _context.PlaylistDetail.Include(m => m.Song)
-                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song.Singer).ToList();
+                .Where(m => m.IdPlaylist == idPlayList).ToList();
             //Tạo danh sách bài hát có các bài hát trong PlayList và SuggestedSongList
             List<SongModel> list = new List<SongModel>();
             foreach (var item in listSuggestedSong)
@@ -885,7 +905,7 @@ namespace DDMusic.Controllers
                 list.Add(item.Song);
             }
             //Get tất cả Song từ database
-            var listSong = _context.Song.Include(m => m.Singer).ToList();
+            var listSong = _context.Song.ToList();
             //Thêm Song vào SuggestedSongList
             foreach (var item in listSong)
             {
@@ -921,7 +941,7 @@ namespace DDMusic.Controllers
         {
             int idPlayList = int.Parse(Request.Cookies["idPlayList"]);
             List<PlaylistDetail> listSong = _context.PlaylistDetail
-                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song).Include(m => m.Song.Singer).ToList();
+                .Where(m => m.IdPlaylist == idPlayList).Include(m => m.Song).ToList();
             return PartialView("_ListSongPartial", listSong);
         }
         [HttpGet]
@@ -931,7 +951,7 @@ namespace DDMusic.Controllers
             //Get danh sách bài hát trong PlayList
             var listSong = _context.PlaylistDetail.Where(m => m.IdPlaylist == idPlayList).ToList();
             //Get tất cả các bài hát trong database
-            var allSong = _context.Song.Include(m => m.Singer).ToList();
+            var allSong = _context.Song.ToList();
             //Tạo list gợi ý
             List<SongModel> listSuggestedSong = new List<SongModel>();
             foreach (var item in allSong)
@@ -988,7 +1008,99 @@ namespace DDMusic.Controllers
             }
             return text;
         }
+        public async Task<List<TopSongOnWeekDetail>> GetTopSongOnWeek()
+        {
 
+            DateTime firstDayOfWeek = DateTime.Now;
+            int getIntDay = GetIntDay(firstDayOfWeek);
+            List<TopSongOnWeekDetail> topSongOnWeekDetails = new List<TopSongOnWeekDetail>();
+            if (getIntDay != 0)
+            {
+                firstDayOfWeek = firstDayOfWeek.AddDays(-getIntDay);
+            }
+
+            var topSongOnWeek = _context.TopSongOnWeek.Where(m => m.TimeRestart == firstDayOfWeek.Date).FirstOrDefault();
+            if (topSongOnWeek != null)
+            {
+                topSongOnWeekDetails = _context.TopSongOnWeekDetail.Include(m => m.Song).Where(m => m.IdTopSongOnWeek == topSongOnWeek.Id).ToList();
+            }
+            else
+            {
+                topSongOnWeek.TimeRestart = firstDayOfWeek.Date;
+                _context.Add(topSongOnWeek);
+                await _context.SaveChangesAsync();
+
+                var viewSongOfWeek = _context.ViewSongOfWeek.Where(m => m.Date == firstDayOfWeek.AddDays(-7).Date).FirstOrDefault();
+                if (viewSongOfWeek == null)
+                {
+                    viewSongOfWeek = _context.ViewSongOfWeek.Where(m => m.Date == firstDayOfWeek.Date).FirstOrDefault();
+                }
+                if (viewSongOfWeek != null)
+                {
+                    List<ViewSongOfWeekDetail> viewSongOfWeekDetails = _context.ViewSongOfWeekDetail.Where(m => m.IdViewSongOfWeek == viewSongOfWeek.Id).OrderByDescending(m => m.CountView).Take(10).ToList();
+                    if (viewSongOfWeekDetails != null)
+                    {
+                        int top = 1;
+                        foreach (var item in viewSongOfWeekDetails)
+                        {
+                            TopSongOnWeekDetail topSongOnWeekDetail = new TopSongOnWeekDetail();
+                            topSongOnWeekDetail.IdSong = item.IdSong;
+                            topSongOnWeekDetail.IdTopSongOnWeek = topSongOnWeek.Id;
+                            topSongOnWeekDetail.Top = top;
+                            _context.Add(topSongOnWeekDetail);
+                            await _context.SaveChangesAsync();
+                            top++;
+                        }
+                    }
+                }
+                topSongOnWeekDetails = _context.TopSongOnWeekDetail.Include(m => m.Song).Where(m => m.IdTopSongOnWeek == topSongOnWeek.Id).ToList();
+            }
+            return topSongOnWeekDetails;
+        }
+        public async Task<List<TopSongOnMonthDetail>> GetTopSongOnMonth()
+        {
+            DateTime firstDayOfMonth = DateTime.Now;
+            int intDay = firstDayOfMonth.Day - 1;
+            List<TopSongOnMonthDetail> topSongOnMonthDetails = new List<TopSongOnMonthDetail>();
+            if (intDay != 2)
+            {
+                firstDayOfMonth = firstDayOfMonth.AddDays(-intDay);
+            }
+            var topSongOnMonth = _context.TopSongOnMonth.Where(m => m.TimeRestart == firstDayOfMonth.Date).FirstOrDefault();
+            if (topSongOnMonth != null)
+            {
+                topSongOnMonthDetails = _context.TopSongOnMonthDetail.Include(m => m.Song).Where(m => m.IdTopSongOnMonth == topSongOnMonth.Id).ToList();
+            }
+            else
+            {
+                topSongOnMonth.TimeRestart = firstDayOfMonth;
+                _context.Add(topSongOnMonth);
+                await _context.SaveChangesAsync();
+
+                var viewSongOfMonth = _context.ViewSongOfMonth.Where(m => m.Date == firstDayOfMonth.AddMonths(-1).Date).FirstOrDefault();
+                if (viewSongOfMonth == null)
+                {
+                    viewSongOfMonth = _context.ViewSongOfMonth.Where(m => m.Date == firstDayOfMonth.Date).FirstOrDefault();
+                }
+                if (viewSongOfMonth != null)
+                {
+                    List<ViewSongOfMonthDetail> viewSongOfMonthDetails = _context.ViewSongOfMonthDetail.Where(m => m.IdViewSongOfMonth == viewSongOfMonth.Id).OrderByDescending(m => m.CountView).Take(10).ToList();
+                    int top = 1;
+                    foreach (var item in viewSongOfMonthDetails)
+                    {
+                        TopSongOnMonthDetail topSongOnMonthDetail = new TopSongOnMonthDetail();
+                        topSongOnMonthDetail.Top = top;
+                        topSongOnMonthDetail.IdTopSongOnMonth = topSongOnMonth.Id;
+                        topSongOnMonthDetail.IdSong = item.IdSong;
+                        _context.Add(topSongOnMonthDetail);
+                        await _context.SaveChangesAsync();
+                        top++;
+                    }
+                }
+                topSongOnMonthDetails = _context.TopSongOnMonthDetail.Include(m => m.Song).Where(m => m.IdTopSongOnMonth == topSongOnMonth.Id).ToList();
+            }
+            return topSongOnMonthDetails;
+        }
         public async Task<bool> UpdateViewSongOfDay(int IdSong)
         {
             bool result = false;
@@ -1021,7 +1133,7 @@ namespace DDMusic.Controllers
                 {
                     //Tìm kiếm chi tiết thống kê bài hát
                     var existViewSongOfDayDetails = _context.ViewSongOfDayDetail.Where(m => m.IdSong == IdSong && m.IdViewSongOfDay == existViewSongOfDay.FirstOrDefault().Id).ToList();
-                    if(existViewSongOfDayDetails.Count == 0 || existViewSongOfDayDetails == null)
+                    if (existViewSongOfDayDetails.Count == 0 || existViewSongOfDayDetails == null)
                     {
                         ViewSongOfDayDetail viewSongOfDayDetail = new ViewSongOfDayDetail();
                         viewSongOfDayDetail.IdSong = IdSong;
@@ -1049,6 +1161,113 @@ namespace DDMusic.Controllers
             }
 
             return result;
+        }
+        public async Task<bool> UpdateViewSongOfWeek(int IdSong)
+        {
+            int getIntDay = GetIntDay(DateTime.Now);
+            DateTime firstDayOfWeek = DateTime.Now;
+            if (getIntDay != 0)
+            {
+                firstDayOfWeek = firstDayOfWeek.AddDays(-getIntDay);
+            }
+
+            var viewSongOfWeek = _context.ViewSongOfWeek.Where(m => m.Date == firstDayOfWeek.Date).FirstOrDefault();
+
+            if (viewSongOfWeek != null)
+            {
+                var viewSongOfWeekDetail = _context.ViewSongOfWeekDetail.Where(m => m.IdSong == IdSong && m.IdViewSongOfWeek == viewSongOfWeek.Id).FirstOrDefault();
+                if (viewSongOfWeekDetail != null)
+                {
+                    viewSongOfWeekDetail.CountView++;
+                    _context.Update(viewSongOfWeekDetail);
+                }
+                else
+                {
+                    viewSongOfWeekDetail.IdSong = IdSong;
+                    viewSongOfWeekDetail.IdViewSongOfWeek = viewSongOfWeekDetail.Id;
+                    _context.Add(viewSongOfWeekDetail);
+                }
+            }
+            else
+            {
+                viewSongOfWeek.Date = firstDayOfWeek.Date;
+                _context.Add(viewSongOfWeek);
+                await _context.SaveChangesAsync();
+
+                ViewSongOfWeekDetail viewSongOfWeekDetail = new ViewSongOfWeekDetail();
+                viewSongOfWeekDetail.IdSong = IdSong;
+                viewSongOfWeekDetail.IdViewSongOfWeek = viewSongOfWeekDetail.Id;
+                _context.Add(viewSongOfWeekDetail);
+            }
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> UpdateViewSongOfMonth(int IdSong)
+        {
+            int IntDay = DateTime.Now.Day - 1;
+            DateTime firstDayOfMonth = DateTime.Now.AddDays(-IntDay);
+            var viewSongOfMonth = _context.ViewSongOfMonth.Where(m => m.Date == firstDayOfMonth.Date).FirstOrDefault();
+            if (viewSongOfMonth != null)
+            {
+                var viewSongOfMonthDetail = _context.ViewSongOfMonthDetail.Where(m => m.IdSong == IdSong && m.IdViewSongOfMonth == viewSongOfMonth.Id).FirstOrDefault();
+                if (viewSongOfMonthDetail != null)
+                {
+                    viewSongOfMonthDetail.CountView++;
+                    _context.Update(viewSongOfMonthDetail);
+                }
+                else
+                {
+                    viewSongOfMonthDetail.IdSong = IdSong;
+                    viewSongOfMonthDetail.IdViewSongOfMonth = viewSongOfMonthDetail.Id;
+                    _context.Add(viewSongOfMonthDetail);
+                }
+            }
+            else
+            {
+                viewSongOfMonth.Date = firstDayOfMonth.Date;
+                _context.Add(viewSongOfMonth);
+                await _context.SaveChangesAsync();
+
+                ViewSongOfMonthDetail viewSongOfMonthDetail = new ViewSongOfMonthDetail();
+                viewSongOfMonthDetail.IdSong = IdSong;
+                viewSongOfMonthDetail.IdViewSongOfMonth = viewSongOfMonthDetail.Id;
+                _context.Add(viewSongOfMonthDetail);
+            }
+            await _context.SaveChangesAsync();
+            return true;
+
+        }
+        public int GetIntDay(DateTime Date)
+        {
+            if (Date.DayOfWeek == DayOfWeek.Monday)
+            {
+                return 0;
+            }
+            if (Date.DayOfWeek == DayOfWeek.Tuesday)
+            {
+                return 1;
+            }
+            if (Date.DayOfWeek == DayOfWeek.Wednesday)
+            {
+                return 2;
+            }
+            if (Date.DayOfWeek == DayOfWeek.Thursday)
+            {
+                return 3;
+            }
+            if (Date.DayOfWeek == DayOfWeek.Friday)
+            {
+                return 4;
+            }
+            if (Date.DayOfWeek == DayOfWeek.Saturday)
+            {
+                return 5;
+            }
+            if (Date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return 6;
+            }
+            return 0;
         }
     }
 }

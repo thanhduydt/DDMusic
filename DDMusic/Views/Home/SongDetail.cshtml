@@ -485,7 +485,7 @@
         function loadMusic(indexNumb) {
             musicName.innerText = allMusic[indexNumb - 1].Name;
             musicLyrics.innerHTML = allMusic[indexNumb - 1].Lyric;
-            musicArtist.innerText = allMusic[indexNumb - 1].Singer.Name;
+            musicArtist.innerText = allMusic[indexNumb - 1].NameSinger;
             musicImg.src = `../img/song/${allMusic[indexNumb - 1].URLImg}`;
             mainAudio.src = `../audio/${allMusic[indexNumb - 1].URLMusic}`;
             if (allMusic[indexNumb - 1].User!=null&&allMusic[indexNumb - 1].User.UserName != null) {
@@ -657,7 +657,7 @@
             let liTag = `<li >
                             <div class="row" li-index="${i + 1}">
                             <img class="im" src="../img/song/${allMusic[i].URLImg}">
-                              <span>${allMusic[i].Name}<p> ${allMusic[i].Singer.Name}</p></span>
+                              <span>${allMusic[i].Name}<p> ${allMusic[i].NameSinger}</p></span>
                         <span id="${allMusic[i].URLMusic}" class="audio-duration"></span>
                             </div>
 @if (ViewBag.checkPlayList != true)
