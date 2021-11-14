@@ -130,6 +130,7 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             else
             {
+                topSongOnWeek = new TopSongOnWeek();
                 topSongOnWeek.TimeRestart = firstDayOfWeek.Date;
                 _context.Add(topSongOnWeek);
                 await _context.SaveChangesAsync();
@@ -159,9 +160,9 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 topSongOnWeekDetails = _context.TopSongOnWeekDetail.Include(m => m.Song).Where(m => m.IdTopSongOnWeek == topSongOnWeek.Id).ToList();
 
-
+                
             }
-
+            ViewBag.Date = topSongOnWeek.TimeRestart;
             return View(topSongOnWeekDetails);
         }
         public int GetIntDay(DateTime Date)

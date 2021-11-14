@@ -1026,6 +1026,7 @@ namespace DDMusic.Controllers
             }
             else
             {
+                topSongOnWeek = new TopSongOnWeek();
                 topSongOnWeek.TimeRestart = firstDayOfWeek.Date;
                 _context.Add(topSongOnWeek);
                 await _context.SaveChangesAsync();
@@ -1073,6 +1074,7 @@ namespace DDMusic.Controllers
             }
             else
             {
+                topSongOnMonth = new TopSongOnMonth();
                 topSongOnMonth.TimeRestart = firstDayOfMonth;
                 _context.Add(topSongOnMonth);
                 await _context.SaveChangesAsync();
@@ -1180,26 +1182,33 @@ namespace DDMusic.Controllers
                 {
                     viewSongOfWeekDetail.CountView++;
                     _context.Update(viewSongOfWeekDetail);
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
+                    viewSongOfWeekDetail = new ViewSongOfWeekDetail();
                     viewSongOfWeekDetail.IdSong = IdSong;
-                    viewSongOfWeekDetail.IdViewSongOfWeek = viewSongOfWeekDetail.Id;
+                    viewSongOfWeekDetail.IdViewSongOfWeek = viewSongOfWeek.Id;
+                    viewSongOfWeekDetail.CountView = 1;
                     _context.Add(viewSongOfWeekDetail);
+                    await _context.SaveChangesAsync();
                 }
             }
             else
             {
+                viewSongOfWeek = new ViewSongOfWeek();
                 viewSongOfWeek.Date = firstDayOfWeek.Date;
                 _context.Add(viewSongOfWeek);
                 await _context.SaveChangesAsync();
 
                 ViewSongOfWeekDetail viewSongOfWeekDetail = new ViewSongOfWeekDetail();
                 viewSongOfWeekDetail.IdSong = IdSong;
-                viewSongOfWeekDetail.IdViewSongOfWeek = viewSongOfWeekDetail.Id;
+                viewSongOfWeekDetail.IdViewSongOfWeek = viewSongOfWeek.Id;
+                viewSongOfWeekDetail.CountView = 1;
                 _context.Add(viewSongOfWeekDetail);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
+            
             return true;
         }
         public async Task<bool> UpdateViewSongOfMonth(int IdSong)
@@ -1214,27 +1223,33 @@ namespace DDMusic.Controllers
                 {
                     viewSongOfMonthDetail.CountView++;
                     _context.Update(viewSongOfMonthDetail);
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
+                    viewSongOfMonthDetail = new ViewSongOfMonthDetail();
                     viewSongOfMonthDetail.IdSong = IdSong;
-                    viewSongOfMonthDetail.IdViewSongOfMonth = viewSongOfMonthDetail.Id;
+                    viewSongOfMonthDetail.IdViewSongOfMonth = viewSongOfMonth.Id;
+                    viewSongOfMonthDetail.CountView = 1;
                     _context.Add(viewSongOfMonthDetail);
+                    await _context.SaveChangesAsync();
                 }
             }
             else
             {
+                viewSongOfMonth = new ViewSongOfMonth();
                 viewSongOfMonth.Date = firstDayOfMonth.Date;
                 _context.Add(viewSongOfMonth);
                 await _context.SaveChangesAsync();
 
                 ViewSongOfMonthDetail viewSongOfMonthDetail = new ViewSongOfMonthDetail();
                 viewSongOfMonthDetail.IdSong = IdSong;
-                viewSongOfMonthDetail.IdViewSongOfMonth = viewSongOfMonthDetail.Id;
+                viewSongOfMonthDetail.IdViewSongOfMonth = viewSongOfMonth.Id;
+                viewSongOfMonthDetail.CountView = 1;
                 _context.Add(viewSongOfMonthDetail);
+                await _context.SaveChangesAsync();
             }
-            await _context.SaveChangesAsync();
-            return true;
+          return true;
 
         }
         public int GetIntDay(DateTime Date)

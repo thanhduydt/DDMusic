@@ -33,7 +33,7 @@ namespace DDMusic.Areas.Admin.Controllers
         //public JsonResult GetAlbumOfSinger(List<int> idSinger)
         //{
         //    var List = new SelectListItem();
-            
+
         //    //List<SingerModel> List = new List<SingerModel>();
         //    //var List = _context.Album.Where(m => m.IdSinger == idSinger).Select(a => new SelectListItem()
         //    //{
@@ -78,7 +78,7 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 //Khởi tạo số view cho bài hát mới là 0
                 song.CountView = 0;
-                song.NameUnsigned = RemoveUnicode(song.Name);              
+                song.NameUnsigned = RemoveUnicode(song.Name);
                 _context.Add(song);
                 await _context.SaveChangesAsync();
                 if (IdSinger != null)
@@ -131,9 +131,9 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
 
 
-                if(IdSinger != null)
+                if (IdSinger != null)
                 {
-                    foreach(var item in IdSinger)
+                    foreach (var item in IdSinger)
                     {
                         SingerOfSong singerOfSong = new SingerOfSong();
                         singerOfSong.IdSinger = item;
@@ -238,24 +238,28 @@ namespace DDMusic.Areas.Admin.Controllers
         }
         public async Task<IActionResult> GetSingerOfSong(int id)
         {
-            ViewData["Singers"] = new SelectList(_context.Singer, "Id", "Name"); 
+            ViewData["Singers"] = new SelectList(_context.Singer, "Id", "Name");
             ViewBag.IdSong = id;
             return PartialView("_SingerOfSong", _context.SingerOfSong.Include(m => m.Singer).Where(m => m.IdSong == id));
-           // return View( );
+            // return View( );
         }
 
         public async Task<IActionResult> AddSinger(List<int> idSingers, int idSong)
         {
-            foreach(var item in idSingers)
+            foreach (var item in idSingers)
             {
-                var singerOfSong = await _context.SingerOfSong.FindAsync(item);
-                if(singerOfSong == null)
+                var singerOfSong = _context.SingerOfSong.Where(m => m.IdSinger == item && m.IdSong == idSong).FirstOrDefault();
+                if (singerOfSong == null)
                 {
-                    singerOfSong = new SingerOfSong();
-                    singerOfSong.IdSong = idSong;
-                    singerOfSong.IdSinger = item;
-                    _context.Add(singerOfSong);
-                    await _context.SaveChangesAsync();
+                    var singer = await _context.Singer.FindAsync(item);
+                    if (singer != null)
+                    {
+                        singerOfSong = new SingerOfSong();
+                        singerOfSong.IdSong = idSong;
+                        singerOfSong.IdSinger = item;
+                        _context.Add(singerOfSong);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
             var song = _context.Song.Find(idSong);
@@ -280,22 +284,22 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             return RedirectToAction("SingerOfSong", "Song", new { area = "Admin", id = idSong });
         }
-        public async Task<IActionResult> RemoveSinger(int idSinger, int idSong)
+        public async Task<IActionResult> RemoveSinger(int id, int idSong)
         {
-            var singerOfSong = _context.SingerOfSong.Where(m => m.IdSinger==idSinger && m.IdSong == idSong).FirstOrDefault();
-            if(singerOfSong != null)
+            var singerOfSong = await _context.SingerOfSong.FindAsync(id);
+            if (singerOfSong != null)
             {
                 _context.Remove(singerOfSong);
                 await _context.SaveChangesAsync();
             }
             var song = _context.Song.Find(idSong);
-            var ListSinger = _context.SingerOfSong.Include(m =>m.Singer).Where(m => m.IdSong == idSong).ToList();
-            if(song != null)
+            var ListSinger = _context.SingerOfSong.Include(m => m.Singer).Where(m => m.IdSong == idSong).ToList();
+            if (song != null)
             {
                 song.NameSinger = String.Empty;
-                foreach(var item in ListSinger)
+                foreach (var item in ListSinger)
                 {
-                    if(item != ListSinger.LastOrDefault())
+                    if (item != ListSinger.LastOrDefault())
                     {
                         song.NameSinger += item.Singer.Name + ", ";
                     }

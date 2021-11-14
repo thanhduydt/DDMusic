@@ -117,7 +117,7 @@ namespace DDMusic.Areas.Admin.Controllers
             DateTime firstDayOfMonth = DateTime.Now;
             int intDay = firstDayOfMonth.Day - 1;
             List<TopSongOnMonthDetail> topSongOnMonthDetails = new List<TopSongOnMonthDetail>();
-            if(intDay != 2)
+            if(intDay != 0)
             {
                 firstDayOfMonth = firstDayOfMonth.AddDays(-intDay);
             }
@@ -128,6 +128,7 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             else
             {
+                topSongOnMonth = new TopSongOnMonth();
                 topSongOnMonth.TimeRestart = firstDayOfMonth;
                 _context.Add(topSongOnMonth);
                 await _context.SaveChangesAsync();
@@ -154,6 +155,7 @@ namespace DDMusic.Areas.Admin.Controllers
                 }
                 topSongOnMonthDetails = _context.TopSongOnMonthDetail.Include(m => m.Song).Where(m => m.IdTopSongOnMonth == topSongOnMonth.Id).ToList();
             }
+            ViewBag.Date = topSongOnMonth.TimeRestart;
             return View(topSongOnMonthDetails);
         }
     }
