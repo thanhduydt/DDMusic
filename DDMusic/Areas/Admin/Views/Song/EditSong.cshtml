@@ -81,14 +81,14 @@
                                             <input type="date" asp-for="ReleaseDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-6">
+                                    @*<div class="col-md-6 col-lg-6">
                                         <div class="form-group wow fadeInUp" data-wow-delay="100ms">
                                             <label>Album</label>
                                             <br />
                                             <select class="form-control select2" asp-for="IdAlbum" id="Album">
                                             </select>
                                         </div>
-                                    </div>
+                                    </div>*@
                                     <div class="col-md-6 col-lg-6">
                                         <label>Số lượng lượt nghe nhạc: <span>@Model.CountView</span></label>
                                         <div class="input-group">
@@ -178,36 +178,36 @@
                 sortField: 'text'
             });
         });
-        ////On Load Album
-        $list = $("#Album");
-        $.ajax({
-            url: '/Admin/Song/GetAlbumOfSinger',
-            type: "GET",
-            data: { idSinger: parseInt($("#Singer").val()) },
-            success: function (data) {
-                $list.empty();
-                $list.append('<option value="' + 0 + '"> ' + "Hãy chọn album(Nếu có)" + ' </option>');
-                $.each(data, function (i, item) {
-                    $list.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
-                });
-            },
-        })
-        //Change Singer
-        function GetAlbum() {
-            $list = $("#Album");
-            $.ajax({
-                url: '/Admin/Song/GetAlbumOfSinger',
-                type: "GET",
-                data: { idSinger: parseInt($("#Singer").val()) },
-                success: function (data) {
-                    $list.empty();
-                    $list.append('<option value="' + 0 + '"> ' + "Hãy chọn album(Nếu có)" + ' </option>');
-                    $.each(data, function (i, item) {
-                        $list.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
-                    });
-                },
-            })
-        }
+        //////On Load Album
+        //$list = $("#Album");
+        //$.ajax({
+        //    url: '/Admin/Song/GetAlbumOfSinger',
+        //    type: "GET",
+        //    data: { idSinger: parseInt($("#Singer").val()) },
+        //    success: function (data) {
+        //        $list.empty();
+        //        $list.append('<option value="' + 0 + '"> ' + "Hãy chọn album(Nếu có)" + ' </option>');
+        //        $.each(data, function (i, item) {
+        //            $list.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
+        //        });
+        //    },
+        //})
+        ////Change Singer
+        //function GetAlbum() {
+        //    $list = $("#Album");
+        //    $.ajax({
+        //        url: '/Admin/Song/GetAlbumOfSinger',
+        //        type: "GET",
+        //        data: { idSinger: parseInt($("#Singer").val()) },
+        //        success: function (data) {
+        //            $list.empty();
+        //            $list.append('<option value="' + 0 + '"> ' + "Hãy chọn album(Nếu có)" + ' </option>');
+        //            $.each(data, function (i, item) {
+        //                $list.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
+        //            });
+        //        },
+        //    })
+        //}
         ClassicEditor
             .create(document.querySelector('#editor'))
             .catch(error => {
