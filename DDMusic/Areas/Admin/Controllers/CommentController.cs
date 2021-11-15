@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [Area("Admin")]
     public class CommentController : Controller
     {
@@ -19,46 +19,42 @@ namespace DDMusic.Areas.Admin.Controllers
         {
             _context = context;
         }
+        public List<CommentModel> GetListComment(bool accept)
+        {
+            List<CommentModel> listComment = new List<CommentModel>();
+            listComment = _context.Comment.Where(m => m.Accept == accept).Include(m => m.Song).Include(m => m.User).OrderByDescending(m => m.Time).ToList();
+            return listComment;
+        }
         public async Task<IActionResult> Index()
         {
-            //CommentModel c = new CommentModel();
-            //c.IdUser = "2";
-            //c.IdSong = 1;
-            //c.Description = "rtyubbcs"+ DateTime.Now.ToString("dd/MM/yyyy");
-            //c.Time = DateTime.Now;
-            //_context.Comment.Add(c);
-            //_context.SaveChanges();
-
-            //List<CommentModel> cg = await _context.Comment.OrderByDescending(m => m.Time).ToListAsync();
-            //List<CommentModel> Comment =await( from c in _context.Comment
-            //              join u in _context.User on c.IdUser equals u.Id
-            //              join s in _context.Song on c.IdSong equals s.Id
-            //              select new CommentModel
-            //              {
-            //                  Id=c.Id,
-            //                  User = u,
-            //                  Song = s,
-            //                  Description=c.Description,
-            //                  Time=c.Time,
-            //        }).OrderByDescending(m => m.Time).ToListAsync();
-            return View(await (from c in _context.Comment
-                               join u in _context.User on c.IdUser equals u.Id
-                               join s in _context.Song on c.IdSong equals s.Id
-                               select new CommentModel
-                               {
-                                   Id = c.Id,
-                                   User = u,
-                                   Song = s,
-                                   Content = c.Content,
-                                   Time = c.Time,
-                               }).OrderByDescending(m => m.Time).ToListAsync());
+            return View(GetListComment(true));
         }
-        public async Task<IActionResult>Delete(int id)
+        [HttpPost]
+        public async Task<IActionResult>Delete(int id,int page)
         {
             var comment = await _context.Comment.FindAsync(id);
              _context.Comment.Remove(comment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            bool accept = true;
+            if (page != 0)
+            {
+                accept = false;
+            }
+            ViewBag.page = page;
+            return PartialView("_CommentListPartial", GetListComment(accept));
+        }
+        public IActionResult AcceptComment()
+        {
+            return View(GetListComment(false));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Accept(int id)
+        {
+            var comment =await _context.Comment.FindAsync(id);
+            comment.Accept = true;
+            _context.Update(comment); 
+            await _context.SaveChangesAsync();
+            return PartialView("_CommentListPartial", GetListComment(false));
         }
     }
 }

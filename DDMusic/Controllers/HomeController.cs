@@ -301,7 +301,7 @@ namespace DDMusic.Controllers
         public async Task<List<CommentModel>> GetListComment(int idSong)
         {
             List<CommentModel> listComment = await _context.Comment.Include(m => m.User)
-      .Where(m => m.IdSong == idSong).OrderByDescending(m => m.Time).ToListAsync();
+      .Where(m => m.IdSong == idSong).Where(m=>m.Accept==true).OrderByDescending(m => m.Time).ToListAsync();
             return listComment;
         }
         [HttpPost]
@@ -640,6 +640,27 @@ namespace DDMusic.Controllers
             GetListSingerAndAlbum();
             return View();
 
+        }
+        public IActionResult UploadSongList()
+        {
+            var user = _userManager.GetUserAsync(User);
+            List<SongModel> model = new List<SongModel>();
+            model = _context.Song.Where(m => m.IdUser == user.Result.Id).ToList();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteSongInUploadSongList(int idSong)
+        {
+            var user = _userManager.GetUserAsync(User);
+            var song = _context.Song.Find(idSong);
+            if (song.IdUser == user.Result.Id)
+            {
+                _context.Song.Remove(song);
+                await _context.SaveChangesAsync();
+            }
+            List<SongModel> listSong = new List<SongModel>();
+            listSong = _context.Song.Where(m => m.IdUser == user.Result.Id).ToList();
+            return PartialView("_UploadSongListPartial", listSong);
         }
         public void GetListSingerAndAlbum()
         {

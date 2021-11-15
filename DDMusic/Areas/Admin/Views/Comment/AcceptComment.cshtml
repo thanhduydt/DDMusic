@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Bình luận</h1>
+                    <h1>Duyệt bình luận</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -49,6 +49,7 @@
 
 
                                             <td>
+                                                <button class="btn btn-info btn-xs" onclick="accept(@m.Id)">Duyệt <i class="fas fa-check"></i></button>
                                                 <button class="btn btn-danger btn-xs" onclick="deleteComment(@m.Id)">Xóa <i title="Xóa" class="fas fa-trash-alt"></i></button>
                                             </td>
                                         </tr>
@@ -70,16 +71,22 @@
     </section>
     <!-- /.content -->
 </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+<script>
         function deleteComment(id) {
             var confirmText = "Bạn có muốn xóa không?";
             if (confirm(confirmText)) {
-                $.post('@Url.Action("Delete","Comment","Admin")', { id: id,page:0 }, function (data) {
+                $.post('@Url.Action("Delete","Comment","Admin")', { id: id,page:1 }, function (data) {
                     $("#listComment").html(data);
                 });
             }
-    }
-    </script>
+        }
+        function accept(id) {
+             $.post('@Url.Action("Accept","Comment","Admin")', { id: id }, function (data) {
+                    $("#listComment").html(data);
+                });
+        }
+</script>
 }

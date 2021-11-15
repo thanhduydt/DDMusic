@@ -125,14 +125,27 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li>                
                     <li class="nav-item">
-                        <a asp-action="Index" asp-controller="Comment" class="nav-link">
+                        <a href="#" class="nav-link" id="MenuSong">
                             <i class="nav-icon fas fa-comments"></i>
                             <p>
                                 Bình luận
+                                <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-action="Index" asp-controller="Comment" class="nav-link">
+                                    <p>Bình luận</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-action="AcceptComment" asp-controller="Comment" class="nav-link">
+                                    <p>Duyệt bình luận</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link" id="MenuSong">

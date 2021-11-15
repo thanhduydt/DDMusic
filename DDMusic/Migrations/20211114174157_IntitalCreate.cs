@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DDMusic.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class IntitalCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -344,7 +344,8 @@ namespace DDMusic.Migrations
                     IdUser = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IdSong = table.Column<int>(type: "int", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Time = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Time = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Accept = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

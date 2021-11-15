@@ -13,6 +13,7 @@ namespace DDMusic.Areas.Admin.Models
         public int IdSong { get; set; }
         public string Content { get; set; }
         public DateTime Time { get; set; }
+        public bool Accept { get; set; }
         [ForeignKey("IdUser")]
         public virtual  UserModel User { get; set; }
         [ForeignKey("IdSong")]

@@ -16,7 +16,13 @@
 
     .e {
         padding-top: 100px;
+        padding-bottom:20px;
         padding-left: 50px;
+        font-size: 18px;
+        text-transform: uppercase;
+        letter-spacing: 10px;
+        margin-bottom: 0;
+       text-align:center
     }
 
     .scroll {
@@ -30,9 +36,12 @@
         background-color: blue;
     }
 </style>
-<h2 class="e">TÌM KIẾM</h2>
+<h2 class="e">Danh sách bài hát tải lên </h2>
 <div class="container s">
-    <h5>BÀI HÁT</h5>
+  <a asp-controller="Home" asp-action="UploadSong" style="float:right"><i class="fa fa-upload" aria-hidden="true"> Tải lên</i></a>
+  <div id="listSong">
+      @if (Model.Count() > 0)
+      {
     <table class="table">
         <tbody>
             @foreach (var item in Model)
@@ -97,6 +106,11 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div class="dropdown-item">
+                                    <div onclick="deleteSongInUploadSongList('@item.Id')">
+                                        <i class="fa fa-trash-o" aria-hidden="true"> Xóa</i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -104,6 +118,12 @@
             }
         </tbody>
     </table>
+      }
+      else { 
+      <center style="padding-top: 80px; font-size: 20px;">Không có bài hát tải lên</center>
+      }
+
+      </div>
 </div>
 <div class="modal fade modalAdd" id="modalAdd">
     <div class="modal-dialog dialog">
@@ -124,6 +144,13 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        function deleteSongInUploadSongList(idSong) {
+            $.post('@Url.Action("DeleteSongInUploadSongList","Home")', { idSong: idSong },
+                function (data) {
+                    $("#listSong").html(data);
+                }
+            );
+        }
     function addSongToPlayList(idPlayList,idSong,nameSong) {
         $.post('@Url.Action("AddSongToPlayList","Home")', { idPlayList: idPlayList, idSong: idSong },
             function () {

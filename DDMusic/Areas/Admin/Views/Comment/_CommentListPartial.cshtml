@@ -1,0 +1,20 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.CommentModel>
+@foreach (var m in Model)
+{
+    <tr>
+
+        <td>@m.Song.Name</td>
+        <td>@m.User.UserName</td>
+        <td>@m.Content</td>
+        <td>@m.Time</td>
+
+
+        <td>
+            @if (ViewBag.page != 0)
+            {
+            <button class="btn btn-info btn-xs" onclick="accept(@m.Id)">Duyệt <i class="fas fa-check"></i></button>
+            }
+            <button class="btn btn-danger btn-xs" onclick="deleteComment(@m.Id)">Xóa <i title="Xóa" class="fas fa-trash-alt"></i></button>
+        </td>
+    </tr>
+}

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DDMusic.Areas.Admin.Models.SongModel>
+@using Microsoft.AspNetCore.Identity
+@using DDMusic.Areas.Admin.Models
+@inject SignInManager<UserModel> SignInManager
+@inject UserManager<UserModel> UserManager
+@if (Model.Count() > 0)
+{
+<table class="table">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="img">
+                    <img src="~/img/song/@item.URLImg" />
+                </td>
+                <td>
+                    <div class="name" onclick="location.href ='/playlistUsers/@item.Id'">
+                        <div class="name-song">@item.Name</div>
+                        <div class="name-singer">@item.NameSinger</div>
+                    </div>
+                </td>
+
+                <td class="t-icon"><i class="fa fa-headphones" aria-hidden="true"> @item.CountView</i></td>
+                <td>
+                    @*<i onclick="showselection(@i)" class="fa fa-trash" aria-hidden="true" title="xóa khỏi playlist này" onclick="displayselection(@i)" style="position:relative"></i>*@
+                    <div class="dropdown">
+                        <button class="dropup btn-ellipsis" type="button" id="dr" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" id="dr">
+
+                            <div class="dropdown-header">
+                                <div class="song">
+                                    <img src="~/img/song/@item.URLImg" />
+                                    <div class="name-song">@item.Name</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-item">
+                                <div onclick="dowloadMusic('@item.URLMusic')">
+                                    <i class="fa fa-download" aria-hidden="true"></i> Tải nhạc
+                                </div>
+                            </div>
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <div class="dropdown-item playlist">
+
+                                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Thêm vào playlist
+                                    <ul class="dropdown selection-playlist scroll">
+                                        <li style="padding-left:5px" onclick="createPlayList(@item.Id)"><i class="fa fa-plus-circle" aria-hidden="true"> Tạo playlist mới</i></li>
+                                        @if (ViewBag.PlayList != null)
+                                        {
+                                            @foreach (var i in ViewBag.PlayList)
+                                            {
+                                                <li style="padding-left:5px" onclick="addSongToPlayList(@i.Id,@item.Id,'@item.Name')">
+                                                    @i.Name
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                            <div class="dropdown-item share">
+
+                                <i class="fa fa-share" aria-hidden="true"></i> Chia sẻ
+                                <ul class="dropdown selection-share">
+                                    <li>
+                                        <div class="zalo-share-button" data-href="https://localhost:44305/bai-hat/@item.Id" data-oaid="579745863508352884" data-layout="1"
+                                             data-color="blue" data-customize="false"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-item">
+                                <div onclick="deleteSongInUploadSongList('@item.Id')">
+                                    <i class="fa fa-trash-o" aria-hidden="true"> Xóa</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+else
+{
+    <center style="padding-top: 80px; font-size: 20px;">Không có bài hát tải lên</center>
+}
