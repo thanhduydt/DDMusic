@@ -23,7 +23,7 @@ namespace DDMusic.Areas.Admin.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = "Admin,AddSong")]
         public async Task<IActionResult> Index()
         {
             var AllSong = _context.Song.Where(m => m.Accept == true);
@@ -42,12 +42,14 @@ namespace DDMusic.Areas.Admin.Controllers
         //    //}).ToList();
         //    return Json(List);
         //}
+        [Authorize(Roles = "Admin,AddSong")]
         public IActionResult CreateSong()
         {
             ViewData["ListGenre"] = new SelectList(SongModel.GetAllGerne());
             ViewData["IdSinger"] = new SelectList(_context.Singer, "Id", "Name");
             return View();
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AcceptSong()
         {
             var Song = _context.Song;
@@ -55,6 +57,7 @@ namespace DDMusic.Areas.Admin.Controllers
             var SongNotAccept = AllSong.Where(m => m.Accept == false);
             return View(SongNotAccept);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Accept(int id)
         {
             var SongModel = await _context.Song.FindAsync(id);
@@ -150,6 +153,7 @@ namespace DDMusic.Areas.Admin.Controllers
             ViewBag.Alert = "Tạo mới bài hát không thành công, vui lòng thử lại";
             return View(song);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditSong(int id)
         {
             ViewData["IdSinger"] = new SelectList(_context.Singer, "Id", "Name");
@@ -229,6 +233,7 @@ namespace DDMusic.Areas.Admin.Controllers
             }
             return View(song);
         }
+
         public async Task<IActionResult> SingerOfSong(int id)
         {
             var song = await _context.Song.FindAsync(id);
@@ -316,7 +321,7 @@ namespace DDMusic.Areas.Admin.Controllers
             ViewData["Singers"] = new SelectList(_context.Singer, "Id", "Name");
             return PartialView("_SingerOfSong", _context.SingerOfSong.Include(m => m.Singer).Where(m => m.IdSong == idSong));
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var SongModel = await _context.Song.FindAsync(id);

@@ -1,6 +1,7 @@
 ﻿using DDMusic.Areas.Admin.Data;
 using DDMusic.Areas.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,14 +11,18 @@ using System.Threading.Tasks;
 
 namespace DDMusic.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,CommentManager")]
     [Area("Admin")]
     public class CommentController : Controller
     {
         private readonly DPContext _context;
-        public CommentController(DPContext context)
+        private readonly UserManager<UserModel> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public CommentController(DPContext context, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
         public List<CommentModel> GetListComment(bool accept)
         {
