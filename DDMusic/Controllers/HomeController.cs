@@ -274,6 +274,10 @@ namespace DDMusic.Controllers
             AudioFileReader wf = new AudioFileReader("wwwroot/audio/" + Url);
             TimeSpan span = wf.TotalTime;
             int time = (int)span.TotalMilliseconds;
+            if (time > 10000)
+            {
+                time = 10000;
+            }
             return Json(new { timeSong = time });
         }
         [HttpPost]

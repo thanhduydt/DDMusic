@@ -184,6 +184,24 @@ namespace DDMusic.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            //Xóa playlist của user đã tạo
+            foreach(var item in _context.Playlist)
+            {
+                if (item.IdUser == id)
+                {
+                    _context.Playlist.Remove(item);
+                   // await _context.SaveChangesAsync();
+                }
+            }
+            //Xóa bài hát user đã upload
+            foreach (var item in _context.Song)
+            {
+                if (item.IdUser == id)
+                {
+                    _context.Song.Remove(item);
+              //      await _context.SaveChangesAsync();
+                }
+            }
             var user = await _userManager.FindByIdAsync(id);
             await _userManager.DeleteAsync(user);
             return RedirectToAction(nameof(Users));
